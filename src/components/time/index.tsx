@@ -1,7 +1,7 @@
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 
-import { TaskBarButtonWrapper } from '../task-bar-icon';
+import { ButtonWrapper } from '../buttons/button-wrapper';
 import './style.less';
 
 export function TimeBlock() {
@@ -23,11 +23,11 @@ export function TimeBlock() {
   }, []);
 
   return (
-    <TaskBarButtonWrapper className="time-block flex flex-col justify-between items-end">
+    <ButtonWrapper className="time-block flex flex-col justify-between items-end">
       <>
         <span>{time}</span>
         <span>{date}</span>
       </>
-    </TaskBarButtonWrapper>
+    </ButtonWrapper>
   );
 }

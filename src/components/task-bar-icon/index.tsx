@@ -1,6 +1,6 @@
 import React from 'react';
-import { noop } from 'rxjs';
 
+import { ButtonWrapper } from '../buttons/button-wrapper';
 import './style.less';
 
 interface Props {
@@ -13,27 +13,11 @@ export function TaskBarButton({ icon, name, onclick }: Props) {
   name;
   const Icon = icon;
   return (
-    <TaskBarButtonWrapper
+    <ButtonWrapper
       onclick={onclick}
-      className="flex items-center justify-center"
+      className="taskbar-button flex items-center justify-center"
     >
       {typeof Icon === 'string' ? <img src={Icon} /> : <Icon />}
-    </TaskBarButtonWrapper>
-  );
-}
-
-export function TaskBarButtonWrapper({
-  children,
-  className = '',
-  onclick = noop,
-}: {
-  children: React.JSX.Element;
-  className?: string;
-  onclick?: () => void;
-}) {
-  return (
-    <div onClick={onclick} className={`taskbar-button-wrapper ${className}`}>
-      {children}
-    </div>
+    </ButtonWrapper>
   );
 }

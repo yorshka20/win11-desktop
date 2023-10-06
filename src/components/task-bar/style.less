@@ -1,0 +1,38 @@
+.taskbar-container {
+  height: 38px;
+
+  border-top: 1px solid #999;
+
+  position: relative;
+
+  .taskbar {
+    background: #d7e0f6;
+
+    .win-icon {
+      width: 30px;
+      height: 30px;
+    }
+
+    .taskbar-button-wrapper {
+      margin-right: 4px;
+    }
+  }
+
+  .back-to-desktop {
+    width: 10px;
+    height: 30px;
+
+    border-radius: 2px;
+    margin-right: 2px;
+
+    &:hover {
+      background-color: aliceblue;
+      opacity: 0.8;
+    }
+  }
+
+  .taskbar-float-menu {
+    position: fixed;
+    bottom: -40px;
+  }
+}

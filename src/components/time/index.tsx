@@ -23,11 +23,12 @@ export function TimeBlock() {
   }, []);
 
   return (
-    <ButtonWrapper className="time-block flex flex-col justify-between items-end">
-      <>
-        <span>{time}</span>
-        <span>{date}</span>
-      </>
+    <ButtonWrapper className="time-block flex justify-end items-center">
+      <span className="flex flex-col justify-center items-end float-right">
+        {time}
+        <br />
+        {date}
+      </span>
     </ButtonWrapper>
   );
 }

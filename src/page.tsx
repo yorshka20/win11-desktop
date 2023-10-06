@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 
 import { WindowContextProvider } from './context/context-provider';
-import { useContextState } from './hooks';
+import { useContextState, useDesktopSelection } from './hooks';
 
 interface WindowContainerProps {
   children: React.JSX.Element | React.JSX.Element[];
@@ -30,15 +30,21 @@ interface DesktopContainerProps {
 }
 
 export function DesktopContainer({ desktopConfig }: DesktopContainerProps) {
-  console.log('config', desktopConfig);
-  const time = useContextState('time');
-  console.log('time', time);
+  const desktopRef = useRef<HTMLDivElement>(null);
+
+  const selectionArea = useDesktopSelection(desktopRef);
+
+  useEffect(() => {
+    console.log('selectionArea', selectionArea);
+  }, [selectionArea]);
 
   return (
-    <div className="flex-1 flex flex-col ">
+    <div ref={desktopRef} className="flex-1 flex flex-col desktop-container">
       {desktopConfig.map((c, index) => (
         <span key={index}>{c.name}</span>
       ))}
+
+      <div id="desktop-selection" className="desktop-selection" />
     </div>
   );
 }

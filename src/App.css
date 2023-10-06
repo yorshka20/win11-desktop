@@ -14,9 +14,22 @@
 #window-container {
   background: url('./assets/wallpaper/light.jpg');
 
-  background-size: 100% 100%;
+  background-size: cover;
 }
 
 .window-container {
   position: relative;
+}
+
+.desktop-container {
+  position: relative;
+}
+
+.desktop-selection {
+  border: 1px solid #064b85;
+  background-color: #137fd6;
+
+  opacity: 0.6;
+
+  position: absolute;
 }

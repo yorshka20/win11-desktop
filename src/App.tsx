@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import './App.css';
+import './app.less';
 import { StartMenu } from './components/start-menu';
 import { TaskBar } from './components/task-bar';
 import { taskbarButtonsConfig } from './configs/desktop-config';

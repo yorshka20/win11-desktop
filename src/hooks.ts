@@ -65,7 +65,7 @@ export function useDesktopSelection(ref: React.RefObject<HTMLDivElement>) {
     let x = 0;
     let y = 0;
 
-    const handleMouseMove = (e) => {
+    const handleMouseMove = (e: MouseEvent) => {
       const selection = getSelection();
       const area = {} as SelectionArea;
 
@@ -118,7 +118,15 @@ export function useDesktopSelection(ref: React.RefObject<HTMLDivElement>) {
       hideSelection();
     };
 
-    const handleMouseDown = (e) => {
+    const handleMouseDown = (e: MouseEvent) => {
+      if (e.button !== 0) {
+        return;
+      }
+      const ele = e.target as HTMLDivElement;
+      if (ele['className'].includes('context-menu-container')) {
+        return;
+      }
+
       x = e.clientX;
       y = e.clientY;
 
@@ -133,4 +141,58 @@ export function useDesktopSelection(ref: React.RefObject<HTMLDivElement>) {
   }, [ref]);
 
   return selectionArea;
+}
+
+export function useContextMenu() {
+  const { store } = useWindowContext();
+  const ref = useRef<HTMLDivElement>();
+
+  useEffect(() => {
+    function getContextMenu() {
+      if (ref.current) {
+        return ref.current;
+      }
+      const target = document.getElementById('context-menu') as HTMLDivElement;
+      ref.current = target;
+      return target;
+    }
+
+    function hide() {
+      const menu = getContextMenu();
+      menu.style.visibility = 'hidden';
+
+      store.updateState('showContextMenu', false);
+      window.removeEventListener('click', handleClick);
+    }
+
+    function handleClick(e: MouseEvent) {
+      console.log('e click', e, e.target);
+      const ele = e.target as HTMLDivElement;
+      if (ele['className'].includes('context-menu-container')) {
+        return;
+      }
+
+      hide();
+    }
+
+    function handleContextMenu(e: MouseEvent) {
+      e.preventDefault();
+
+      const menu = getContextMenu();
+
+      menu.style.top = `${e.clientY}px`;
+      menu.style.left = `${e.clientX}px`;
+      menu.style.visibility = 'visible';
+
+      store.updateState('showContextMenu', true);
+
+      window.addEventListener('click', handleClick);
+    }
+
+    window.addEventListener('contextmenu', handleContextMenu);
+
+    return () => {
+      window.removeEventListener('contextmenu', handleContextMenu);
+    };
+  }, [store]);
 }

@@ -4,6 +4,7 @@ export interface ContextStoreState {
   window: string;
   time: number;
   showStartMenu: boolean;
+  showContextMenu: boolean;
 }
 
 type ContextKey = keyof ContextStoreState;
@@ -58,4 +59,5 @@ export const store = new ContextStore({
   window: 'main',
   time: Date.now(),
   showStartMenu: false,
+  showContextMenu: false,
 });

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 
 import { WindowContextProvider } from './context/context-provider';
-import { useContextState, useDesktopSelection } from './hooks';
+import { useContextMenu, useDesktopSelection } from './hooks';
 
 interface WindowContainerProps {
   children: React.JSX.Element | React.JSX.Element[];
@@ -34,8 +34,10 @@ export function DesktopContainer({ desktopConfig }: DesktopContainerProps) {
 
   const selectionArea = useDesktopSelection(desktopRef);
 
+  useContextMenu();
+
   useEffect(() => {
-    console.log('selectionArea', selectionArea);
+    // console.log('selectionArea', selectionArea);
   }, [selectionArea]);
 
   return (
@@ -45,6 +47,7 @@ export function DesktopContainer({ desktopConfig }: DesktopContainerProps) {
       ))}
 
       <div id="desktop-selection" className="desktop-selection" />
+      <div id="context-menu" className="context-menu-container"></div>
     </div>
   );
 }

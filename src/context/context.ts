@@ -1,10 +1,13 @@
 import React from 'react';
 
+import { WindowHandler } from '../components/windows/interface';
+import { Options } from '../components/windows/interface';
 import { store } from './store';
 
 export interface WindowContextType {
   theme: 'light' | 'dark';
   dispatcher: typeof dispatcher;
+  windowManager: WindowManager;
   desktopContainer: HTMLDivElement;
 }
 
@@ -12,8 +15,11 @@ function dispatcher(command: 'trigger-start-menu'): void;
 function dispatcher(command: 'display-start-menu', value: boolean): void;
 function dispatcher(command: 'trigger-context-menu'): void;
 function dispatcher(command: 'display-context-menu', value: boolean): void;
-function dispatcher(command: 'create-window', value: any): void;
-function dispatcher(command: string, value?: boolean | string) {
+// function dispatcher(command: 'open-window', value: Partial<Options>): void;
+function dispatcher(
+  command: string,
+  value?: boolean | string | Partial<Options>,
+) {
   console.log('command', command, value, store.getValue());
   switch (command) {
     case 'trigger-theme': {
@@ -35,22 +41,45 @@ function dispatcher(command: string, value?: boolean | string) {
       store.updateState('showContextMenu', !state);
       break;
     }
-    case 'create-window': {
-      store.dispatchEvent({
-        name: 'create-window',
-        value,
-      });
-      break;
-    }
 
     default:
       break;
   }
 }
 
+class WindowManager {
+  private windowHandleMap: Record<string, WindowHandler>;
+
+  constructor() {
+    this.windowHandleMap = {};
+  }
+
+  addWindow(id: string, window: WindowHandler) {
+    this.windowHandleMap[id] = window;
+  }
+
+  getWindow(id: string) {
+    return this.windowHandleMap[id];
+  }
+
+  maximizeWindow(id: string) {
+    const window = this.getWindow(id);
+    window.maximize();
+  }
+  minimizeWindow(id: string) {
+    const window = this.getWindow(id);
+    window.minimize();
+  }
+  closeWindow(id: string) {
+    const window = this.getWindow(id);
+    window.close();
+  }
+}
+
 const defaultContext: WindowContextType = {
   theme: 'light',
   dispatcher,
+  windowManager: new WindowManager(),
   desktopContainer: {} as HTMLDivElement,
 };
 

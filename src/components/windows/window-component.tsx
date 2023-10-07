@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import Draggable, { type DraggableEventHandler } from 'react-draggable';
 
-import { store } from '../../context/store';
+import { PipeEvent, store } from '../../context/store';
 import { useWindowContext } from '../../hooks';
 import type { Options, WindowType } from './interface';
 import './style.less';
@@ -18,17 +18,23 @@ interface WindowComponentProps extends Options {
 
 function WindowComponent({
   title,
+  id,
   position: pos,
   zIndex,
   size,
   content = '',
 }: WindowComponentProps) {
   const headerRef = useRef<HTMLHeadElement>(null);
+  const { windowManager } = useWindowContext();
 
   const [position, setPosition] = useState<{ x: number; y: number }>({
     x: pos[0],
     y: pos[1],
   });
+
+  function getWindowHandler() {
+    return windowManager.getWindow(id);
+  }
 
   // const handleStart = (e) => {
   //   // console.log('start', e);
@@ -39,6 +45,19 @@ function WindowComponent({
   const handleStop: DraggableEventHandler = (_, data) => {
     setPosition({ x: data.x, y: data.y });
   };
+
+  function handleMinimize() {
+    const handler = getWindowHandler();
+    handler.minimize();
+  }
+  function handleMaximize() {
+    const handler = getWindowHandler();
+    handler.maximize();
+  }
+  function handleClose() {
+    const handler = getWindowHandler();
+    handler.close();
+  }
 
   return (
     <Draggable
@@ -67,9 +86,9 @@ function WindowComponent({
         >
           <div className="tabs"></div>
           <div className="buttons flex flex-row justify-between items-center">
-            <Minimize className="icon min" />
-            <CropSquareOutlined className="icon max" />
-            <CloseOutlined className="icon close" />
+            <Minimize onClick={handleMinimize} className="icon min" />
+            <CropSquareOutlined onClick={handleMaximize} className="icon max" />
+            <CloseOutlined onClick={handleClose} className="icon close" />
           </div>
         </header>
         <div className="window-toolbar w-full">1111</div>
@@ -86,25 +105,30 @@ export function createWindow(windowType: WindowType, options: Options) {
 }
 
 export function WindowComponentContainer() {
-  const { desktopContainer } = useWindowContext();
+  const { desktopContainer, windowManager } = useWindowContext();
 
   const [windows, setWindows] = useState<React.JSX.Element[]>([]);
 
   useEffect(() => {
     const event$ = store.getEventPipe();
-    const handler = ({
-      name,
-      value,
-    }: {
-      name: string;
-      value: Options & {
-        windowType: WindowType;
-      };
-    }) => {
+    const handler = ({ name, value }: PipeEvent) => {
       console.log('name,', name, value);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const win = createWindow(value.windowType, value.options as any);
-      setWindows((a) => [...a, win]);
+      const handler = windowManager.getWindow(value.id);
+      switch (name) {
+        case 'open-window': {
+          setWindows((a) => [...a, handler.window]);
+          break;
+        }
+        case 'close-window': {
+          setWindows((w) => {
+            const ww = w.filter((i) => i !== handler.window);
+            return ww;
+          });
+          break;
+        }
+        default:
+          break;
+      }
     };
 
     const subscription = event$.subscribe((event) => {
@@ -114,7 +138,7 @@ export function WindowComponentContainer() {
     return () => {
       subscription.unsubscribe();
     };
-  }, []);
+  }, [windowManager]);
 
   return <>{windows.map((child) => createPortal(child, desktopContainer))}</>;
 }

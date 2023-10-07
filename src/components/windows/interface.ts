@@ -6,6 +6,7 @@ export type WindowType = 'Explorer' | 'Setting' | 'Image';
 
 interface BaseWindowOptions {
   reuse: boolean;
+  id: string;
   title: string;
   position: Position;
   zIndex: number;
@@ -16,7 +17,7 @@ interface BaseWindowOptions {
 export type Options = BaseWindowOptions;
 
 export type WindowHandler = {
-  window: unknown;
+  window: React.JSX.Element;
   close: () => void;
   move: (pos: Position) => void;
   maximize: () => void;

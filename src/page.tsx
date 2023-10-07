@@ -6,8 +6,9 @@ import {
   buildFromConfig,
   useContextMenu,
 } from './components/context-menu';
+import { DesktopIconWrapper } from './components/desktop-icon';
 import { WindowComponentContainer } from './components/windows';
-import { contextMenuConfig } from './configs/desktop-config';
+import { contextMenuConfig, desktopIconConfig } from './configs/desktop-config';
 import {
   useContextState,
   useDesktopSelection,
@@ -25,6 +26,8 @@ interface DesktopContainerProps {
 
 export function DesktopContainer({ desktopConfig }: DesktopContainerProps) {
   const desktopRef = useRef<HTMLDivElement>(null);
+
+  desktopConfig;
 
   const context = useWindowContext();
 
@@ -49,11 +52,17 @@ export function DesktopContainer({ desktopConfig }: DesktopContainerProps) {
     <div
       ref={desktopRef}
       id="desktop"
-      className="flex-1 flex flex-col desktop-container"
+      className="flex-1 flex flex-col flex-wrap justify-start items-start desktop-container"
     >
       {/* desktop icons */}
-      {desktopConfig.map((c, index) => (
-        <span key={index}>{c.name}</span>
+      {desktopIconConfig.map((c, index) => (
+        <DesktopIconWrapper
+          key={index}
+          grid={c.grid}
+          id={c.id}
+          name={c.name}
+          icon={c.icon}
+        />
       ))}
 
       {/* desktop selections area */}

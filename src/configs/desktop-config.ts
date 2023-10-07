@@ -8,6 +8,7 @@ import {
   SearchOutlined,
   Settings,
 } from '@mui/icons-material';
+import React from 'react';
 
 import trashBinEmptyIcon from '../assets/trash-bin-empty.ico';
 import trashBinFullIcon from '../assets/trash-bin-full.ico';
@@ -37,14 +38,31 @@ export const taskbarButtonsConfig: TaskbarConfigItem[] = [
   },
 ];
 
-export const desktopIconConfig = [
+interface IconConfig {
+  icon: string | React.FC<{ className: string }>;
+  name: string;
+  id: string;
+  grid: [number, number];
+}
+
+export const desktopIconConfig: IconConfig[] = [
   {
     name: 'trash-bin-empty',
-    src: trashBinEmptyIcon,
+    icon: trashBinEmptyIcon,
+    id: 'trash-empty',
+    grid: [0, 0],
   },
   {
     name: 'trash-bin-full',
-    src: trashBinFullIcon,
+    icon: trashBinFullIcon,
+    id: 'trash-full',
+    grid: [0, 1],
+  },
+  {
+    name: 'home',
+    icon: Settings,
+    id: 'home',
+    grid: [0, 2],
   },
 ];
 

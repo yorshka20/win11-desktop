@@ -2,8 +2,6 @@ import { unmountComponentAtNode } from 'react-dom';
 
 import { store } from '../../context/store';
 import type { Options, WindowHandler, WindowType } from './interface';
-import './style.less';
-import { createWindow } from './window-component';
 
 let desktopContainer: HTMLDivElement;
 
@@ -33,7 +31,6 @@ export function windowOpener(
     },
   });
 
-  const window = createWindow(windowType, options);
   const handler = {
     close() {
       unmountComponentAtNode(desktopContainer);
@@ -47,7 +44,6 @@ export function windowOpener(
     minimize() {
       //
     },
-    window,
   } as WindowHandler;
 
   console.log('windowOpener', window, handler);

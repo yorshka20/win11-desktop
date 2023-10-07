@@ -1,3 +1,7 @@
+import React from 'react';
+
+import type { Position } from '../../types';
+
 export type WindowType = 'Explorer' | 'Setting' | 'Image';
 
 interface BaseWindowOptions {
@@ -6,12 +10,10 @@ interface BaseWindowOptions {
   position: Position;
   zIndex: number;
   size: [number, number];
+  content: React.JSX.Element | string;
 }
 
 export type Options = BaseWindowOptions;
-
-export type Position = [number, number];
-export type Size = [number, number];
 
 export type WindowHandler = {
   window: unknown;

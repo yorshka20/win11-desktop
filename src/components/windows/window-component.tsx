@@ -1,39 +1,81 @@
-import { useEffect, useState } from 'react';
+import {
+  CloseOutlined,
+  CropSquareOutlined,
+  Minimize,
+} from '@mui/icons-material';
+import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+import Draggable, { type DraggableEventHandler } from 'react-draggable';
 
 import { store } from '../../context/store';
 import { useWindowContext } from '../../hooks';
-import type { Options, Position, Size, WindowType } from './interface';
+import type { Options, WindowType } from './interface';
+import './style.less';
 
-interface WindowComponentProps {
-  title: string;
-  position: Position;
-  size: Size;
-  zIndex: number;
-  content?: string;
+interface WindowComponentProps extends Options {
+  //
 }
 
 function WindowComponent({
   title,
-  position,
+  position: pos,
   zIndex,
   size,
   content = '',
 }: WindowComponentProps) {
+  const headerRef = useRef<HTMLHeadElement>(null);
+
+  const [position, setPosition] = useState<{ x: number; y: number }>({
+    x: pos[0],
+    y: pos[1],
+  });
+
+  // const handleStart = (e) => {
+  //   // console.log('start', e);
+  // };
+  // const handleDrag = (e) => {
+  //   // console.log('drag', e);
+  // };
+  const handleStop: DraggableEventHandler = (_, data) => {
+    setPosition({ x: data.x, y: data.y });
+  };
+
   return (
-    <div
-      style={{
-        width: size[0],
-        height: size[1],
-        top: position[1],
-        left: position[0],
-        zIndex,
-      }}
-      className="flex window-component-container"
+    <Draggable
+      axis="both"
+      handle=".window-header"
+      defaultPosition={{ x: 0, y: 0 }}
+      position={position}
+      grid={[5, 5]}
+      scale={1}
+      // onStart={handleStart}
+      // onDrag={handleDrag}
+      onStop={handleStop}
     >
-      {title}
-      <div>{content}</div>
-    </div>
+      <div
+        style={{
+          width: size[0],
+          height: size[1],
+          zIndex,
+        }}
+        title={title}
+        className="flex flex-col window-component-container"
+      >
+        <header
+          ref={headerRef}
+          className="window-header flex flex-row justify-between items-center w-full"
+        >
+          <div className="tabs"></div>
+          <div className="buttons flex flex-row justify-between items-center">
+            <Minimize className="icon min" />
+            <CropSquareOutlined className="icon max" />
+            <CloseOutlined className="icon close" />
+          </div>
+        </header>
+        <div className="window-toolbar w-full">1111</div>
+        <div className="window-content flex-1">{content}</div>
+      </div>
+    </Draggable>
   );
 }
 

@@ -25,15 +25,14 @@ export function TaskBar({ buttons }: Props) {
   }, [dispatcher]);
 
   const handleSearch = useCallback(() => {
-    const genNumber = () => Math.random() * 1000;
     const handler = windowOpener('Explorer', {
-      size: [genNumber(), genNumber()],
-      position: [genNumber(), genNumber()],
+      size: [600, 400],
+      position: [200, 100],
       title: 'search window',
       reuse: false,
-      zIndex: genNumber(),
-      content: Math.round(Math.random() * 100),
-    } as any);
+      zIndex: 10,
+      content: 'window content',
+    });
 
     console.log('handler', handler);
   }, []);

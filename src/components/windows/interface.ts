@@ -2,8 +2,6 @@ import React from 'react';
 
 import type { Position } from '../../types';
 
-export type WindowType = 'Explorer' | 'Setting' | 'Image';
-
 interface BaseWindowOptions {
   reuse: boolean;
   id: string;

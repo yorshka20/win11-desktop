@@ -1,27 +1,31 @@
 import React from 'react';
 
-import type { Options, WindowType } from './interface';
-import { createWindow } from './window-component';
-
-// let desktopContainer: HTMLDivElement;
-
-// function getDesktopContainer() {
-//   if (desktopContainer) {
-//     return desktopContainer;
-//   }
-
-//   const container = document.getElementById(
-//     'desktop-window-container',
-//   ) as HTMLDivElement;
-//   desktopContainer = container;
-//   return container;
-// }
+import type { WindowType } from '../../types';
+import { createExplorerWindow } from './explorer';
+import type { Options } from './interface';
 
 export function windowOpener(
   windowType: WindowType,
   options: Options,
 ): React.JSX.Element {
-  const window = createWindow(windowType, options);
+  let window: React.JSX.Element;
+
+  switch (windowType) {
+    case 'Explorer':
+      window = createExplorerWindow(windowType, options);
+      break;
+    case 'Setting': {
+      window = createExplorerWindow(windowType, options);
+      break;
+    }
+    case 'Image': {
+      window = createExplorerWindow(windowType, options);
+      break;
+    }
+    default:
+      window = createExplorerWindow(windowType, options);
+      break;
+  }
 
   return window;
 }

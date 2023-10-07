@@ -4,14 +4,14 @@ import './style.less';
 export function ButtonWrapper({
   children,
   className = '',
-  onclick = noop,
+  onClick = noop,
 }: {
   children: React.JSX.Element;
   className?: string;
-  onclick?: () => void;
+  onClick?: () => void;
 }) {
   return (
-    <div onClick={onclick} className={`common-button-wrapper ${className}`}>
+    <div onClick={onClick} className={`common-button-wrapper ${className}`}>
       {children}
     </div>
   );

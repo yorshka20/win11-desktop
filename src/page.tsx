@@ -1,24 +1,6 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
-import { WindowContextProvider } from './context/context-provider';
 import { useContextMenu, useDesktopSelection } from './hooks';
-
-interface WindowContainerProps {
-  children: React.JSX.Element | React.JSX.Element[];
-}
-
-export function WindowContainer({ children }: WindowContainerProps) {
-  return (
-    <WindowContextProvider>
-      <div
-        id="window-container"
-        className="flex min-w-full justify-between min-h-screen min-w-screen flex-col"
-      >
-        {children}
-      </div>
-    </WindowContextProvider>
-  );
-}
 
 export interface DesktopItem {
   name: string;
@@ -41,7 +23,11 @@ export function DesktopContainer({ desktopConfig }: DesktopContainerProps) {
   }, [selectionArea]);
 
   return (
-    <div ref={desktopRef} className="flex-1 flex flex-col desktop-container">
+    <div
+      ref={desktopRef}
+      id="desktop"
+      className="flex-1 flex flex-col desktop-container"
+    >
       {desktopConfig.map((c, index) => (
         <span key={index}>{c.name}</span>
       ))}

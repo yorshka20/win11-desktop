@@ -6,15 +6,15 @@ import './style.less';
 interface Props {
   icon: string | React.FC;
   name: string;
-  onclick?: () => void;
+  onClick?: () => void;
 }
 
-export function TaskBarButton({ icon, name, onclick }: Props) {
+export function TaskBarButton({ icon, name, onClick: onClick }: Props) {
   name;
   const Icon = icon;
   return (
     <ButtonWrapper
-      onclick={onclick}
+      onClick={onClick}
       className="taskbar-button flex items-center justify-center"
     >
       {typeof Icon === 'string' ? <img src={Icon} /> : <Icon />}

@@ -33,7 +33,7 @@ export function TaskBar({ buttons }: Props) {
 
         <div className="flex flex-row justify-start item-center">
           <TaskBarButton
-            onclick={handleClickStart}
+            onClick={handleClickStart}
             name="start"
             icon={WinIcon}
           />

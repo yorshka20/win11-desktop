@@ -20,13 +20,13 @@ function dispatcher(
   console.log('command', command, value);
   switch (command) {
     case 'display-start-menu': {
-      const state = (value ?? store.getStateValue('showStartMenu')) as boolean;
+      const state = (value ?? !store.getStateValue('showStartMenu')) as boolean;
       store.updateState('showStartMenu', state);
       break;
     }
     case 'display-context-menu': {
       const state = (value ??
-        store.getStateValue('showContextMenu')) as boolean;
+        !store.getStateValue('showContextMenu')) as boolean;
       store.updateState('showContextMenu', state);
       break;
     }

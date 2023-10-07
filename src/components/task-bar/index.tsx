@@ -95,6 +95,7 @@ export function TaskBar({ buttons }: Props) {
           <TaskBarButton
             onClick={handleClickStart}
             name="start"
+            id={'win-button'}
             icon={WinIcon}
           />
           <TaskBarButton

@@ -14,6 +14,7 @@ import trashBinEmptyIcon from '../assets/trash-bin-empty.ico';
 import trashBinFullIcon from '../assets/trash-bin-full.ico';
 import { ContextMenuItemConfig } from '../components/context-menu';
 import { type TaskbarConfigItem } from '../components/task-bar';
+import type { WindowType } from '../types';
 
 export const taskbarButtonsConfig: TaskbarConfigItem[] = [
   {
@@ -43,6 +44,7 @@ interface IconConfig {
   name: string;
   id: string;
   grid: [number, number];
+  windowType: WindowType;
 }
 
 export const desktopIconConfig: IconConfig[] = [
@@ -51,18 +53,21 @@ export const desktopIconConfig: IconConfig[] = [
     icon: trashBinEmptyIcon,
     id: 'trash-empty',
     grid: [0, 0],
+    windowType: 'Explorer',
   },
   {
     name: 'trash-bin-full',
     icon: trashBinFullIcon,
     id: 'trash-full',
     grid: [0, 1],
+    windowType: 'Explorer',
   },
   {
     name: 'home',
     icon: Settings,
     id: 'home',
     grid: [0, 2],
+    windowType: 'Setting',
   },
 ];
 

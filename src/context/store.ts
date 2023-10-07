@@ -73,3 +73,7 @@ export const store = new ContextStore({
   showContextMenu: false,
   showSystemPreference: false,
 });
+
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+window.store = store;

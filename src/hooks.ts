@@ -145,21 +145,24 @@ export function useDesktopSelection(ref: React.RefObject<HTMLDivElement>) {
 }
 
 export function useClickOutside(
-  target: HTMLElement | string | null,
+  targets: (HTMLElement | string | null)[],
   callback: () => void,
 ) {
   useEffect(() => {
-    if (!target) {
+    if (!targets.length) {
       return;
     }
 
-    const targetElement =
+    const nodeList = targets.map((target) =>
       typeof target === 'string'
-        ? document.getElementsByClassName(target)
-        : [target];
+        ? target[0] === '#'
+          ? document.getElementById(target.split('#')[1])
+          : document.getElementsByClassName(target)
+        : target,
+    ) as HTMLElement[];
 
     function handler(e: MouseEvent) {
-      for (const t of targetElement) {
+      for (const t of nodeList) {
         if (t.contains(e.target as Node)) {
           return;
         }
@@ -172,7 +175,7 @@ export function useClickOutside(
     return () => {
       window.removeEventListener('mousedown', handler);
     };
-  }, [target, callback]);
+  }, [targets, callback]);
 }
 
 type EventListenerPair = {

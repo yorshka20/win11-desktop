@@ -5,14 +5,16 @@ import { store } from './store';
 export interface WindowContextType {
   theme: 'light' | 'dark';
   dispatcher: typeof dispatcher;
+  desktopContainer: HTMLDivElement;
 }
 
 function dispatcher(command: 'trigger-start-menu'): void;
 function dispatcher(command: 'display-start-menu', value: boolean): void;
 function dispatcher(command: 'trigger-context-menu'): void;
 function dispatcher(command: 'display-context-menu', value: boolean): void;
+function dispatcher(command: 'create-window', value: any): void;
 function dispatcher(command: string, value?: boolean | string) {
-  console.log('command', command, value);
+  console.log('command', command, value, store.getValue());
   switch (command) {
     case 'trigger-theme': {
       // const state = store.getStateValue('theme');
@@ -33,7 +35,11 @@ function dispatcher(command: string, value?: boolean | string) {
       store.updateState('showContextMenu', !state);
       break;
     }
-    case '': {
+    case 'create-window': {
+      store.dispatchEvent({
+        name: 'create-window',
+        value,
+      });
       break;
     }
 
@@ -45,6 +51,7 @@ function dispatcher(command: string, value?: boolean | string) {
 const defaultContext: WindowContextType = {
   theme: 'light',
   dispatcher,
+  desktopContainer: {} as HTMLDivElement,
 };
 
 export function makeContextValue() {

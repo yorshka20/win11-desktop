@@ -11,8 +11,10 @@ import {
 
 import trashBinEmptyIcon from '../assets/trash-bin-empty.ico';
 import trashBinFullIcon from '../assets/trash-bin-full.ico';
+import { ContextMenuItemConfig } from '../components/context-menu';
+import { type TaskbarConfigItem } from '../components/task-bar';
 
-export const taskbarButtonsConfig = [
+export const taskbarButtonsConfig: TaskbarConfigItem[] = [
   {
     name: 'start',
     icon: SearchOutlined,
@@ -46,21 +48,24 @@ export const desktopIconConfig = [
   },
 ];
 
-export const contextMenuConfig = [
+export const contextMenuConfig: ContextMenuItemConfig[] = [
   {
     name: 'copy',
     key: 'copy',
     icon: CopyAllOutlined,
+    shortcut: 'ctrl+c',
   },
   {
     name: 'paste',
     key: 'paste',
     icon: ContentPasteOutlined,
+    shortcut: 'ctrl+v',
   },
   {
     name: 'cut',
     key: 'cut',
     icon: ContentCutOutlined,
+    shortcut: 'ctrl+x',
   },
   { key: 'divider-1', isDivider: true },
   {
@@ -84,5 +89,6 @@ export const contextMenuConfig = [
     name: 'test',
     key: 'test1',
     icon: ContentPasteOutlined,
+    shortcut: 'shift+f10',
   },
 ];

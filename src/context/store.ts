@@ -1,4 +1,10 @@
-import { BehaviorSubject, type Observable, type Subscription, map } from 'rxjs';
+import {
+  BehaviorSubject,
+  type Observable,
+  Subject,
+  type Subscription,
+  map,
+} from 'rxjs';
 
 export interface ContextStoreState {
   window: string;
@@ -15,8 +21,15 @@ type StateSubscribeCallback<T extends keyof ContextStoreState> = (
   v: ContextStoreState[T],
 ) => void;
 
+type PipeEvent = {
+  name: string;
+  value: any;
+};
+
 export class ContextStore {
   private state$: BehaviorSubject<ContextStoreState>;
+
+  private event$: Subject<PipeEvent> = new Subject();
 
   private get value() {
     return this.state$.value;
@@ -29,6 +42,10 @@ export class ContextStore {
     setInterval(() => {
       this.updateState('time', Date.now());
     }, 1000);
+  }
+
+  getValue() {
+    return this.value;
   }
 
   updateState<T extends ContextKey>(key: T, value: ContextValue<T>) {
@@ -54,6 +71,14 @@ export class ContextStore {
   ): Subscription {
     const subscription = this.getState$(key).subscribe(callback);
     return subscription;
+  }
+
+  getEventPipe() {
+    return this.event$;
+  }
+
+  dispatchEvent(event: PipeEvent) {
+    this.event$.next(event);
   }
 }
 

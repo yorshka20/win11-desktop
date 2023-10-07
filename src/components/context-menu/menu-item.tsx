@@ -37,8 +37,8 @@ interface ContextMenuItemConfigBase {
 }
 
 interface ContextMenuItemConfigExtends {
-  children: React.JSX.Element;
-  render: (config: ContextMenuItemConfig) => React.JSX.Element;
+  children?: React.JSX.Element;
+  render?: (config: ContextMenuItemConfig) => React.JSX.Element;
 }
 
 export type ContextMenuItemConfig = ContextMenuItemConfigBase &
@@ -72,8 +72,10 @@ export function buildFromConfig(config: ContextMenuItemConfig) {
           ) : (
             <Icon className="menu-item-icon" />
           ))}
-        <span className={`menu-item ${!Icon && 'no-icon'}`}>{name}</span>
-        {shortcut && <span className="shortcut">{shortcut}</span>}
+        <div className="flex flex-row justify-between items-center w-full">
+          <span className={`menu-item ${!Icon && 'no-icon'}`}>{name}</span>
+          <span className="shortcut">{shortcut || ''}</span>
+        </div>
       </>
     </ContextMenuItemWrapper>
   );

@@ -1,0 +1,36 @@
+.context-menu-container {
+  position: fixed;
+
+  min-width: 200px;
+
+  border-radius: 6px;
+  border: 1px solid #999;
+
+  background-color: #dfe6f6;
+  opacity: 0.9;
+
+  user-select: none;
+
+  .context-menu-item {
+    min-height: 30px;
+
+    box-sizing: border-box;
+    padding: 8px 10px;
+
+    .menu-item {
+      display: inline-block;
+      font-size: 13px;
+
+      &.no-icon {
+        margin-left: 16px;
+      }
+    }
+
+    .menu-item-icon {
+      width: 12px;
+      height: 12px;
+
+      margin-right: 4px;
+    }
+  }
+}

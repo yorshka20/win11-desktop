@@ -1,5 +1,9 @@
 import {
   AddBoxOutlined,
+  ContentCutOutlined,
+  ContentPasteOutlined,
+  CopyAllOutlined,
+  OpenWithOutlined,
   SafetyCheck,
   SearchOutlined,
   Settings,
@@ -39,5 +43,46 @@ export const desktopIconConfig = [
   {
     name: 'trash-bin-full',
     src: trashBinFullIcon,
+  },
+];
+
+export const contextMenuConfig = [
+  {
+    name: 'copy',
+    key: 'copy',
+    icon: CopyAllOutlined,
+  },
+  {
+    name: 'paste',
+    key: 'paste',
+    icon: ContentPasteOutlined,
+  },
+  {
+    name: 'cut',
+    key: 'cut',
+    icon: ContentCutOutlined,
+  },
+  { key: 'divider-1', isDivider: true },
+  {
+    name: 'open',
+    key: 'open',
+    icon: OpenWithOutlined,
+  },
+  {
+    name: 'open',
+    key: 'open1',
+  },
+  {
+    name: 'adasd',
+    key: 'open2',
+  },
+  {
+    key: 'divider-2',
+    isDivider: true,
+  },
+  {
+    name: 'test',
+    key: 'test1',
+    icon: ContentPasteOutlined,
   },
 ];

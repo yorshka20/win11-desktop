@@ -10,7 +10,7 @@ export function ButtonWrapper({
 }: {
   children: React.JSX.Element;
   className?: string;
-  title: string;
+  title?: string;
   id?: string;
   onClick?: () => void;
 }) {

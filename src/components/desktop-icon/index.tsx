@@ -11,6 +11,7 @@ interface Props {
   id: string;
   icon: IconType;
   grid: [number, number];
+  shadowText?: boolean;
   onClick?: (id: string) => void;
   onDoubleClick?: (id: string) => void;
 }
@@ -20,6 +21,7 @@ export function DesktopIconWrapper({
   id,
   grid,
   icon: Icon,
+  shadowText,
   onClick = noop,
 }: Props) {
   const [focused] = useState(false);
@@ -67,7 +69,7 @@ export function DesktopIconWrapper({
         ) : (
           <Icon className={'icon'} />
         )}
-        <p className="name">{name}</p>
+        <p className={`name ${shadowText ? 'shadow' : ''}`}>{name}</p>
       </div>
     </Draggable>
   );

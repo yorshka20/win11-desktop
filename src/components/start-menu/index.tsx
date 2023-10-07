@@ -1,10 +1,16 @@
-import { FileCopy, PowerOffOutlined, Settings } from '@mui/icons-material';
-import { Input } from '@mui/material';
+import {
+  FileCopy,
+  PowerOffOutlined,
+  SearchOutlined,
+  Settings,
+} from '@mui/icons-material';
 import { useRef } from 'react';
 
+import { desktopIconConfig } from '../../configs/desktop-config';
 import { store } from '../../context/store';
 import { useClickOutside, useContextState } from '../../hooks';
 import { ButtonWrapper } from '../buttons/button-wrapper';
+import { DesktopIconWrapper } from '../desktop-icon';
 import './style.less';
 
 export function StartMenu() {
@@ -20,11 +26,28 @@ export function StartMenu() {
     <div
       style={{ visibility: show ? 'visible' : 'hidden' }}
       ref={ref}
-      className="flex flex-col justify-between items-start start-menu-container"
+      className="flex flex-col justify-between items-start  start-menu-container"
     >
-      <div className="start-menu-content flex flex-col flex-1">
-        <Input />
-        <div>dsasd</div>
+      <div className="start-menu-content w-full flex flex-col flex-1">
+        <div className="flex justify-start items-center w-full input-wrapper">
+          <SearchOutlined />
+          <span>Search for applications, settings and documents</span>
+        </div>
+        <div className="pin-header w-full flex justify-between items-center">
+          <span>Pinned Apps</span>
+          <span className="all-apps">All Apps {'>'}</span>
+        </div>
+        <div className="pin-block w-full flex flex-row flex-wrap justify-start items-center">
+          {desktopIconConfig.map((icon, index) => (
+            <DesktopIconWrapper
+              key={index}
+              icon={icon.icon}
+              name={icon.name}
+              id={icon.id}
+              grid={icon.grid}
+            />
+          ))}
+        </div>
       </div>
       <div className="w-full flex flex-row justify-between items-center start-menu-footer">
         <ButtonWrapper className="profile" title="profile">

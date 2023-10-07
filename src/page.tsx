@@ -57,6 +57,7 @@ export function DesktopContainer({ desktopConfig }: DesktopContainerProps) {
       {/* desktop icons */}
       {desktopIconConfig.map((c, index) => (
         <DesktopIconWrapper
+          shadowText
           key={index}
           grid={c.grid}
           id={c.id}

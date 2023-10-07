@@ -1,8 +1,10 @@
+import { FileCopy, PowerOffOutlined, Settings } from '@mui/icons-material';
 import { Input } from '@mui/material';
 import { useRef } from 'react';
 
 import { store } from '../../context/store';
 import { useClickOutside, useContextState } from '../../hooks';
+import { ButtonWrapper } from '../buttons/button-wrapper';
 import './style.less';
 
 export function StartMenu() {
@@ -10,7 +12,7 @@ export function StartMenu() {
 
   const ref = useRef<HTMLDivElement>(null);
 
-  useClickOutside(ref.current, () => {
+  useClickOutside([ref.current, '#win-button'], () => {
     store.updateState('showStartMenu', false);
   });
 
@@ -25,7 +27,23 @@ export function StartMenu() {
         <div>dsasd</div>
       </div>
       <div className="w-full flex flex-row justify-between items-center start-menu-footer">
-        1 2
+        <ButtonWrapper className="profile" title="profile">
+          <div className="profile-content flex flex-row justify-start items-center">
+            <Settings />
+            <span className="name text-center">Yorshka</span>
+          </div>
+        </ButtonWrapper>
+        <div className="flex flex-row justify-center items-center footer-icons">
+          <ButtonWrapper title="explorer">
+            <FileCopy className="footer-icon" />
+          </ButtonWrapper>
+          <ButtonWrapper title="setting">
+            <Settings className="footer-icon" />
+          </ButtonWrapper>
+          <ButtonWrapper title="power">
+            <PowerOffOutlined className="footer-icon" />
+          </ButtonWrapper>
+        </div>
       </div>
     </div>
   );

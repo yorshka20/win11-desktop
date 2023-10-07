@@ -3,12 +3,12 @@ import {
   CropSquareOutlined,
   Minimize,
 } from '@mui/icons-material';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import Draggable, { type DraggableEventHandler } from 'react-draggable';
 
-import { PipeEvent, store } from '../../context/store';
-import { useWindowContext } from '../../hooks';
+import { useEventListener, useWindowContext } from '../../hooks';
+import { Size } from '../../types';
 import type { Options, WindowType } from './interface';
 import './style.less';
 
@@ -21,16 +21,17 @@ function WindowComponent({
   id,
   position: pos,
   zIndex,
-  size,
+  size: si,
   content = '',
 }: WindowComponentProps) {
   const headerRef = useRef<HTMLHeadElement>(null);
-  const { windowManager } = useWindowContext();
+  const { desktopContainer, windowManager } = useWindowContext();
 
   const [position, setPosition] = useState<{ x: number; y: number }>({
     x: pos[0],
     y: pos[1],
   });
+  const [size, setSize] = useState<Size>(si);
 
   function getWindowHandler() {
     return windowManager.getWindow(id);
@@ -39,25 +40,57 @@ function WindowComponent({
   // const handleStart = (e) => {
   //   // console.log('start', e);
   // };
-  // const handleDrag = (e) => {
-  //   // console.log('drag', e);
-  // };
+  const handleDrag: DraggableEventHandler = (e, data) => {
+    // console.log('drag', e, data);
+    const isMaximized = windowManager.getWindowState(id, 'isMaximized');
+    if (!isMaximized) return;
+    if (data.y > 50) {
+      windowManager.updateWindowState(id, 'isMaximized', false);
+      setSize([600, 400]);
+
+      const { width } = desktopContainer.getBoundingClientRect();
+      const { clientX } = e as MouseEvent;
+      setPosition({
+        x: Math.round(clientX - (clientX / width) * 600),
+        y: data.y,
+      });
+    }
+  };
+
   const handleStop: DraggableEventHandler = (_, data) => {
     setPosition({ x: data.x, y: data.y });
   };
 
+  function handleFocusWindow() {
+    windowManager.updateWindowState(id, 'isActive', true);
+  }
+
   function handleMinimize() {
     const handler = getWindowHandler();
     handler.minimize();
+    windowManager.updateWindowState(id, 'isMinimized', true);
   }
   function handleMaximize() {
     const handler = getWindowHandler();
     handler.maximize();
+    windowManager.updateWindowState(id, 'isMaximized', true);
   }
   function handleClose() {
     const handler = getWindowHandler();
     handler.close();
+    windowManager.updateWindowState(id, 'isActive', false);
   }
+
+  useEventListener([
+    {
+      event: 'maximize-window',
+      handler() {
+        const { width, height } = desktopContainer.getBoundingClientRect();
+        setSize([width, height]);
+        setPosition({ x: 0, y: 0 });
+      },
+    },
+  ]);
 
   return (
     <Draggable
@@ -68,7 +101,7 @@ function WindowComponent({
       grid={[5, 5]}
       scale={1}
       // onStart={handleStart}
-      // onDrag={handleDrag}
+      onDrag={handleDrag}
       onStop={handleStop}
     >
       <div
@@ -77,6 +110,7 @@ function WindowComponent({
           height: size[1],
           zIndex,
         }}
+        onClick={handleFocusWindow}
         title={title}
         className="flex flex-col window-component-container"
       >
@@ -109,36 +143,22 @@ export function WindowComponentContainer() {
 
   const [windows, setWindows] = useState<React.JSX.Element[]>([]);
 
-  useEffect(() => {
-    const event$ = store.getEventPipe();
-    const handler = ({ name, value }: PipeEvent) => {
-      console.log('name,', name, value);
-      const handler = windowManager.getWindow(value.id);
-      switch (name) {
-        case 'open-window': {
-          setWindows((a) => [...a, handler.window]);
-          break;
-        }
-        case 'close-window': {
-          setWindows((w) => {
-            const ww = w.filter((i) => i !== handler.window);
-            return ww;
-          });
-          break;
-        }
-        default:
-          break;
-      }
-    };
-
-    const subscription = event$.subscribe((event) => {
-      handler(event);
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, [windowManager]);
+  useEventListener([
+    {
+      event: 'close-window',
+      handler(e) {
+        const handler = windowManager.getWindow(e.value.id);
+        setWindows((w) => w.filter((i) => i !== handler.window));
+      },
+    },
+    {
+      event: 'open-window',
+      handler(e) {
+        const handler = windowManager.getWindow(e.value.id);
+        setWindows((a) => [...a, handler.window]);
+      },
+    },
+  ]);
 
   return <>{windows.map((child) => createPortal(child, desktopContainer))}</>;
 }

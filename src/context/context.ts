@@ -1,44 +1,33 @@
 import React from 'react';
+import { Subject } from 'rxjs';
 
-import { WindowHandler } from '../components/windows/interface';
-import { Options } from '../components/windows/interface';
-import { store } from './store';
+import { Options, WindowHandler } from '../components/windows/interface';
+import { PipeEvent, store } from './store';
 
 export interface WindowContextType {
-  theme: 'light' | 'dark';
   dispatcher: typeof dispatcher;
   windowManager: WindowManager;
+  event$: Subject<PipeEvent>;
   desktopContainer: HTMLDivElement;
 }
 
-function dispatcher(command: 'trigger-start-menu'): void;
-function dispatcher(command: 'display-start-menu', value: boolean): void;
-function dispatcher(command: 'trigger-context-menu'): void;
-function dispatcher(command: 'display-context-menu', value: boolean): void;
-// function dispatcher(command: 'open-window', value: Partial<Options>): void;
+function dispatcher(command: 'display-start-menu', value?: boolean): void;
+function dispatcher(command: 'display-context-menu', value?: boolean): void;
 function dispatcher(
   command: string,
   value?: boolean | string | Partial<Options>,
 ) {
-  console.log('command', command, value, store.getValue());
+  console.log('command', command, value);
   switch (command) {
-    case 'trigger-theme': {
-      // const state = store.getStateValue('theme');
-      // store.updateState('theme', !state);
-      break;
-    }
-    case 'trigger-start-menu': {
-      const state = store.getStateValue('showStartMenu');
-      store.updateState('showStartMenu', !state);
-      break;
-    }
     case 'display-start-menu': {
-      store.updateState('showStartMenu', value as boolean);
+      const state = (value ?? store.getStateValue('showStartMenu')) as boolean;
+      store.updateState('showStartMenu', state);
       break;
     }
-    case 'trigger-context-menu': {
-      const state = store.getStateValue('showContextMenu');
-      store.updateState('showContextMenu', !state);
+    case 'display-context-menu': {
+      const state = (value ??
+        store.getStateValue('showContextMenu')) as boolean;
+      store.updateState('showContextMenu', state);
       break;
     }
 
@@ -47,28 +36,61 @@ function dispatcher(
   }
 }
 
+type WindowState = {
+  isMaximized: boolean;
+  isMinimized: boolean;
+  isActive: boolean;
+  data: Options;
+};
+
 class WindowManager {
   private windowHandleMap: Record<string, WindowHandler>;
 
+  private windowStateMap: Record<string, WindowState>;
+
   constructor() {
     this.windowHandleMap = {};
+    this.windowStateMap = {};
   }
 
   addWindow(id: string, window: WindowHandler) {
     this.windowHandleMap[id] = window;
+    this.windowStateMap[id] = {
+      isActive: false,
+      isMaximized: false,
+      isMinimized: false,
+      data: window.data,
+    };
   }
 
   getWindow(id: string) {
     return this.windowHandleMap[id];
   }
 
+  getWindowState<T extends keyof WindowState>(
+    id: string,
+    key: T,
+  ): WindowState[T] {
+    return this.windowStateMap[id][key];
+  }
+
+  updateWindowState<T extends keyof WindowState>(
+    id: string,
+    key: T,
+    value: WindowState[T],
+  ) {
+    this.windowStateMap[id][key] = value;
+  }
+
   maximizeWindow(id: string) {
     const window = this.getWindow(id);
     window.maximize();
+    this.updateWindowState(id, 'isMaximized', true);
   }
   minimizeWindow(id: string) {
     const window = this.getWindow(id);
     window.minimize();
+    this.updateWindowState(id, 'isMinimized', true);
   }
   closeWindow(id: string) {
     const window = this.getWindow(id);
@@ -77,8 +99,8 @@ class WindowManager {
 }
 
 const defaultContext: WindowContextType = {
-  theme: 'light',
   dispatcher,
+  event$: new Subject<PipeEvent>(),
   windowManager: new WindowManager(),
   desktopContainer: {} as HTMLDivElement,
 };

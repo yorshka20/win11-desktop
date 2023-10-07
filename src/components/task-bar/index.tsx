@@ -1,12 +1,11 @@
 import { SearchOutlined } from '@mui/icons-material';
 import React, { useCallback } from 'react';
 
-import { store } from '../../context/store';
 import { useWindowContext } from '../../hooks';
 import { TaskBarButton } from '../task-bar-icon';
 import { TimeBlock } from '../time';
 import { windowOpener } from '../windows/create-window';
-import { type WindowHandler } from '../windows/interface';
+import { Options, type WindowHandler } from '../windows/interface';
 import './style.less';
 import { WinIcon } from './win-icon';
 
@@ -20,15 +19,15 @@ export interface TaskbarConfigItem {
 }
 
 export function TaskBar({ buttons }: Props) {
-  const { dispatcher, windowManager } = useWindowContext();
+  const { dispatcher, windowManager, event$ } = useWindowContext();
 
   const handleClickStart = useCallback(() => {
-    dispatcher('trigger-start-menu');
+    dispatcher('display-start-menu');
   }, [dispatcher]);
 
   const handleSearch = useCallback(() => {
     const id = 'searchWindow';
-    const window = windowOpener('Explorer', {
+    const options: Options = {
       id,
       size: [600, 400],
       position: [200, 100],
@@ -36,11 +35,12 @@ export function TaskBar({ buttons }: Props) {
       reuse: false,
       zIndex: 10,
       content: 'window content',
-    });
+    };
+    const window = windowOpener('Explorer', options);
 
     const handler: WindowHandler = {
       close() {
-        store.getEventPipe().next({
+        event$.next({
           name: 'close-window',
           value: {
             id,
@@ -51,7 +51,7 @@ export function TaskBar({ buttons }: Props) {
         console.log('move window', pos);
       },
       maximize() {
-        store.getEventPipe().next({
+        event$.next({
           name: 'maximize-window',
           value: {
             id,
@@ -59,7 +59,7 @@ export function TaskBar({ buttons }: Props) {
         });
       },
       minimize() {
-        store.getEventPipe().next({
+        event$.next({
           name: 'minimize-window',
           value: {
             id,
@@ -67,13 +67,14 @@ export function TaskBar({ buttons }: Props) {
         });
       },
       window,
+      data: options,
     };
 
     console.log('windowOpener', window, handler);
 
     windowManager.addWindow('searchWindow', handler);
 
-    store.dispatchEvent({
+    event$.next({
       name: 'open-window',
       value: {
         id: 'searchWindow',
@@ -81,7 +82,7 @@ export function TaskBar({ buttons }: Props) {
     });
 
     console.log('handler', handler);
-  }, [windowManager]);
+  }, [windowManager, event$]);
 
   return (
     <div className="taskbar-container w-full">

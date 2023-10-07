@@ -17,9 +17,10 @@ interface BaseWindowOptions {
 export type Options = BaseWindowOptions;
 
 export type WindowHandler = {
-  window: React.JSX.Element;
   close: () => void;
   move: (pos: Position) => void;
   maximize: () => void;
   minimize: () => void;
+  window: React.JSX.Element;
+  data: Options;
 };

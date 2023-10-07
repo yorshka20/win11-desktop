@@ -9,7 +9,7 @@ export interface ContextStoreState {
 
 type ContextKey = keyof ContextStoreState;
 
-type ContextValue = ContextStoreState[ContextKey];
+type ContextValue<T extends ContextKey> = ContextStoreState[T];
 
 type StateSubscribeCallback<T extends keyof ContextStoreState> = (
   v: ContextStoreState[T],
@@ -17,6 +17,10 @@ type StateSubscribeCallback<T extends keyof ContextStoreState> = (
 
 export class ContextStore {
   private state$: BehaviorSubject<ContextStoreState>;
+
+  private get value() {
+    return this.state$.value;
+  }
 
   constructor(defaultState: ContextStoreState) {
     this.state$ = new BehaviorSubject(defaultState);
@@ -27,20 +31,20 @@ export class ContextStore {
     }, 1000);
   }
 
-  updateState<T extends ContextKey>(key: T, value: ContextValue) {
+  updateState<T extends ContextKey>(key: T, value: ContextValue<T>) {
     this.state$.next({
-      ...this.getState(),
+      ...this.value,
       [key]: value,
     });
   }
 
-  getState() {
-    return this.state$.getValue();
+  getStateValue<T extends ContextKey>(key: T): ContextValue<T> {
+    return this.state$.value[key];
   }
 
-  getState$<T extends keyof ContextStoreState>(
+  private getState$<T extends keyof ContextStoreState>(
     key: T,
-  ): Observable<ContextValue> {
+  ): Observable<ContextStoreState[T]> {
     return this.state$.pipe(map((i) => i[key]));
   }
 
@@ -48,9 +52,7 @@ export class ContextStore {
     key: T,
     callback: StateSubscribeCallback<T>,
   ): Subscription {
-    const subscription = this.state$
-      .pipe(map((i) => i[key]))
-      .subscribe(callback);
+    const subscription = this.getState$(key).subscribe(callback);
     return subscription;
   }
 }

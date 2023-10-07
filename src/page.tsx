@@ -1,6 +1,13 @@
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 
-import { useContextMenu, useDesktopSelection } from './hooks';
+import {
+  ContextMenu,
+  type ContextMenuItemConfig,
+  buildFromConfig,
+  useContextMenu,
+} from './components/context-menu';
+import { contextMenuConfig } from './configs/desktop-config';
+import { useContextState, useDesktopSelection } from './hooks';
 
 export interface DesktopItem {
   name: string;
@@ -16,7 +23,9 @@ export function DesktopContainer({ desktopConfig }: DesktopContainerProps) {
 
   const selectionArea = useDesktopSelection(desktopRef);
 
-  useContextMenu();
+  const position = useContextMenu();
+
+  const showContextMenu = useContextState('showContextMenu');
 
   useEffect(() => {
     // console.log('selectionArea', selectionArea);
@@ -33,7 +42,13 @@ export function DesktopContainer({ desktopConfig }: DesktopContainerProps) {
       ))}
 
       <div id="desktop-selection" className="desktop-selection" />
-      <div id="context-menu" className="context-menu-container"></div>
+      <ContextMenu position={position} show={showContextMenu}>
+        {menuContent(contextMenuConfig as ContextMenuItemConfig[])}
+      </ContextMenu>
     </div>
   );
+}
+
+function menuContent(configs: ContextMenuItemConfig[]): React.JSX.Element {
+  return <>{configs.map((item) => buildFromConfig(item))}</>;
 }

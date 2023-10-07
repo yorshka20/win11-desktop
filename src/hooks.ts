@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 
 import { WindowContext } from './context/context';
-import { type ContextStoreState } from './context/store';
+import { type ContextStoreState, store } from './context/store';
 
 export function useWindowContext() {
   return useContext(WindowContext);
@@ -10,8 +10,7 @@ export function useWindowContext() {
 export function useContextState<T extends keyof ContextStoreState>(
   key: T,
 ): ContextStoreState[T] {
-  const { store } = useWindowContext();
-  const defaultValue = store.getState()[key];
+  const defaultValue = store.getStateValue(key);
   const [state, setState] = useState<ContextStoreState[T]>(defaultValue);
 
   useEffect(() => {
@@ -19,7 +18,7 @@ export function useContextState<T extends keyof ContextStoreState>(
     return () => {
       subscription.unsubscribe();
     };
-  }, [store, key]);
+  }, [key]);
 
   return state;
 }
@@ -123,7 +122,7 @@ export function useDesktopSelection(ref: React.RefObject<HTMLDivElement>) {
         return;
       }
       const ele = e.target as HTMLDivElement;
-      if (ele['className'].includes('context-menu-container')) {
+      if (!ele['className'].includes('desktop-container')) {
         return;
       }
 
@@ -131,6 +130,7 @@ export function useDesktopSelection(ref: React.RefObject<HTMLDivElement>) {
       y = e.clientY;
 
       container.addEventListener('mousemove', handleMouseMove);
+      container.addEventListener('mouseup', handleMouseUp);
     };
 
     container.addEventListener('mousedown', handleMouseDown);
@@ -143,56 +143,33 @@ export function useDesktopSelection(ref: React.RefObject<HTMLDivElement>) {
   return selectionArea;
 }
 
-export function useContextMenu() {
-  const { store } = useWindowContext();
-  const ref = useRef<HTMLDivElement>();
-
+export function useClickOutside(
+  target: HTMLElement | string | null,
+  callback: () => void,
+) {
   useEffect(() => {
-    function getContextMenu() {
-      if (ref.current) {
-        return ref.current;
+    if (!target) {
+      return;
+    }
+
+    const targetElement =
+      typeof target === 'string'
+        ? document.getElementsByClassName(target)
+        : [target];
+
+    function handler(e: MouseEvent) {
+      for (const t of targetElement) {
+        if (t.contains(e.target as Node)) {
+          return;
+        }
       }
-      const target = document.getElementById('context-menu') as HTMLDivElement;
-      ref.current = target;
-      return target;
+      callback();
     }
 
-    function hide() {
-      const menu = getContextMenu();
-      menu.style.visibility = 'hidden';
-
-      store.updateState('showContextMenu', false);
-      window.removeEventListener('click', handleClick);
-    }
-
-    function handleClick(e: MouseEvent) {
-      console.log('e click', e, e.target);
-      const ele = e.target as HTMLDivElement;
-      if (ele['className'].includes('context-menu-container')) {
-        return;
-      }
-
-      hide();
-    }
-
-    function handleContextMenu(e: MouseEvent) {
-      e.preventDefault();
-
-      const menu = getContextMenu();
-
-      menu.style.top = `${e.clientY}px`;
-      menu.style.left = `${e.clientX}px`;
-      menu.style.visibility = 'visible';
-
-      store.updateState('showContextMenu', true);
-
-      window.addEventListener('click', handleClick);
-    }
-
-    window.addEventListener('contextmenu', handleContextMenu);
+    window.addEventListener('mousedown', handler);
 
     return () => {
-      window.removeEventListener('contextmenu', handleContextMenu);
+      window.removeEventListener('mousedown', handler);
     };
-  }, [store]);
+  }, [target, callback]);
 }

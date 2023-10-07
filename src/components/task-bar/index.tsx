@@ -17,12 +17,11 @@ interface TaskbarConfigItem {
 }
 
 export function TaskBar({ buttons }: Props) {
-  const { store } = useWindowContext();
+  const { dispatcher } = useWindowContext();
 
   const handleClickStart = useCallback(() => {
-    const show = store.getState()['showStartMenu'];
-    store.updateState('showStartMenu', !show);
-  }, [store]);
+    dispatcher('trigger-start-menu');
+  }, [dispatcher]);
 
   return (
     <div className="taskbar-container w-full">

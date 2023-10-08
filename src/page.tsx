@@ -55,15 +55,8 @@ export function DesktopContainer({ desktopConfig }: DesktopContainerProps) {
       className="flex-1 flex flex-col flex-wrap justify-start items-start desktop-container"
     >
       {/* desktop icons */}
-      {desktopIconConfig.map((c, index) => (
-        <DesktopIconWrapper
-          shadowText
-          key={index}
-          grid={c.grid}
-          id={c.id}
-          name={c.name}
-          icon={c.icon}
-        />
+      {desktopIconConfig.map((icon, index) => (
+        <DesktopIconWrapper grided shadowText key={index} {...icon} />
       ))}
 
       {/* desktop selections area */}

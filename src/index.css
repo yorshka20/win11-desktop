@@ -75,3 +75,13 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+div {
+  box-sizing: border-box;
+}
+
+img,
+.icon {
+  user-select: none;
+  -webkit-user-drag: none;
+}

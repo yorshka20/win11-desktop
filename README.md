@@ -4,6 +4,10 @@
 
 here: https://win11-desktop-virid.vercel.app/
 
+# Tech Stack
+
+- @mui/joy, @mui/icons-materials
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.

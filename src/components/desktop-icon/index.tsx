@@ -117,6 +117,8 @@ export function DesktopIconWrapper({
     setPosition({ x, y });
   };
 
+  console.log('icon', grid);
+
   return (
     <Draggable
       axis="both"
@@ -141,11 +143,7 @@ export function DesktopIconWrapper({
         hoverBgColor={hoverBgColor}
         selectedBgColor={selectedBgColor}
       >
-        {typeof Icon === 'string' ? (
-          <img src={Icon} className="icon" />
-        ) : (
-          <Icon className={'icon'} />
-        )}
+        {typeof Icon === 'string' ? <img src={Icon} className="icon" /> : Icon}
         <p className={`${shadowText ? 'text-shadow' : ''}`}>{name}</p>
       </Container>
     </Draggable>

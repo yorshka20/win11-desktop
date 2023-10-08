@@ -38,13 +38,13 @@ export function StartMenu() {
           <span className="all-apps">All Apps {'>'}</span>
         </div>
         <div className="pin-block draggable-area w-full flex flex-row flex-wrap justify-start items-center">
-          {desktopIconConfig.map((icon, index) => (
+          {desktopIconConfig.map(({ icon: Icon, name, id, grid }, index) => (
             <DesktopIconWrapper
               key={index}
-              icon={icon.icon}
-              name={icon.name}
-              id={icon.id}
-              grid={icon.grid}
+              icon={<Icon className={'icon'} />}
+              name={name}
+              id={id}
+              grid={grid}
             />
           ))}
         </div>

@@ -7,6 +7,7 @@ import {
   useContextMenu,
 } from './components/context-menu';
 import { DesktopIconWrapper } from './components/desktop-icon';
+import { loadIcons } from './components/icons/internal-icons';
 import { WindowComponentContainer } from './components/windows';
 import { contextMenuConfig, desktopIconConfig } from './configs/desktop-config';
 import {
@@ -23,6 +24,10 @@ export interface DesktopItem {
 interface DesktopContainerProps {
   desktopConfig: DesktopItem[];
 }
+
+const iconMaps = await loadIcons();
+
+console.log(iconMaps);
 
 export function DesktopContainer({ desktopConfig }: DesktopContainerProps) {
   const desktopRef = useRef<HTMLDivElement>(null);
@@ -52,12 +57,43 @@ export function DesktopContainer({ desktopConfig }: DesktopContainerProps) {
     <div
       ref={desktopRef}
       id="desktop"
-      className="flex-1 flex flex-col flex-wrap justify-start items-start desktop-container"
+      className="flex-1 h-full flex flex-col flex-wrap justify-start items-start desktop-container"
     >
       {/* desktop icons */}
-      {desktopIconConfig.map((icon, index) => (
-        <DesktopIconWrapper grided shadowText key={index} {...icon} />
+      {desktopIconConfig.map(({ icon: Icon, grid, name, id }, index) => (
+        <DesktopIconWrapper
+          grided
+          id={id}
+          grid={grid}
+          name={name}
+          shadowText
+          key={index}
+          icon={<Icon className={'icon'} />}
+        />
       ))}
+
+      {Object.keys(iconMaps)
+        .map((iconType, i) =>
+          Object.keys(iconMaps[iconType]).map((name, j) => {
+            const Icon = iconMaps[iconType][name];
+            // console.log('name', [i, j]);
+            return (
+              <DesktopIconWrapper
+                grided
+                grid={[
+                  Math.round(Math.random() * 8),
+                  Math.round(Math.random() * 2),
+                ]}
+                name={name}
+                id={`${iconType}-${name}`}
+                shadowText
+                key={`${i}${j}`}
+                icon={<Icon size={70} />}
+              />
+            );
+          }),
+        )
+        .flat()}
 
       {/* desktop selections area */}
       <div id="desktop-selection" className="desktop-selection" />

@@ -2,6 +2,7 @@ import { SearchOutlined } from '@mui/icons-material';
 import React, { useCallback } from 'react';
 
 import { useWindowContext } from '../../hooks';
+import { ExplorerIcon } from '../icons/internal-icons';
 import { WinIcon } from '../icons/win-icon';
 import { TaskBarButton } from '../task-bar-icon';
 import { TimeBlock } from '../time';
@@ -96,21 +97,21 @@ export function TaskBar({ buttons }: Props) {
             onClick={handleClickStart}
             name="start"
             id={'win-button'}
-            icon={WinIcon}
+            icon={<WinIcon />}
           />
           <TaskBarButton
             onClick={handleSearch}
             name="search"
-            icon={SearchOutlined}
+            icon={<ExplorerIcon />}
           />
 
-          {buttons.map((btn) => (
-            <TaskBarButton name={btn.name} icon={btn.icon} key={btn.name} />
+          {buttons.map(({ name, icon: Icon }) => (
+            <TaskBarButton name={name} icon={<Icon />} key={name} />
           ))}
         </div>
 
         <div className="taskbar-right flex flex-row justify-end items-center">
-          <TaskBarButton name="search" icon={SearchOutlined} />
+          <TaskBarButton name="search" icon={<SearchOutlined />} />
 
           <TimeBlock />
 

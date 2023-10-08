@@ -4,14 +4,18 @@ import { ButtonWrapper } from '../buttons/button-wrapper';
 import './style.less';
 
 interface Props {
-  icon: string | React.FC;
+  icon: string | React.JSX.Element;
   name: string;
   id?: string;
   onClick?: () => void;
 }
 
-export function TaskBarButton({ icon, id, name, onClick: onClick }: Props) {
-  const Icon = icon;
+export function TaskBarButton({
+  icon: Icon,
+  id,
+  name,
+  onClick: onClick,
+}: Props) {
   return (
     <ButtonWrapper
       title={name}
@@ -19,7 +23,7 @@ export function TaskBarButton({ icon, id, name, onClick: onClick }: Props) {
       id={id}
       className="taskbar-button flex items-center justify-center"
     >
-      {typeof Icon === 'string' ? <img src={Icon} /> : <Icon />}
+      {typeof Icon === 'string' ? <img src={Icon} /> : Icon}
     </ButtonWrapper>
   );
 }

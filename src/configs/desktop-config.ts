@@ -10,8 +10,6 @@ import {
 } from '@mui/icons-material';
 import React from 'react';
 
-import trashBinEmptyIcon from '../assets/trash-bin-empty.ico';
-import trashBinFullIcon from '../assets/trash-bin-full.ico';
 import { ContextMenuItemConfig } from '../components/context-menu';
 import { type TaskbarConfigItem } from '../components/task-bar';
 import type { WindowType } from '../types';
@@ -48,20 +46,20 @@ interface IconConfig {
 }
 
 export const desktopIconConfig: IconConfig[] = [
-  {
-    name: 'trash-bin-empty',
-    icon: trashBinEmptyIcon,
-    id: 'trash-empty',
-    grid: [0, 0],
-    windowType: 'Explorer',
-  },
-  {
-    name: 'trash-bin-full',
-    icon: trashBinFullIcon,
-    id: 'trash-full',
-    grid: [0, 1],
-    windowType: 'Explorer',
-  },
+  // {
+  //   name: 'trash-bin-empty',
+  //   icon: trashBinEmptyIcon,
+  //   id: 'trash-empty',
+  //   grid: [0, 0],
+  //   windowType: 'Explorer',
+  // },
+  // {
+  //   name: 'trash-bin-full',
+  //   icon: trashBinFullIcon,
+  //   id: 'trash-full',
+  //   grid: [0, 1],
+  //   windowType: 'Explorer',
+  // },
   {
     name: 'home',
     icon: Settings,

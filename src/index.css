@@ -37,6 +37,8 @@ body {
   min-height: 100vh;
 
   overflow: hidden;
+
+  color: #1a1a1a;
 }
 
 h1 {

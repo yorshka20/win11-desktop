@@ -2,12 +2,12 @@ import { SearchOutlined } from '@mui/icons-material';
 import React, { useCallback } from 'react';
 
 import { useWindowContext } from '../../hooks';
+import { WinIcon } from '../icons/win-icon';
 import { TaskBarButton } from '../task-bar-icon';
 import { TimeBlock } from '../time';
 import { windowOpener } from '../windows/create-window';
 import { Options, type WindowHandler } from '../windows/interface';
 import './style.less';
-import { WinIcon } from './win-icon';
 
 interface Props {
   buttons: TaskbarConfigItem[];

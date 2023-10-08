@@ -1,4 +1,4 @@
-import { Divider } from '@mui/material';
+import { Divider } from '@mui/joy';
 import React from 'react';
 
 import { noop } from '../../utils/helper';

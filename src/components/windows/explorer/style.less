@@ -4,13 +4,14 @@
   min-width: 400px;
   min-height: 400px;
 
-  background-color: aliceblue;
-
-  // border: 1px solid red;
+  background-color: rgb(240, 248, 255);
 
   border-radius: 6px;
+  // border: 1px solid red;
 
   overflow: hidden;
+
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 
   .window-header {
     background-color: #cdddec;
@@ -21,6 +22,15 @@
     }
 
     .buttons {
+      .rect-border {
+        border-radius: 0;
+      }
+
+      .close-icon {
+        border-radius: 0;
+        border-top-right-radius: 6px;
+      }
+
       .icon {
         margin-right: 4px;
         width: 15px;
@@ -32,5 +42,80 @@
   .window-toolbar {
     background-color: #f1f5f9;
     height: 50px;
+  }
+
+  .address {
+    height: 34px;
+    padding: 2px 4px;
+
+    background-color: #fff;
+
+    .icon-pack {
+      width: 120px;
+
+      padding: 0 5px;
+    }
+
+    .MuiInput-root {
+      height: 28px;
+      border: none;
+
+      input {
+        height: 100%;
+      }
+    }
+
+    .address-path {
+      height: 100%;
+
+      border: 1px solid #999;
+
+      margin-right: 4px;
+    }
+
+    .address-search {
+      width: 120px;
+      height: 100%;
+
+      border: 1px solid #999;
+    }
+  }
+
+  .window-content {
+    background-color: #fff;
+    .file-tree-container {
+      border: 1px solid red;
+
+      min-width: 200px;
+
+      padding: 2px;
+
+      .MuiDivider-root {
+        height: 2px;
+      }
+
+      .file-tree-item-wrapper {
+        padding-left: 10px;
+        border-radius: 2px;
+
+        &.focused {
+          background-color: #137fd6;
+        }
+        &:hover {
+          background-color: #e5f3ff;
+        }
+      }
+    }
+    .content-container {
+      border: 1px solid red;
+    }
+    .preview-container {
+      border: 1px solid red;
+
+      min-width: 200px;
+    }
+  }
+  .footer {
+    height: 20px;
   }
 }

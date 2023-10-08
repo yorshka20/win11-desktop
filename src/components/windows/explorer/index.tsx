@@ -3,12 +3,15 @@ import {
   CropSquareOutlined,
   Minimize,
 } from '@mui/icons-material';
+import { Divider, Input } from '@mui/joy';
 import { useRef, useState } from 'react';
 import Draggable, { type DraggableEventHandler } from 'react-draggable';
 
 import { useEventListener, useWindowContext } from '../../../hooks';
-import { Size } from '../../../types';
 import type { WindowType } from '../../../types';
+import { Size } from '../../../types';
+import { ButtonWrapper } from '../../buttons/button-wrapper';
+import { ArrowIcon } from '../../icons/arrow-icon';
 import type { Options } from '../interface';
 import './style.less';
 
@@ -117,16 +120,103 @@ function ExplorerWindowComponent({
           className="window-header flex flex-row justify-between items-center w-full"
         >
           <div className="tabs"></div>
-          <div className="buttons flex flex-row justify-between items-center">
-            <Minimize onClick={handleMinimize} className="icon min" />
-            <CropSquareOutlined onClick={handleMaximize} className="icon max" />
-            <CloseOutlined onClick={handleClose} className="icon close" />
+          <div className="buttons self-start flex flex-row justify-between items-start">
+            <ButtonWrapper className="rect-border" height={20}>
+              <Minimize onClick={handleMinimize} className="icon min" />
+            </ButtonWrapper>
+            <ButtonWrapper className="rect-border" height={20}>
+              <CropSquareOutlined
+                onClick={handleMaximize}
+                className="icon max"
+              />
+            </ButtonWrapper>
+            <ButtonWrapper
+              className="close-icon"
+              height={20}
+              backgroundColor="red"
+            >
+              <CloseOutlined onClick={handleClose} className="icon close" />
+            </ButtonWrapper>
           </div>
         </header>
         <div className="window-toolbar w-full">1111</div>
-        <div className="window-content flex-1">{content}</div>
+        <div className="address flex flex-row w-full">
+          <div className="icon-pack flex flex-row justify-between items-center">
+            <ButtonWrapper backgroundColor="#e5f3ff">
+              <ArrowIcon type="left" />
+            </ButtonWrapper>
+            <ButtonWrapper backgroundColor="#e5f3ff">
+              <ArrowIcon type="right" />
+            </ButtonWrapper>
+            <ButtonWrapper backgroundColor="#e5f3ff">
+              <ArrowIcon type="down" />
+            </ButtonWrapper>
+            <ButtonWrapper backgroundColor="#e5f3ff">
+              <ArrowIcon type="up" />
+            </ButtonWrapper>
+          </div>
+          <div className="address-path flex-1">
+            <Input
+              sx={{
+                '--Input-radius': '0px',
+                borderBottom: 'none',
+                '--Input-minHeight': '0px',
+                outline: 'none',
+                '&::before': {
+                  display: 'none',
+                },
+              }}
+              className="path w-full"
+            />
+          </div>
+          <div className="address-search">
+            <Input
+              sx={{
+                '--Input-radius': '0px',
+                borderBottom: 'none',
+                '--Input-minHeight': '0px',
+                outline: 'none',
+                '&::before': {
+                  display: 'none',
+                },
+              }}
+              className="search w-full"
+            />
+          </div>
+        </div>
+        <div className="window-content flex flex-row flex-1">
+          <div className="file-tree-container h-full flex flex-col justify-start items-start">
+            <FileTreeItemWrapper>home</FileTreeItemWrapper>
+            <Divider />
+            <FileTreeItemWrapper>1</FileTreeItemWrapper>
+            <FileTreeItemWrapper>1</FileTreeItemWrapper>
+            <FileTreeItemWrapper>1</FileTreeItemWrapper>
+            <Divider />
+            <FileTreeItemWrapper>1</FileTreeItemWrapper>
+          </div>
+          <div className="content-container flex-1">{content}</div>
+          <div className="preview-container"></div>
+        </div>
+        <div className="footer w-full flex flex-row justify-between items-center"></div>
       </div>
     </Draggable>
+  );
+}
+
+function FileTreeItemWrapper({ children }: any) {
+  const [focused, setFocused] = useState(false);
+
+  function handleClick() {
+    setFocused((f) => !f);
+  }
+
+  return (
+    <p
+      onClick={handleClick}
+      className={`file-tree-item-wrapper w-full ${focused ? 'focused' : ''}`}
+    >
+      {children}
+    </p>
   );
 }
 

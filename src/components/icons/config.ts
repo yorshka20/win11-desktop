@@ -46,6 +46,9 @@ function load(name: FolderIcons): Promise<{ default: string }>;
 function load(name: SystemIcons): Promise<{ default: string }>;
 function load(name: string): Promise<{ default: string }> {
   if (FILE_EXTENSIONS.includes(name as ExtensionIcons)) {
+    // dynamic import with vite should follow two rules:
+    // 1. start with relative path.
+    // 2. end with file extension.
     return import(`../../assets/extensions/${name}.ico`);
   } else if (FILE_FOLDERS.includes(name as FolderIcons)) {
     return import(`../../assets/folders/${name}.ico`);

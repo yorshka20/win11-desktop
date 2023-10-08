@@ -4,10 +4,10 @@ import Draggable, { type DraggableEventHandler } from 'react-draggable';
 import { styled } from 'styled-components';
 
 import { DESKTOP_GRID_SIZE } from '../../constants';
-import { IconType } from '../../types';
+import { type IconType } from '../../types';
 import { noop } from '../../utils/helper';
 
-interface Props extends StyledProps {
+export interface DesktopIconWrapperProps extends StyledProps {
   name: string;
   id: string;
   icon: IconType;
@@ -92,7 +92,7 @@ export function DesktopIconWrapper({
   hoverBgColor = 'rgba(240, 248, 255, 0.3)',
   selectedBgColor = 'rgba(240, 248, 255, 0.5)',
   onClick = noop,
-}: Props) {
+}: DesktopIconWrapperProps) {
   const [focused] = useState(false);
   const [selected, setSelected] = useState(false);
 
@@ -116,8 +116,6 @@ export function DesktopIconWrapper({
     }
     setPosition({ x, y });
   };
-
-  console.log('icon', grid);
 
   return (
     <Draggable

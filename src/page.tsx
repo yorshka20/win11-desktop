@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import {
   ContextMenu,
@@ -7,7 +7,7 @@ import {
   useContextMenu,
 } from './components/context-menu';
 import { DesktopIconWrapper } from './components/desktop-icon';
-import { loadIcons } from './components/icons/internal-icons';
+import { IconMap, loadIconPromise } from './components/icons/internal-icons';
 import { WindowComponentContainer } from './components/windows';
 import { contextMenuConfig, desktopIconConfig } from './configs/desktop-config';
 import {
@@ -25,14 +25,12 @@ interface DesktopContainerProps {
   desktopConfig: DesktopItem[];
 }
 
-const iconMaps = await loadIcons();
-
-console.log(iconMaps);
-
 export function DesktopContainer({ desktopConfig }: DesktopContainerProps) {
   const desktopRef = useRef<HTMLDivElement>(null);
 
   desktopConfig;
+
+  const [icons, setIcons] = useState(IconMap);
 
   const context = useWindowContext();
 
@@ -45,6 +43,12 @@ export function DesktopContainer({ desktopConfig }: DesktopContainerProps) {
   useEffect(() => {
     // console.log('selectionArea', selectionArea);
   }, [selectionArea]);
+
+  useEffect(() => {
+    loadIconPromise.then(() => {
+      setIcons(IconMap);
+    });
+  }, []);
 
   useEffect(() => {
     const container = desktopRef.current;
@@ -72,11 +76,11 @@ export function DesktopContainer({ desktopConfig }: DesktopContainerProps) {
         />
       ))}
 
-      {Object.keys(iconMaps)
+      {Object.keys(icons)
         .map((iconType, i) =>
-          Object.keys(iconMaps[iconType]).map((name, j) => {
-            const Icon = iconMaps[iconType][name];
-            // console.log('name', [i, j]);
+          Object.keys(icons[iconType]).map((name, j) => {
+            const Icon = icons[iconType][name];
+
             return (
               <DesktopIconWrapper
                 grided

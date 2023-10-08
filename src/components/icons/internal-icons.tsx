@@ -1,9 +1,10 @@
 import React from 'react';
 
 import explorerIcon from '../../assets/systems/explorer.ico';
+import { createPromise } from '../../utils/helper';
 import { type CombinedIcons, iconConfigs } from './config';
-import { IconWrapper } from './icon-wrapper';
 import type { IconWrapperProps } from './icon-wrapper';
+import { IconWrapper } from './icon-wrapper';
 
 export const ExplorerIcon = React.memo(
   (props: Omit<IconWrapperProps, 'src'>) => (
@@ -16,11 +17,14 @@ export const IconMap: Record<
   Record<string, React.FC<Omit<IconWrapperProps, 'src'>>>
 > = {};
 
+const [resolve, p] = createPromise();
+
+export const loadIconPromise = p;
+
 export async function loadIcons() {
   for (const { fileList, load, iconType } of iconConfigs) {
     for (const name of fileList) {
       const file = await load(name as CombinedIcons);
-      // console.log('file', file.default);
       if (!IconMap[iconType]) {
         IconMap[iconType] = {};
       }
@@ -29,6 +33,8 @@ export async function loadIcons() {
       );
     }
   }
+
+  resolve(undefined);
 
   return IconMap;
 }

@@ -38,7 +38,7 @@ export const taskbarButtonsConfig: TaskbarConfigItem[] = [
 ];
 
 interface IconConfig {
-  icon: string | React.FC<{ className: string }>;
+  icon: React.FC<{ className: string }>;
   name: string;
   id: string;
   grid: [number, number];

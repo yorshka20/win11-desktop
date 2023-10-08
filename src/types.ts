@@ -1,6 +1,6 @@
 import React from 'react';
 
-export type IconType = string | React.JSX.Element;
+export type IconType = React.JSX.Element;
 
 export type Position = [number, number];
 

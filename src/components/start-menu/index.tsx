@@ -6,11 +6,10 @@ import {
 } from '@mui/icons-material';
 import { useRef } from 'react';
 
-import { desktopIconConfig } from '../../configs/desktop-config';
 import { store } from '../../context/store';
 import { useClickOutside, useContextState } from '../../hooks';
 import { ButtonWrapper } from '../buttons/button-wrapper';
-import { DesktopIconWrapper } from '../desktop-icon';
+import { StartMenuPinBlock } from './components';
 import './style.less';
 
 export function StartMenu() {
@@ -37,17 +36,7 @@ export function StartMenu() {
           <span>Pinned Apps</span>
           <span className="all-apps">All Apps {'>'}</span>
         </div>
-        <div className="pin-block draggable-area w-full flex flex-row flex-wrap justify-start items-center">
-          {desktopIconConfig.map(({ icon: Icon, name, id, grid }, index) => (
-            <DesktopIconWrapper
-              key={index}
-              icon={<Icon className={'icon'} />}
-              name={name}
-              id={id}
-              grid={grid}
-            />
-          ))}
-        </div>
+        <StartMenuPinBlock />
       </div>
       <div className="w-full flex flex-row justify-between items-center start-menu-footer">
         <ButtonWrapper className="profile" title="profile">

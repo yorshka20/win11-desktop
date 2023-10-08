@@ -29,7 +29,7 @@ export function TaskBar({ buttons }: Props) {
     const id = 'searchWindow';
     const options: Options = {
       id,
-      size: [600, 400],
+      size: [1080, 600],
       position: [200, 100],
       title: 'search window',
       reuse: false,

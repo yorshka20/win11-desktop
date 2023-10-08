@@ -13,6 +13,7 @@ interface Props extends StyledProps {
   icon: IconType;
   grid: [number, number];
 
+  grided?: boolean;
   shadowText?: boolean;
 
   onClick?: (id: string) => void;
@@ -20,6 +21,7 @@ interface Props extends StyledProps {
 }
 
 interface StyledProps {
+  color?: string;
   hoverBgColor?: string;
   selectedBgColor?: string;
 }
@@ -53,29 +55,26 @@ const Container = styled.div<StyledProps>`
     width: 40px;
     height: 40px;
     margin-bottom: 4px;
-
-    user-select: none;
-    -webkit-user-drag: none;
   }
 
-  .name {
+  p {
     margin: 0;
 
+    /* display in two lines and ellipse for overflow  */
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
 
-    color: black;
+    color: ${(props) => props.color};
     font-size: 12px;
 
     text-align: center;
 
     width: 100%;
-    // max-height: 2rem;
 
-    &.shadow {
+    &.text-shadow {
       color: white;
       text-shadow: black 0.1em 0.1em 0.2em;
     }
@@ -86,8 +85,10 @@ export function DesktopIconWrapper({
   name,
   id,
   grid,
+  grided = false,
   icon: Icon,
   shadowText,
+  color = 'black',
   hoverBgColor = 'rgba(240, 248, 255, 0.3)',
   selectedBgColor = 'rgba(240, 248, 255, 0.5)',
   onClick = noop,
@@ -107,8 +108,12 @@ export function DesktopIconWrapper({
   }, [onClick, id]);
 
   const handleStop: DraggableEventHandler = (_, data) => {
-    const x = Math.round(data.x / DESKTOP_GRID_SIZE) * DESKTOP_GRID_SIZE;
-    const y = Math.round(data.y / DESKTOP_GRID_SIZE) * DESKTOP_GRID_SIZE;
+    let x = data.x;
+    let y = data.y;
+    if (grided) {
+      x = Math.round(data.x / DESKTOP_GRID_SIZE) * DESKTOP_GRID_SIZE;
+      y = Math.round(data.y / DESKTOP_GRID_SIZE) * DESKTOP_GRID_SIZE;
+    }
     setPosition({ x, y });
   };
 
@@ -122,6 +127,7 @@ export function DesktopIconWrapper({
       scale={1}
       // onStart={handleStart}
       // onDrag={handleDrag}
+      bounds={'parent'}
       onStop={handleStop}
     >
       <Container
@@ -131,6 +137,7 @@ export function DesktopIconWrapper({
           focused ? 'focused' : '',
           selected ? 'selected' : '',
         )}
+        color={color}
         hoverBgColor={hoverBgColor}
         selectedBgColor={selectedBgColor}
       >
@@ -139,7 +146,7 @@ export function DesktopIconWrapper({
         ) : (
           <Icon className={'icon'} />
         )}
-        <p className={`name ${shadowText ? 'shadow' : ''}`}>{name}</p>
+        <p className={`${shadowText ? 'text-shadow' : ''}`}>{name}</p>
       </Container>
     </Draggable>
   );

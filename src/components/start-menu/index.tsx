@@ -37,7 +37,7 @@ export function StartMenu() {
           <span>Pinned Apps</span>
           <span className="all-apps">All Apps {'>'}</span>
         </div>
-        <div className="pin-block w-full flex flex-row flex-wrap justify-start items-center">
+        <div className="pin-block draggable-area w-full flex flex-row flex-wrap justify-start items-center">
           {desktopIconConfig.map((icon, index) => (
             <DesktopIconWrapper
               key={index}

@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { filter } from 'rxjs';
 
-import { WindowContext } from './context/context';
-import { type ContextStoreState, PipeEvent, store } from './context/store';
+import { type PipeEvent, WindowContext } from './context/context';
+import { type ContextStoreState, store } from './context/store';
 
 export function useWindowContext() {
   return useContext(WindowContext);
@@ -123,7 +123,7 @@ export function useDesktopSelection(ref: React.RefObject<HTMLDivElement>) {
         return;
       }
       const ele = e.target as HTMLDivElement;
-      if (!ele || !ele['className']?.includes('desktop-container')) {
+      if (!ele || !ele['classList']?.contains('desktop-container')) {
         return;
       }
 
@@ -180,26 +180,42 @@ export function useClickOutside(
 
 type EventListenerPair = {
   event: PipeEvent['name'];
-  handler: (e: PipeEvent) => void;
+  handler: (id: string, e: PipeEvent) => void;
 }[];
 
-export function useEventListener(pairs: EventListenerPair) {
+/**
+ * subscribe window events
+ *
+ * if `id` = '*', events from all windows will be handled.
+ *
+ * @export
+ * @param {string} id
+ * @param {EventListenerPair} pairs
+ */
+export function useEventListener(id: string | '*', pairs: EventListenerPair) {
   const { event$ } = useWindowContext();
 
   useEffect(() => {
     const events: PipeEvent['name'][] = [];
-    const eventMap = {} as Record<PipeEvent['name'], (e: PipeEvent) => void>;
+    const eventMap = {} as Record<
+      PipeEvent['name'],
+      EventListenerPair[number]['handler']
+    >;
     pairs.forEach((pair) => {
       events.push(pair.event);
       eventMap[pair.event] = pair.handler;
     });
 
     const subscription = event$
-      .pipe(filter((i) => events.includes(i.name)))
-      .subscribe((e) => eventMap[e.name](e));
+      .pipe(
+        // if id === '*', do not filter.
+        filter((i) => (id === '*' ? true : i.id === id)),
+        filter((i) => events.includes(i.name)),
+      )
+      .subscribe((e) => eventMap[e.name](e.id, e));
 
     return () => {
       subscription.unsubscribe();
     };
-  }, [pairs, event$]);
+  }, [id, pairs, event$]);
 }

@@ -8,16 +8,12 @@ import classNames from 'classnames';
 import { useEffect, useRef, useState } from 'react';
 import Draggable, { type DraggableEventHandler } from 'react-draggable';
 
-import {
-  useContextState,
-  useEventListener,
-  useWindowContext,
-} from '../../../hooks';
+import type { Options } from '../../../context/window-manager';
+import { useEventListener, useWindowContext } from '../../../hooks';
 import type { WindowType } from '../../../types';
 import { Size } from '../../../types';
 import { ButtonWrapper } from '../../buttons/button-wrapper';
 import { ArrowIcon } from '../../icons/arrow-icon';
-import type { Options } from '../interface';
 import './style.less';
 
 interface WindowComponentProps extends Options {}
@@ -46,6 +42,7 @@ function ExplorerWindowComponent({
 
   useEffect(() => {
     const sub = windowManager.subscribeWindowState(id, 'isMaximized', (v) => {
+      console.log('state change', v);
       setClassName(v ? 'fullscreen-state' : '');
     });
     return () => {
@@ -58,7 +55,7 @@ function ExplorerWindowComponent({
   // };
   const handleDrag: DraggableEventHandler = (e, data) => {
     // console.log('drag', e, data);
-    const isMaximized = windowManager.getWindowState(id, 'isMaximized');
+    const isMaximized = windowManager.getWindowStateByKey(id, 'isMaximized');
     if (!isMaximized) return;
     if (data.y > 50) {
       windowManager.updateWindowState(id, 'isMaximized', false);
@@ -84,26 +81,29 @@ function ExplorerWindowComponent({
   function handleMinimize() {
     const handler = getWindowHandler();
     handler.minimize();
-    windowManager.updateWindowState(id, 'isMinimized', true);
   }
   function handleMaximize() {
     const handler = getWindowHandler();
     handler.maximize();
-    windowManager.updateWindowState(id, 'isMaximized', true);
   }
   function handleClose() {
     const handler = getWindowHandler();
     handler.close();
-    windowManager.updateWindowState(id, 'isActive', false);
   }
 
-  useEventListener([
+  useEventListener(id, [
     {
       event: 'maximize-window',
       handler() {
         const { width, height } = desktopContainer.getBoundingClientRect();
         setSize([width, height]);
         setPosition({ x: 0, y: 0 });
+      },
+    },
+    {
+      event: 'minimize-window',
+      handler() {
+        setPosition({ x: 9999, y: 9999 });
       },
     },
   ]);

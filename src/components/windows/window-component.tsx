@@ -8,6 +8,8 @@ import { useEventListener, useWindowContext } from '../../hooks';
  *
  * new window component will be mounted at Desktop.
  *
+ * `close-window` and `open-window` will be handled here.
+ *
  * @export
  * @return {*}
  */
@@ -16,19 +18,22 @@ export function WindowComponentContainer() {
 
   const [windows, setWindows] = useState<React.JSX.Element[]>([]);
 
-  useEventListener([
+  useEventListener('*', [
     {
       event: 'close-window',
-      handler(e) {
-        const handler = windowManager.getWindow(e.value.id);
+      handler(id) {
+        const handler = windowManager.getWindow(id);
+        // since we still need to use the handler
         setWindows((w) => w.filter((i) => i !== handler.window));
+        // we should delete the window after we have unmounted it.
+        windowManager.deleteWindow(id);
       },
     },
     {
       event: 'open-window',
-      handler(e) {
+      handler(id) {
         // windows are store in windowManager.
-        const handler = windowManager.getWindow(e.value.id);
+        const handler = windowManager.getWindow(id);
         setWindows((a) => [...a, handler.window]);
       },
     },

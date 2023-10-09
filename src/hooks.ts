@@ -163,7 +163,7 @@ export function useClickOutside(
 
     function handler(e: MouseEvent) {
       for (const t of nodeList) {
-        if (t.contains(e.target as Node)) {
+        if (t?.contains(e.target as Node)) {
           return;
         }
       }

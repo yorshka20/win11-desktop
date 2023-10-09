@@ -1,3 +1,4 @@
+import React from 'react';
 import { styled } from 'styled-components';
 
 export interface IconWrapperProps {
@@ -14,11 +15,8 @@ const Img = styled.img<IconWrapperProps>`
   -webkit-user-drag: none;
 `;
 
-export function IconWrapper({
-  size = 24,
-  className = '',
-  src,
-}: IconWrapperProps) {
-  console.log('src', src);
-  return <Img className={className} size={size} src={src} />;
-}
+export const IconWrapper = React.memo(
+  ({ size = 24, className = '', src }: IconWrapperProps) => (
+    <Img className={className} size={size} src={src} />
+  ),
+);

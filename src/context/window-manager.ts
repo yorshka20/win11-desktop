@@ -4,12 +4,21 @@ import type { Position } from '../types';
 import { PipeEvent } from './context';
 import { RxStore } from './rx-store';
 
-type WindowState = {
+export type WindowState = {
   isMaximized: boolean;
   isMinimized: boolean;
   isActive: boolean;
   data: Options;
 };
+
+export function getDefaultWindowState() {
+  return {
+    isActive: false,
+    isMaximized: false,
+    isMinimized: false,
+    data: {} as Options,
+  };
+}
 
 export interface BaseWindowOptions {
   reuse: boolean;
@@ -49,9 +58,7 @@ export class WindowManager {
   addWindow(id: string, window: WindowHandler) {
     this.windowHandlerMap[id] = window;
     this.windowState$Map[id] = new RxStore<WindowState>({
-      isActive: false,
-      isMaximized: false,
-      isMinimized: false,
+      ...getDefaultWindowState(),
       data: window.data,
     });
     this.windowEventMap[id] = this.event$
@@ -119,10 +126,17 @@ export class WindowManager {
     key: T,
     value: WindowState[T],
   ) {
-    this.getWindowState$(id).updateState(key, value);
+    console.log('update state', key, value);
+    // window could have been destroyed
+    this.getWindowState$(id)?.updateState(key, value);
   }
 
-  subscribeWindowState<T extends keyof WindowState>(
+  subscribeState(id: string, fn: (v: WindowState) => void): Subscription {
+    const subscription = this.getWindowState$(id).subscribeState(fn);
+    return subscription;
+  }
+
+  subscribeStateByKey<T extends keyof WindowState>(
     id: string,
     key: T,
     fn: (v: WindowState[T]) => void,
@@ -142,7 +156,7 @@ export class WindowManager {
   }
 
   private onCloseWindow(id: string) {
-    const window = this.getWindow(id);
-    window.close();
+    id;
+    //
   }
 }

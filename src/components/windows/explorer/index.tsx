@@ -8,10 +8,15 @@ import classNames from 'classnames';
 import { useEffect, useRef, useState } from 'react';
 import Draggable, { type DraggableEventHandler } from 'react-draggable';
 
-import type { Options } from '../../../context/window-manager';
+import {
+  type Options,
+  type WindowState,
+  getDefaultWindowState,
+} from '../../../context/window-manager';
 import { useEventListener, useWindowContext } from '../../../hooks';
 import type { WindowType } from '../../../types';
 import { Size } from '../../../types';
+import { noop } from '../../../utils/helper';
 import { ButtonWrapper } from '../../buttons/button-wrapper';
 import { ArrowIcon } from '../../icons/arrow-icon';
 import './style.less';
@@ -36,14 +41,19 @@ function ExplorerWindowComponent({
   const [size, setSize] = useState<Size>(si);
   const [className, setClassName] = useState<string>('');
 
+  const [windowState, setWindowState] = useState<WindowState>(
+    getDefaultWindowState(),
+  );
+
   function getWindowHandler() {
     return windowManager.getWindow(id);
   }
 
   useEffect(() => {
-    const sub = windowManager.subscribeWindowState(id, 'isMaximized', (v) => {
+    const sub = windowManager.subscribeState(id, (v) => {
       console.log('state change', v);
-      setClassName(v ? 'fullscreen-state' : '');
+      setWindowState(v);
+      setClassName(v.isMaximized ? 'fullscreen-state' : '');
     });
     return () => {
       sub.unsubscribe();
@@ -55,8 +65,6 @@ function ExplorerWindowComponent({
   // };
   const handleDrag: DraggableEventHandler = (e, data) => {
     // console.log('drag', e, data);
-    const isMaximized = windowManager.getWindowStateByKey(id, 'isMaximized');
-    if (!isMaximized) return;
     if (data.y > 50) {
       windowManager.updateWindowState(id, 'isMaximized', false);
       setSize([600, 400]);
@@ -74,9 +82,9 @@ function ExplorerWindowComponent({
     setPosition({ x: data.x, y: data.y });
   };
 
-  function handleFocusWindow() {
-    windowManager.updateWindowState(id, 'isActive', true);
-  }
+  // function handleFocusWindow() {
+  //   windowManager.updateWindowState(id, 'isActive', true);
+  // }
 
   function handleMinimize() {
     const handler = getWindowHandler();
@@ -111,14 +119,14 @@ function ExplorerWindowComponent({
   return (
     <Draggable
       axis="both"
-      handle=".window-header"
       defaultPosition={{ x: 0, y: 0 }}
       position={position}
       grid={[1, 1]}
       scale={1}
       // onStart={handleStart}
-      onDrag={handleDrag}
+      onDrag={windowState.isMaximized ? handleDrag : noop}
       onStop={handleStop}
+      nodeRef={headerRef}
     >
       <div
         style={{
@@ -126,7 +134,6 @@ function ExplorerWindowComponent({
           height: size[1],
           zIndex,
         }}
-        onClick={handleFocusWindow}
         title={title}
         className={classNames(
           'flex flex-col window-component-container',

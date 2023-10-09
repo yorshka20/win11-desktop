@@ -1,13 +1,13 @@
 import { SearchOutlined } from '@mui/icons-material';
 import React, { useCallback } from 'react';
 
+import { Options, type WindowHandler } from '../../context/window-manager';
 import { useWindowContext } from '../../hooks';
 import { ExplorerIcon } from '../icons/internal-icons';
 import { WinIcon } from '../icons/win-icon';
 import { TaskBarButton } from '../task-bar-icon';
 import { TimeBlock } from '../time';
 import { windowOpener } from '../windows/create-window';
-import { Options, type WindowHandler } from '../windows/interface';
 import './style.less';
 
 interface Props {
@@ -27,15 +27,15 @@ export function TaskBar({ buttons }: Props) {
   }, [dispatcher]);
 
   const handleSearch = useCallback(() => {
-    const id = 'searchWindow';
+    const id = `searchWindow-${Math.random().toString(36)}`;
     const options: Options = {
       id,
       size: [1080, 600],
       position: [200, 100],
-      title: 'search window',
+      title: id,
       reuse: false,
       zIndex: 10,
-      content: 'window content',
+      content: id,
     };
     const window = windowOpener('Explorer', options);
 
@@ -43,9 +43,7 @@ export function TaskBar({ buttons }: Props) {
       close() {
         event$.next({
           name: 'close-window',
-          value: {
-            id,
-          },
+          id,
         });
       },
       move(pos) {
@@ -54,17 +52,13 @@ export function TaskBar({ buttons }: Props) {
       maximize() {
         event$.next({
           name: 'maximize-window',
-          value: {
-            id,
-          },
+          id,
         });
       },
       minimize() {
         event$.next({
           name: 'minimize-window',
-          value: {
-            id,
-          },
+          id,
         });
       },
       window,
@@ -73,16 +67,14 @@ export function TaskBar({ buttons }: Props) {
 
     console.log('windowOpener', window, handler);
 
-    windowManager.addWindow('searchWindow', handler);
+    // 1. add window
+    windowManager.addWindow(id, handler);
 
+    // 2. open window
     event$.next({
       name: 'open-window',
-      value: {
-        id: 'searchWindow',
-      },
+      id,
     });
-
-    console.log('handler', handler);
   }, [windowManager, event$]);
 
   return (

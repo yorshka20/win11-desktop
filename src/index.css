@@ -80,6 +80,7 @@ button:focus-visible {
 
 div {
   box-sizing: border-box;
+  user-select: none;
 }
 
 img,

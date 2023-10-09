@@ -4,10 +4,15 @@ import {
   Minimize,
 } from '@mui/icons-material';
 import { Divider, Input } from '@mui/joy';
-import { useRef, useState } from 'react';
+import classNames from 'classnames';
+import { useEffect, useRef, useState } from 'react';
 import Draggable, { type DraggableEventHandler } from 'react-draggable';
 
-import { useEventListener, useWindowContext } from '../../../hooks';
+import {
+  useContextState,
+  useEventListener,
+  useWindowContext,
+} from '../../../hooks';
 import type { WindowType } from '../../../types';
 import { Size } from '../../../types';
 import { ButtonWrapper } from '../../buttons/button-wrapper';
@@ -33,10 +38,20 @@ function ExplorerWindowComponent({
     y: pos[1],
   });
   const [size, setSize] = useState<Size>(si);
+  const [className, setClassName] = useState<string>('');
 
   function getWindowHandler() {
     return windowManager.getWindow(id);
   }
+
+  useEffect(() => {
+    const sub = windowManager.subscribeWindowState(id, 'isMaximized', (v) => {
+      setClassName(v ? 'fullscreen-state' : '');
+    });
+    return () => {
+      sub.unsubscribe();
+    };
+  }, [windowManager, id]);
 
   // const handleStart = (e) => {
   //   // console.log('start', e);
@@ -99,7 +114,7 @@ function ExplorerWindowComponent({
       handle=".window-header"
       defaultPosition={{ x: 0, y: 0 }}
       position={position}
-      grid={[5, 5]}
+      grid={[1, 1]}
       scale={1}
       // onStart={handleStart}
       onDrag={handleDrag}
@@ -113,7 +128,10 @@ function ExplorerWindowComponent({
         }}
         onClick={handleFocusWindow}
         title={title}
-        className="flex flex-col window-component-container"
+        className={classNames(
+          'flex flex-col window-component-container',
+          className,
+        )}
       >
         <header
           ref={headerRef}
@@ -203,7 +221,7 @@ function ExplorerWindowComponent({
   );
 }
 
-function FileTreeItemWrapper({ children }: any) {
+function FileTreeItemWrapper({ children }) {
   const [focused, setFocused] = useState(false);
 
   function handleClick() {

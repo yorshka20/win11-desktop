@@ -6,16 +6,23 @@
   border-radius: 6px;
   border: 1px solid #999;
 
-  background-color: #dfe6f6;
-  opacity: 0.9;
+  background-color: rgba(223, 230, 246, 0.9);
 
-  user-select: none;
+  z-index: 100;
+
+  padding: 2px;
 
   .context-menu-item {
-    min-height: 30px;
+    min-height: 24px;
 
     box-sizing: border-box;
     padding: 8px 10px;
+
+    margin-bottom: 2px;
+
+    &:hover {
+      background-color: rgba(240, 248, 255, 0.6);
+    }
 
     .menu-item {
       display: inline-block;

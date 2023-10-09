@@ -16,19 +16,6 @@ type StateSubscribeCallback<T extends keyof ContextStoreState> = (
   v: ContextStoreState[T],
 ) => void;
 
-type PipeEventType =
-  | 'open-window'
-  | 'close-window'
-  | 'maximize-window'
-  | 'minimize-window';
-
-export type PipeEvent = {
-  name: PipeEventType;
-  value: {
-    id: string;
-  };
-};
-
 export class ContextStore {
   private state$: BehaviorSubject<ContextStoreState>;
 

@@ -1,8 +1,8 @@
 import React from 'react';
 
+import type { Options } from '../../context/window-manager';
 import type { WindowType } from '../../types';
 import { createExplorerWindow } from './explorer';
-import type { Options } from './interface';
 
 export function windowOpener(
   windowType: WindowType,

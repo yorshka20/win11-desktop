@@ -15,7 +15,7 @@ interface Props {
 }
 
 const Container = styled.div`
-  width: 120px;
+  width: 115px;
 
   .rect-border {
     border-radius: 0;
@@ -27,7 +27,6 @@ const Container = styled.div`
   }
 
   .icon {
-    margin-right: 4px;
     width: 15px;
     height: 15px;
   }
@@ -53,13 +52,18 @@ function Component({ windowManager, id }: Props) {
 
   return (
     <Container className="traffic-light-buttons self-start flex flex-row justify-between items-start">
-      <ButtonWrapper className="rect-border" height={20}>
+      <ButtonWrapper className="rect-border" width={35} height={20}>
         <Minimize onClick={handleMinimize} className="icon min" />
       </ButtonWrapper>
-      <ButtonWrapper className="rect-border" height={20}>
+      <ButtonWrapper className="rect-border" width={35} height={20}>
         <CropSquareOutlined onClick={handleMaximize} className="icon max" />
       </ButtonWrapper>
-      <ButtonWrapper className="close-icon" height={20} backgroundColor="red">
+      <ButtonWrapper
+        className="close-icon"
+        width={35}
+        height={20}
+        backgroundColor="red"
+      >
         <CloseOutlined onClick={handleClose} className="icon close" />
       </ButtonWrapper>
     </Container>

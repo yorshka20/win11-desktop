@@ -61,7 +61,7 @@ export interface CommonWindowWrapperProps {
   // onMaximize?: () => void;
   // onClose?: () => void;
 
-  nodeRef: () => React.RefObject<HTMLElement>;
+  nodeRef?: () => React.RefObject<HTMLElement>;
   handle?: string;
   cancel?: string;
   onDragStart?: DraggableEventHandler;
@@ -79,7 +79,7 @@ export function DraggableWindowWrapper({
   size: si,
   position: pos,
   zIndex,
-  nodeRef,
+  // nodeRef,
   handle,
   onDrag = noop,
   onDragStart = noop,
@@ -150,7 +150,7 @@ export function DraggableWindowWrapper({
       onStart={onDragStart}
       // onDrag={windowState.isMaximized ? handleDrag : noop}
       onStop={handleDragStop}
-      nodeRef={nodeRef()}
+      // nodeRef={nodeRef()}
       cancel={cancel}
     >
       <div

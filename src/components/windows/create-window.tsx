@@ -3,6 +3,7 @@ import React from 'react';
 import type { Options } from '../../context/window-manager';
 import type { WindowType } from '../../types';
 import { createExplorerWindow } from './explorer/create';
+import { createSettingWindow } from './setting/window';
 
 export function windowOpener(
   windowType: WindowType,
@@ -15,7 +16,7 @@ export function windowOpener(
       window = createExplorerWindow(windowType, options);
       break;
     case 'Setting': {
-      window = createExplorerWindow(windowType, options);
+      window = createSettingWindow(windowType, options);
       break;
     }
     case 'Image': {

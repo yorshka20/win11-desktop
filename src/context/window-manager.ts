@@ -76,6 +76,7 @@ export class WindowManager {
         break;
       }
       case 'open-window': {
+        console.log('window manager', this);
         break;
       }
       case 'minimize-window': {

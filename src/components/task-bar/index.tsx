@@ -26,6 +26,57 @@ export function TaskBar({ buttons }: Props) {
     dispatcher('display-start-menu');
   }, [dispatcher]);
 
+  const handleSetting = () => {
+    const id = `setting-window-${Math.random().toString(36)}`;
+    const options: Options = {
+      id,
+      size: [1080, 600],
+      position: [200, 100],
+      title: id,
+      reuse: false,
+      zIndex: 10,
+      content: id,
+    };
+    const window = windowOpener('Setting', options);
+
+    const handler: WindowHandler = {
+      close() {
+        event$.next({
+          name: 'close-window',
+          id,
+        });
+      },
+      move(pos) {
+        console.log('move window', pos);
+      },
+      maximize() {
+        event$.next({
+          name: 'maximize-window',
+          id,
+        });
+      },
+      minimize() {
+        event$.next({
+          name: 'minimize-window',
+          id,
+        });
+      },
+      window,
+      data: options,
+    };
+
+    console.log('windowOpener', window, handler);
+
+    // 1. add window
+    windowManager.addWindow(id, handler);
+
+    // 2. open window
+    event$.next({
+      name: 'open-window',
+      id,
+    });
+  };
+
   const handleSearch = useCallback(() => {
     const id = `searchWindow-${Math.random().toString(36)}`;
     const options: Options = {
@@ -81,7 +132,7 @@ export function TaskBar({ buttons }: Props) {
     <div className="taskbar-container w-full">
       <div className="flex flex-row justify-between items-center w-full h-full taskbar">
         <div className="taskbar-left">
-          <SearchOutlined />
+          <SearchOutlined onClick={handleSetting} />
         </div>
 
         <div className="flex flex-row justify-start item-center">

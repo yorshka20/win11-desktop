@@ -32,6 +32,8 @@ export function ExplorerWindowComponent({
       size={size}
       position={position}
       nodeRef={() => headerRef}
+      cancel=".tabs-container"
+      handle=".window-header"
     >
       <header
         ref={headerRef}

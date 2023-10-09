@@ -52,10 +52,10 @@ function Component({ id }: Props) {
       : tabs[tabs.indexOf(tab) + 1];
     const list = tabs.map((t, i) => {
       if (tabs[i + 1]?.id === id) {
-        return tab;
+        return tab ?? t;
       }
       if (tabs[i].id === id) {
-        return tmp;
+        return tmp ?? t;
       }
       return t;
     });
@@ -109,7 +109,7 @@ function TabItem({ name, id, onDrag, onClick, active }: ItemProps) {
   const dragRef = useRef<HTMLDivElement>(null);
 
   const handleClick: React.MouseEventHandler<HTMLDivElement> = (e) => {
-    // e.stopPropagation();
+    e.stopPropagation();
     onClick(id);
   };
 

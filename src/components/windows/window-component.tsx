@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import Draggable, { type DraggableEventHandler } from 'react-draggable';
 
@@ -62,7 +62,8 @@ export interface CommonWindowWrapperProps {
   // onClose?: () => void;
 
   nodeRef: () => React.RefObject<HTMLElement>;
-
+  handle?: string;
+  cancel?: string;
   onDragStart?: DraggableEventHandler;
   onDrag?: DraggableEventHandler;
   onDragStop?: DraggableEventHandler;
@@ -79,15 +80,17 @@ export function DraggableWindowWrapper({
   position: pos,
   zIndex,
   nodeRef,
+  handle,
   onDrag = noop,
   onDragStart = noop,
   onDragStop = noop,
+  cancel,
   children,
 }: CommonWindowWrapperProps) {
-  const dragRef = useMemo(() => nodeRef(), [nodeRef]);
+  // const dragRef = useMemo(() => nodeRef(), [nodeRef]);
   const { desktopContainer, windowManager } = useWindowContext();
 
-  const [, setPosition] = useState<Position>(pos);
+  const [position, setPosition] = useState<Position>(pos);
   const [size, setSize] = useState<Size>(si);
 
   const [windowState, setWindowState] = useState<WindowState>(dState);
@@ -97,22 +100,27 @@ export function DraggableWindowWrapper({
     return () => sub.unsubscribe();
   }, [windowManager, id]);
 
-  const handleDrag: DraggableEventHandler = (e, data) => {
-    // if (data.y > 50) {
-    //   windowManager.updateWindowState(id, 'isMaximized', false);
-    //   setSize([600, 400]);
+  onDrag;
 
-    //   const { width } = desktopContainer.getBoundingClientRect();
-    //   const { clientX } = e as MouseEvent;
-    //   setPosition([Math.round(clientX - (clientX / width) * 600), data.y]);
-    // }
-    onDrag(e, data);
-  };
+  // const handleDrag: DraggableEventHandler = (e, data) => {
+  //   // if (data.y > 50) {
+  //   //   windowManager.updateWindowState(id, 'isMaximized', false);
+  //   //   setSize([600, 400]);
+
+  //   //   const { width } = desktopContainer.getBoundingClientRect();
+  //   //   const { clientX } = e as MouseEvent;
+  //   //   setPosition([Math.round(clientX - (clientX / width) * 600), data.y]);
+  //   // }
+  //   onDrag(e, data);
+  // };
 
   // handle move.
   const handleDragStop: DraggableEventHandler = (e, data) => {
     onDragStop(e, data);
+    setPosition([data.x, data.y]);
   };
+
+  console.log('position]', ...position);
 
   useEventListener(id, [
     {
@@ -135,13 +143,15 @@ export function DraggableWindowWrapper({
     <Draggable
       axis="both"
       defaultPosition={{ x: 0, y: 0 }}
+      position={{ x: position[0], y: position[1] }}
       grid={[1, 1]}
       scale={1}
+      handle={handle}
       onStart={onDragStart}
-      onDrag={windowState.isMaximized ? handleDrag : noop}
+      // onDrag={windowState.isMaximized ? handleDrag : noop}
       onStop={handleDragStop}
-      nodeRef={dragRef}
-      cancel=".tabs-container"
+      nodeRef={nodeRef()}
+      cancel={cancel}
     >
       <div
         style={{

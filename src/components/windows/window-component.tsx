@@ -1,7 +1,15 @@
-import { useState } from 'react';
+import classNames from 'classnames';
+import React, { useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
+import Draggable, { type DraggableEventHandler } from 'react-draggable';
 
+import {
+  type WindowState,
+  getDefaultWindowState,
+} from '../../context/window-manager';
 import { useEventListener, useWindowContext } from '../../hooks';
+import { Position, Size } from '../../types';
+import { noop } from '../../utils/helper';
 
 /**
  * createPortal at the Desktop root.
@@ -40,4 +48,116 @@ export function WindowComponentContainer() {
   ]);
 
   return <>{windows.map((child) => createPortal(child, desktopContainer))}</>;
+}
+
+export interface CommonWindowWrapperProps {
+  id: string;
+  title: string;
+  size: Size;
+  position: Position;
+  zIndex: number;
+
+  // onMinimize?: () => void;
+  // onMaximize?: () => void;
+  // onClose?: () => void;
+
+  nodeRef: () => React.RefObject<HTMLElement>;
+
+  onDragStart?: DraggableEventHandler;
+  onDrag?: DraggableEventHandler;
+  onDragStop?: DraggableEventHandler;
+
+  children: React.JSX.Element[] | React.JSX.Element;
+}
+
+const dState = getDefaultWindowState();
+
+export function DraggableWindowWrapper({
+  id,
+  title,
+  size: si,
+  position: pos,
+  zIndex,
+  nodeRef,
+  onDrag = noop,
+  onDragStart = noop,
+  onDragStop = noop,
+  children,
+}: CommonWindowWrapperProps) {
+  const dragRef = useMemo(() => nodeRef(), [nodeRef]);
+  const { desktopContainer, windowManager } = useWindowContext();
+
+  const [position, setPosition] = useState<Position>(pos);
+  const [size, setSize] = useState<Size>(si);
+
+  const [windowState, setWindowState] = useState<WindowState>(dState);
+
+  useEffect(() => {
+    const sub = windowManager.subscribeState(id, setWindowState);
+    return () => sub.unsubscribe();
+  }, [windowManager, id]);
+
+  const handleDrag: DraggableEventHandler = (e, data) => {
+    if (data.y > 50) {
+      windowManager.updateWindowState(id, 'isMaximized', false);
+      setSize([600, 400]);
+
+      const { width } = desktopContainer.getBoundingClientRect();
+      const { clientX } = e as MouseEvent;
+      setPosition([Math.round(clientX - (clientX / width) * 600), data.y]);
+    }
+    onDrag(e, data);
+  };
+
+  // handle move.
+  const handleDragStop: DraggableEventHandler = (e, data) => {
+    setPosition([data.x, data.y]);
+    onDragStop(e, data);
+  };
+
+  useEventListener(id, [
+    {
+      event: 'maximize-window',
+      handler() {
+        const { width, height } = desktopContainer.getBoundingClientRect();
+        setSize([width, height]);
+        setPosition([0, 0]);
+      },
+    },
+    {
+      event: 'minimize-window',
+      handler() {
+        setPosition([9999, 9999]);
+      },
+    },
+  ]);
+
+  return (
+    <Draggable
+      axis="both"
+      defaultPosition={{ x: 0, y: 0 }}
+      position={{ x: position[0], y: position[1] }}
+      grid={[1, 1]}
+      scale={1}
+      onStart={onDragStart}
+      onDrag={windowState.isMaximized ? handleDrag : noop}
+      onStop={handleDragStop}
+      nodeRef={dragRef}
+    >
+      <div
+        style={{
+          width: size[0],
+          height: size[1],
+          zIndex,
+        }}
+        title={title}
+        className={classNames(
+          'flex flex-col w-full h-full window-component-container',
+          windowState.isMaximized && 'fullscreen-state',
+        )}
+      >
+        {Array.isArray(children) ? <>{...children}</> : children}
+      </div>
+    </Draggable>
+  );
 }

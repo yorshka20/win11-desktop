@@ -2,17 +2,17 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import { filter } from 'rxjs';
 
 import { type PipeEvent, WindowContext } from './context/context';
-import { type ContextStoreState, store } from './context/store';
+import { type ContextState, store } from './context/store';
 
 export function useWindowContext() {
   return useContext(WindowContext);
 }
 
-export function useContextState<T extends keyof ContextStoreState>(
+export function useContextState<T extends keyof ContextState>(
   key: T,
-): ContextStoreState[T] {
+): ContextState[T] {
   const defaultValue = store.getStateValue(key);
-  const [state, setState] = useState<ContextStoreState[T]>(defaultValue);
+  const [state, setState] = useState<ContextState[T]>(defaultValue);
 
   useEffect(() => {
     const subscription = store.subscribeState(key, setState);

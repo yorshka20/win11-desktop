@@ -1,6 +1,8 @@
-import { BehaviorSubject, type Observable, type Subscription, map } from 'rxjs';
+import { type Subscription } from 'rxjs';
 
-export interface ContextStoreState {
+import { RxStore, RxStoreContent } from './rx-store';
+
+export interface ContextState extends RxStoreContent {
   theme: 'light' | 'dark';
   activeWindow: string;
   showStartMenu: boolean;
@@ -8,52 +10,42 @@ export interface ContextStoreState {
   showSystemPreference: boolean;
 }
 
-type ContextKey = keyof ContextStoreState;
+type ContextKey = keyof ContextState;
 
-type ContextValue<T extends ContextKey> = ContextStoreState[T];
+type ContextValue<T extends ContextKey> = ContextState[T];
 
-type StateSubscribeCallback<T extends keyof ContextStoreState> = (
-  v: ContextStoreState[T],
+type StateSubscribeCallback<T extends keyof ContextState> = (
+  v: ContextState[T],
 ) => void;
 
-export class ContextStore {
-  private state$: BehaviorSubject<ContextStoreState>;
+export class ContextStateStore {
+  private state$: RxStore<ContextState>;
 
   private get value() {
-    return this.state$.value;
+    return this.state$.getValue();
   }
 
-  constructor(defaultState: ContextStoreState) {
-    this.state$ = new BehaviorSubject(defaultState);
+  constructor(defaultState: ContextState) {
+    this.state$ = new RxStore<ContextState>(defaultState);
   }
 
   updateState<T extends ContextKey>(key: T, value: ContextValue<T>) {
-    this.state$.next({
-      ...this.value,
-      [key]: value,
-    });
+    this.state$.updateState(key, value);
   }
 
   getStateValue<T extends ContextKey>(key: T): ContextValue<T> {
-    return this.state$.value[key];
-  }
-
-  private getState$<T extends keyof ContextStoreState>(
-    key: T,
-  ): Observable<ContextStoreState[T]> {
-    return this.state$.pipe(map((i) => i[key]));
+    return this.value[key];
   }
 
   subscribeState<T extends ContextKey>(
     key: T,
     callback: StateSubscribeCallback<T>,
   ): Subscription {
-    const subscription = this.getState$(key).subscribe(callback);
-    return subscription;
+    return this.state$.subscribeKey(key, callback);
   }
 }
 
-export const store = new ContextStore({
+export const store = new ContextStateStore({
   theme: 'light',
   activeWindow: 'main',
   showStartMenu: false,

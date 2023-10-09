@@ -7,7 +7,7 @@ import {
   useContextMenu,
 } from './components/context-menu';
 import { DesktopIconWrapper } from './components/desktop-icon';
-import { IconMap, loadIconPromise } from './components/icons/internal-icons';
+import { IconMap, loadIcons } from './components/icons/internal-icons';
 import { WindowComponentContainer } from './components/windows';
 import { contextMenuConfig, desktopIconConfig } from './configs/desktop-config';
 import {
@@ -45,8 +45,9 @@ export function DesktopContainer({ desktopConfig }: DesktopContainerProps) {
   }, [selectionArea]);
 
   useEffect(() => {
-    loadIconPromise.then(() => {
-      setIcons(IconMap);
+    loadIcons().then((res) => {
+      console.log('do icons load?', res);
+      setIcons({ ...res });
     });
   }, []);
 

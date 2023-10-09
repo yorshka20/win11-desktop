@@ -1,9 +1,11 @@
-import { BehaviorSubject, type Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, type Subscription, map } from 'rxjs';
 
-type RxStoreContent = Record<string, unknown>;
+export type RxStoreContent = {
+  [x: string]: unknown;
+};
 
 type StateSubscriptionMap<State, T extends keyof State = keyof State> = {
-  [key in T]?: BehaviorSubject<State[T]>;
+  [key in T]?: Observable<State[T]>;
 };
 
 export class RxStore<State extends RxStoreContent> {
@@ -24,7 +26,10 @@ export class RxStore<State extends RxStoreContent> {
   }
 
   updateState<T extends keyof State>(key: T, value: State[T]) {
-    this.stateSubscription[key]?.next(value);
+    this.state$.next({
+      ...this.value,
+      [key]: value,
+    });
   }
 
   subscribeState(fn: (v: State) => void): Subscription {
@@ -43,8 +48,7 @@ export class RxStore<State extends RxStoreContent> {
       return sub;
     }
 
-    const value = this.value[key];
-    const subject = new BehaviorSubject<State[keyof State]>(value);
+    const subject = this.state$.pipe(map((s) => s[key]));
     const subscription = subject.subscribe((v) => fn(v as State[T]));
     this.stateSubscription[key] = subject;
 
@@ -53,8 +57,6 @@ export class RxStore<State extends RxStoreContent> {
 
   destroy() {
     this.state$.complete();
-    for (const sub in this.stateSubscription) {
-      this.stateSubscription[sub]?.complete();
-    }
+    this.stateSubscription = {};
   }
 }

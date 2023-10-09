@@ -87,7 +87,7 @@ export function DraggableWindowWrapper({
   const dragRef = useMemo(() => nodeRef(), [nodeRef]);
   const { desktopContainer, windowManager } = useWindowContext();
 
-  const [position, setPosition] = useState<Position>(pos);
+  const [, setPosition] = useState<Position>(pos);
   const [size, setSize] = useState<Size>(si);
 
   const [windowState, setWindowState] = useState<WindowState>(dState);
@@ -98,20 +98,19 @@ export function DraggableWindowWrapper({
   }, [windowManager, id]);
 
   const handleDrag: DraggableEventHandler = (e, data) => {
-    if (data.y > 50) {
-      windowManager.updateWindowState(id, 'isMaximized', false);
-      setSize([600, 400]);
+    // if (data.y > 50) {
+    //   windowManager.updateWindowState(id, 'isMaximized', false);
+    //   setSize([600, 400]);
 
-      const { width } = desktopContainer.getBoundingClientRect();
-      const { clientX } = e as MouseEvent;
-      setPosition([Math.round(clientX - (clientX / width) * 600), data.y]);
-    }
+    //   const { width } = desktopContainer.getBoundingClientRect();
+    //   const { clientX } = e as MouseEvent;
+    //   setPosition([Math.round(clientX - (clientX / width) * 600), data.y]);
+    // }
     onDrag(e, data);
   };
 
   // handle move.
   const handleDragStop: DraggableEventHandler = (e, data) => {
-    setPosition([data.x, data.y]);
     onDragStop(e, data);
   };
 
@@ -136,13 +135,13 @@ export function DraggableWindowWrapper({
     <Draggable
       axis="both"
       defaultPosition={{ x: 0, y: 0 }}
-      position={{ x: position[0], y: position[1] }}
       grid={[1, 1]}
       scale={1}
       onStart={onDragStart}
       onDrag={windowState.isMaximized ? handleDrag : noop}
       onStop={handleDragStop}
       nodeRef={dragRef}
+      cancel=".tabs-container"
     >
       <div
         style={{

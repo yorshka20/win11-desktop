@@ -1,8 +1,3 @@
-import {
-  CloseOutlined,
-  CropSquareOutlined,
-  Minimize,
-} from '@mui/icons-material';
 import { Divider, Input } from '@mui/joy';
 import { useRef } from 'react';
 
@@ -10,9 +5,11 @@ import { type Options } from '../../../context/window-manager';
 import { useWindowContext } from '../../../hooks';
 import { ButtonWrapper } from '../../buttons/button-wrapper';
 import { ArrowIcon } from '../../icons/arrow-icon';
+import { TrafficLightButtonGroup } from '../../traffic-light';
 import { DraggableWindowWrapper } from '../window-component';
 import { FileTreeItemWrapper } from './file-tree';
 import './style.less';
+import { Tabs } from './tabs';
 
 interface WindowComponentProps extends Options {}
 
@@ -27,23 +24,6 @@ export function ExplorerWindowComponent({
   const headerRef = useRef<HTMLHeadElement>(null);
   const { windowManager } = useWindowContext();
 
-  function getWindowHandler() {
-    return windowManager.getWindow(id);
-  }
-
-  function handleMinimize() {
-    const handler = getWindowHandler();
-    handler.minimize();
-  }
-  function handleMaximize() {
-    const handler = getWindowHandler();
-    handler.maximize();
-  }
-  function handleClose() {
-    const handler = getWindowHandler();
-    handler.close();
-  }
-
   return (
     <DraggableWindowWrapper
       id={id}
@@ -57,24 +37,12 @@ export function ExplorerWindowComponent({
         ref={headerRef}
         className="window-header flex flex-row justify-between items-center w-full"
       >
-        <div className="tabs"></div>
-        <div className="buttons self-start flex flex-row justify-between items-start">
-          <ButtonWrapper className="rect-border" height={20}>
-            <Minimize onClick={handleMinimize} className="icon min" />
-          </ButtonWrapper>
-          <ButtonWrapper className="rect-border" height={20}>
-            <CropSquareOutlined onClick={handleMaximize} className="icon max" />
-          </ButtonWrapper>
-          <ButtonWrapper
-            className="close-icon"
-            height={20}
-            backgroundColor="red"
-          >
-            <CloseOutlined onClick={handleClose} className="icon close" />
-          </ButtonWrapper>
-        </div>
+        <Tabs id={id} />
+        <TrafficLightButtonGroup windowManager={windowManager} id={id} />
       </header>
+
       <div className="window-toolbar w-full">1111</div>
+
       <div className="address flex flex-row w-full">
         <div className="icon-pack flex flex-row justify-between items-center">
           <ButtonWrapper backgroundColor="#e5f3ff">
@@ -119,6 +87,7 @@ export function ExplorerWindowComponent({
           />
         </div>
       </div>
+
       <div className="window-content flex flex-row flex-1">
         <div className="file-tree-container h-full flex flex-col justify-start items-start">
           <FileTreeItemWrapper>home</FileTreeItemWrapper>

@@ -1,7 +1,6 @@
 import React from 'react';
 
 import explorerIcon from '../../assets/systems/explorer.ico';
-import { createPromise } from '../../utils/helper';
 import { type CombinedIcons, iconConfigs } from './config';
 import type { IconWrapperProps } from './icon-wrapper';
 import { IconWrapper } from './icon-wrapper';
@@ -17,10 +16,6 @@ export const IconMap: Record<
   Record<string, React.FC<Omit<IconWrapperProps, 'src'>>>
 > = {};
 
-const [resolve, p] = createPromise();
-
-export const loadIconPromise = p;
-
 export async function loadIcons() {
   for (const { fileList, load, iconType } of iconConfigs) {
     for (const name of fileList) {
@@ -33,8 +28,6 @@ export async function loadIcons() {
       );
     }
   }
-
-  resolve(undefined);
 
   return IconMap;
 }

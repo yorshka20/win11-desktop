@@ -1,5 +1,5 @@
 import cls from 'classnames';
-import { useCallback, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import Draggable, { type DraggableEventHandler } from 'react-draggable';
 import { styled } from 'styled-components';
 
@@ -7,7 +7,7 @@ import { DESKTOP_GRID_SIZE } from '../../constants';
 import { type IconType } from '../../types';
 import { noop } from '../../utils/helper';
 
-export interface DesktopIconWrapperProps extends StyledProps {
+export interface DesktopIconWrapperProps {
   name: string;
   id: string;
   icon: IconType;
@@ -16,14 +16,20 @@ export interface DesktopIconWrapperProps extends StyledProps {
   grided?: boolean;
   shadowText?: boolean;
 
+  // styled props.
+  color?: string;
+  hoverBgColor?: string;
+  selectedBgColor?: string;
+  // styled props.
+
   onClick?: (id: string) => void;
   onDoubleClick?: (id: string) => void;
 }
 
 interface StyledProps {
-  color?: string;
-  hoverBgColor?: string;
-  selectedBgColor?: string;
+  $color?: string;
+  $hoverBgColor?: string;
+  $selectedBgColor?: string;
 }
 
 const Container = styled.div<StyledProps>`
@@ -43,12 +49,12 @@ const Container = styled.div<StyledProps>`
   }
 
   &.selected {
-    background-color: ${(props) => props.selectedBgColor};
+    background-color: ${(props) => props.$selectedBgColor};
     border-color: #999;
   }
 
   &:hover {
-    background-color: ${(props) => props.hoverBgColor};
+    background-color: ${(props) => props.$hoverBgColor};
   }
 
   .icon {
@@ -67,7 +73,7 @@ const Container = styled.div<StyledProps>`
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
 
-    color: ${(props) => props.color};
+    color: ${(props) => props.$color};
     font-size: 12px;
 
     text-align: center;
@@ -93,9 +99,10 @@ export function DesktopIconWrapper({
   selectedBgColor = 'rgba(240, 248, 255, 0.5)',
   onClick = noop,
 }: DesktopIconWrapperProps) {
+  const dragRef = useRef<HTMLDivElement>(null);
+
   const [focused] = useState(false);
   const [selected, setSelected] = useState(false);
-
   const [position, setPosition] = useState<{ x: number; y: number }>({
     x: grid[0] * 100,
     y: grid[1] * 100,
@@ -120,7 +127,6 @@ export function DesktopIconWrapper({
   return (
     <Draggable
       axis="both"
-      handle=".desktop-icon-container"
       defaultPosition={{ x: 0, y: 0 }}
       position={position}
       grid={[5, 5]}
@@ -129,6 +135,7 @@ export function DesktopIconWrapper({
       // onDrag={handleDrag}
       bounds={'parent'}
       onStop={handleStop}
+      nodeRef={dragRef}
     >
       <Container
         onClick={handleClick}
@@ -137,9 +144,10 @@ export function DesktopIconWrapper({
           focused ? 'focused' : '',
           selected ? 'selected' : '',
         )}
-        color={color}
-        hoverBgColor={hoverBgColor}
-        selectedBgColor={selectedBgColor}
+        ref={dragRef}
+        $color={color}
+        $hoverBgColor={hoverBgColor}
+        $selectedBgColor={selectedBgColor}
       >
         {typeof Icon === 'string' ? <img src={Icon} className="icon" /> : Icon}
         <p className={`${shadowText ? 'text-shadow' : ''}`}>{name}</p>

@@ -30,7 +30,7 @@ export function TaskBar({ buttons }: Props) {
     const id = `setting-window-${Math.random().toString(36)}`;
     const options: Options = {
       id,
-      size: [1080, 600],
+      size: [800, 600],
       position: [200, 100],
       title: id,
       reuse: false,
@@ -81,7 +81,7 @@ export function TaskBar({ buttons }: Props) {
     const id = `searchWindow-${Math.random().toString(36)}`;
     const options: Options = {
       id,
-      size: [1080, 600],
+      size: [800, 600],
       position: [200, 100],
       title: id,
       reuse: false,

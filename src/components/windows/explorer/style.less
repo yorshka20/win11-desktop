@@ -1,13 +1,4 @@
-.window-component-container {
-  position: fixed;
-
-  min-width: 400px;
-  min-height: 400px;
-
-  background-color: rgb(240, 248, 255);
-
-  border-radius: 6px;
-
+.explorer-window {
   &.fullscreen-state {
     border-radius: 0;
   }
@@ -18,7 +9,7 @@
 
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 
-  .window-header {
+  .explorer-window-header {
     background-color: #cdddec;
     height: 35px;
 
@@ -27,7 +18,7 @@
     }
   }
 
-  .window-toolbar {
+  .explorer-window-toolbar {
     background-color: #f1f5f9;
     height: 50px;
   }
@@ -71,7 +62,7 @@
     }
   }
 
-  .window-content {
+  .explorer-window-content {
     background-color: #fff;
     .file-tree-container {
       border: 1px solid red;
@@ -105,7 +96,7 @@
       min-width: 200px;
     }
   }
-  .footer {
+  .explorer-window-footer {
     height: 20px;
   }
 }

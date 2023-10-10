@@ -33,17 +33,18 @@ export function ExplorerWindowComponent({
       position={position}
       nodeRef={() => headerRef}
       cancel=".tabs-container"
-      handle=".window-header"
+      handle=".explorer-window-header"
+      className="explorer-window"
     >
       <header
         ref={headerRef}
-        className="window-header flex flex-row justify-between items-center w-full"
+        className="explorer-window-header flex flex-row justify-between items-center w-full"
       >
         <Tabs id={id} />
         <TrafficLightButtonGroup windowManager={windowManager} id={id} />
       </header>
 
-      <div className="window-toolbar w-full">1111</div>
+      <div className="explorer-window-toolbar w-full">1111</div>
 
       <div className="address flex flex-row w-full">
         <div className="icon-pack flex flex-row justify-between items-center">
@@ -90,7 +91,7 @@ export function ExplorerWindowComponent({
         </div>
       </div>
 
-      <div className="window-content flex flex-row flex-1">
+      <div className="explorer-window-content flex flex-row flex-1">
         <div className="file-tree-container h-full flex flex-col justify-start items-start">
           <FileTreeItemWrapper>home</FileTreeItemWrapper>
           <Divider />
@@ -103,7 +104,7 @@ export function ExplorerWindowComponent({
         <div className="content-container flex-1">{content}</div>
         <div className="preview-container"></div>
       </div>
-      <div className="footer w-full flex flex-row justify-between items-center"></div>
+      <div className="explorer-window-footer w-full flex flex-row justify-between items-center"></div>
     </DraggableWindowWrapper>
   );
 }

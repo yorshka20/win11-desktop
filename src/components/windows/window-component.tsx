@@ -139,7 +139,7 @@ export function DraggableWindowWrapper({
     setPosition([data.x, data.y]);
   };
 
-  console.log('position]', ...position);
+  // console.log('position]', ...position);
 
   useEventListener(id, [
     {

@@ -111,6 +111,10 @@ export class WindowManager {
     return this.windowHandlerMap[id];
   }
 
+  resizeWindow(id: string, size: [number, number]) {
+    this.getWindow(id).data.size = size;
+  }
+
   getWindowStateByKey<T extends keyof WindowState>(
     id: string,
     key: T,

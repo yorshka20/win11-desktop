@@ -6,6 +6,7 @@ import { type Options } from '../../../context/window-manager';
 import { useWindowContext } from '../../../hooks';
 import type { WindowType } from '../../../types';
 import { TrafficLightButtonGroup } from '../../traffic-light';
+import ResizableWrapper from '../resize-wrapper';
 import { DraggableWindowWrapper } from '../window-component';
 import './style.less';
 
@@ -36,41 +37,48 @@ export function SettingWindowComponent({
   const headerRef = useRef<HTMLHeadElement>(null);
   const { windowManager } = useWindowContext();
   windowManager;
+
   return (
-    <DraggableWindowWrapper
-      id={id}
-      title={title}
-      zIndex={zIndex}
-      size={size}
-      position={position}
-      // nodeRef={() => headerRef}
-      handle=".setting-window-header"
-      className="setting-window-component"
+    <ResizableWrapper
+      onResize={(width, height) => {
+        windowManager.resizeWindow(id, [width, height]);
+      }}
     >
-      <Container className="flex flex-col w-full h-full">
-        <header
-          ref={headerRef}
-          className="setting-window-header flex flex-row justify-end items-center w-full"
-        >
-          <TrafficLightButtonGroup windowManager={windowManager} id={id} />
-        </header>
-        <div className="flex flex-1 flex-row w-full h-full justify-center items-center content-container">
-          <div className="flex flex-col justify-start items-start h-full menus">
-            <div className="flex flex-row justify-start items-center profile-block">
-              profile 1312312
+      <DraggableWindowWrapper
+        id={id}
+        title={title}
+        zIndex={zIndex}
+        size={size}
+        position={position}
+        // nodeRef={() => headerRef}
+        handle=".setting-window-header"
+        className="setting-window-component"
+      >
+        <Container className="flex flex-col w-full h-full">
+          <header
+            ref={headerRef}
+            className="setting-window-header flex flex-row justify-end items-center w-full"
+          >
+            <TrafficLightButtonGroup windowManager={windowManager} id={id} />
+          </header>
+          <div className="flex flex-1 flex-row w-full h-full justify-center items-center content-container">
+            <div className="flex flex-col justify-start items-start h-full menus">
+              <div className="flex flex-row justify-start items-center profile-block">
+                profile 1312312
+              </div>
+              <Input />
+              <p>1</p>
+              <p>1</p>
+              <p>1</p>
+              <p>1</p>
+              <p>1</p>
+              <p>1</p>
             </div>
-            <Input />
-            <p>1</p>
-            <p>1</p>
-            <p>1</p>
-            <p>1</p>
-            <p>1</p>
-            <p>1</p>
+            <div className="content w-full h-full flex-1">{content}</div>
           </div>
-          <div className="content w-full h-full flex-1">{content}</div>
-        </div>
-      </Container>
-    </DraggableWindowWrapper>
+        </Container>
+      </DraggableWindowWrapper>
+    </ResizableWrapper>
   );
 }
 

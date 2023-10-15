@@ -39,20 +39,21 @@ export function SettingWindowComponent({
   windowManager;
 
   return (
-    <ResizableWrapper
-      onResize={(width, height) => {
-        windowManager.resizeWindow(id, [width, height]);
-      }}
+    <DraggableWindowWrapper
+      id={id}
+      title={title}
+      zIndex={zIndex}
+      position={position}
+      // nodeRef={() => headerRef}
+      handle=".setting-window-header"
+      className="setting-window-component"
     >
-      <DraggableWindowWrapper
-        id={id}
-        title={title}
-        zIndex={zIndex}
+      <ResizableWrapper
+        onResize={(width, height) => {
+          windowManager.resizeWindow(id, [width, height]);
+        }}
         size={size}
-        position={position}
-        // nodeRef={() => headerRef}
-        handle=".setting-window-header"
-        className="setting-window-component"
+        id={id}
       >
         <Container className="flex flex-col w-full h-full">
           <header
@@ -77,8 +78,8 @@ export function SettingWindowComponent({
             <div className="content w-full h-full flex-1">{content}</div>
           </div>
         </Container>
-      </DraggableWindowWrapper>
-    </ResizableWrapper>
+      </ResizableWrapper>
+    </DraggableWindowWrapper>
   );
 }
 

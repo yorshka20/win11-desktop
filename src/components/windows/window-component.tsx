@@ -9,7 +9,7 @@ import {
   getDefaultWindowState,
 } from '../../context/window-manager';
 import { useEventListener, useWindowContext } from '../../hooks';
-import { Position, Size } from '../../types';
+import { Position } from '../../types';
 import { noop } from '../../utils/helper';
 
 /**
@@ -51,14 +51,11 @@ export function WindowComponentContainer() {
   return <>{windows.map((child) => createPortal(child, desktopContainer))}</>;
 }
 
-const DraggableWindowContainer = styled.div<{ $width; $height; $zIndex }>`
+const DraggableWindowContainer = styled.div<{ $zIndex }>`
   position: fixed;
 
   min-width: 400px;
   min-height: 400px;
-
-  width: ${(props) => props.$width};
-  height: ${(props) => props.$height};
 
   background-color: rgb(240, 248, 255);
   border-radius: 6px;
@@ -69,7 +66,6 @@ const DraggableWindowContainer = styled.div<{ $width; $height; $zIndex }>`
 export interface CommonWindowWrapperProps {
   id: string;
   title: string;
-  size: Size;
   position: Position;
   zIndex: number;
 
@@ -94,7 +90,6 @@ const dState = getDefaultWindowState();
 export function DraggableWindowWrapper({
   id,
   title,
-  size: si,
   position: pos,
   zIndex,
   // nodeRef,
@@ -107,10 +102,9 @@ export function DraggableWindowWrapper({
   children,
 }: CommonWindowWrapperProps) {
   // const dragRef = useMemo(() => nodeRef(), [nodeRef]);
-  const { desktopContainer, windowManager } = useWindowContext();
+  const { windowManager } = useWindowContext();
 
   const [position, setPosition] = useState<Position>(pos);
-  const [size, setSize] = useState<Size>(si);
 
   const [windowState, setWindowState] = useState<WindowState>(dState);
 
@@ -145,8 +139,6 @@ export function DraggableWindowWrapper({
     {
       event: 'maximize-window',
       handler() {
-        const { width, height } = desktopContainer.getBoundingClientRect();
-        setSize([width, height]);
         setPosition([0, 0]);
       },
     },
@@ -174,11 +166,9 @@ export function DraggableWindowWrapper({
     >
       <DraggableWindowContainer
         $zIndex={zIndex}
-        $width={size[0]}
-        $height={size[1]}
         title={title}
         className={classNames(
-          'flex flex-col w-full h-full window-component-container',
+          'flex flex-col window-component-container',
           windowState.isMaximized && 'fullscreen-state',
           className,
         )}

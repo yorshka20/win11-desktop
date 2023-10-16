@@ -38,6 +38,10 @@ export function SettingWindowComponent({
   const { windowManager } = useWindowContext();
   windowManager;
 
+  const handleResize = (width: number, height: number) => {
+    console.log('width, height', width, height);
+  };
+
   return (
     <DraggableWindowWrapper
       id={id}
@@ -48,13 +52,7 @@ export function SettingWindowComponent({
       handle=".setting-window-header"
       className="setting-window-component"
     >
-      <ResizableWrapper
-        onResize={(width, height) => {
-          windowManager.resizeWindow(id, [width, height]);
-        }}
-        size={size}
-        id={id}
-      >
+      <ResizableWrapper onResize={handleResize} size={size} id={id}>
         <Container className="flex flex-col w-full h-full">
           <header
             ref={headerRef}

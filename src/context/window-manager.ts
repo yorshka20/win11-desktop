@@ -1,6 +1,6 @@
 import { Subject, Subscription, filter } from 'rxjs';
 
-import type { Position } from '../types';
+import type { Position, Size } from '../types';
 import { PipeEvent } from './context';
 import { RxStore } from './rx-store';
 
@@ -8,6 +8,8 @@ export type WindowState = {
   isMaximized: boolean;
   isMinimized: boolean;
   isActive: boolean;
+  size: Size;
+  position: Position;
   data: Options;
 };
 
@@ -16,6 +18,8 @@ export function getDefaultWindowState() {
     isActive: false,
     isMaximized: false,
     isMinimized: false,
+    size: [0, 0] as Size,
+    position: [0, 0] as Position,
     data: {} as Options,
   };
 }
@@ -59,6 +63,8 @@ export class WindowManager {
     this.windowHandlerMap[id] = window;
     this.windowState$Map[id] = new RxStore<WindowState>({
       ...getDefaultWindowState(),
+      size: window.data.size,
+      position: window.data.position,
       data: window.data,
     });
     this.windowEventMap[id] = this.event$
@@ -109,10 +115,6 @@ export class WindowManager {
 
   getWindow(id: string) {
     return this.windowHandlerMap[id];
-  }
-
-  resizeWindow(id: string, size: [number, number]) {
-    this.getWindow(id).data.size = size;
   }
 
   getWindowStateByKey<T extends keyof WindowState>(

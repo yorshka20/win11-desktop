@@ -11,9 +11,7 @@ interface ResizableWrapperProps {
   size: [number, number];
 }
 
-const ResizeContainer = styled.div<{ $width; $height }>`
-  width: ${(props) => props.$width}px;
-  height: ${(props) => props.$height}px;
+const ResizeContainer = styled.div`
   border: 1px solid green;
   position: relative;
 `;
@@ -22,16 +20,19 @@ const ResizableWrapper: React.FC<ResizableWrapperProps> = ({
   onResize,
   children,
   id,
-  size: si,
+  size,
 }) => {
-  const { desktopContainer } = useWindowContext();
+  size;
+  const { desktopContainer, windowManager } = useWindowContext();
 
-  const [size, setSize] = useState<[number, number]>(si);
+  const [winSize, setWinSize] = useState<[number, number]>(size);
 
-  const handleResize: ResizeCallback = (e, d, ref, size) => {
-    console.log('e, data', size);
+  const handleResize: ResizeCallback = (e, _, ref, size) => {
+    console.log('e, data', ref, size);
+    setWinSize([size.width, size.height]);
+
     onResize(size.width, size.height);
-    setSize([size.width, size.height]);
+    windowManager.updateWindowState(id, 'size', [size.width, size.height]);
   };
 
   useEventListener(id, [
@@ -39,13 +40,14 @@ const ResizableWrapper: React.FC<ResizableWrapperProps> = ({
       event: 'maximize-window',
       handler() {
         const { width, height } = desktopContainer.getBoundingClientRect();
-        onResize(width, height);
+        windowManager.updateWindowState(id, 'size', [width, height]);
       },
     },
     {
       event: 'minimize-window',
       handler() {
         onResize(0, 0);
+        windowManager.updateWindowState(id, 'size', [0, 0]);
       },
     },
   ]);
@@ -53,9 +55,11 @@ const ResizableWrapper: React.FC<ResizableWrapperProps> = ({
   return (
     <Resizable
       onResizeStop={handleResize}
+      bounds={'parent'}
+      // size={{ width: winSize[0], height: winSize[1] }}
       className="flex w-full h-full relative"
     >
-      <ResizeContainer className={'flex'} $width={size[0]} $height={size[1]}>
+      <ResizeContainer className={'flex w-full h-full flex-1'}>
         {children}
       </ResizeContainer>
     </Resizable>

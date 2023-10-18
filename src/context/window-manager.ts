@@ -10,6 +10,7 @@ export type WindowState = {
   isActive: boolean;
   size: Size;
   position: Position;
+  zIndex: number;
   data: Options;
 };
 
@@ -20,6 +21,7 @@ export function getDefaultWindowState() {
     isMinimized: false,
     size: [0, 0] as Size,
     position: [0, 0] as Position,
+    zIndex: 0,
     data: {} as Options,
   };
 }
@@ -52,6 +54,8 @@ export class WindowManager {
   private windowState$Map: Record<string, RxStore<WindowState>>;
 
   private windowEventMap: Record<string, Subscription>;
+
+  private maxZIndex = 0;
 
   constructor(private event$: Subject<PipeEvent>) {
     this.windowHandlerMap = {};
@@ -165,5 +169,10 @@ export class WindowManager {
   private onCloseWindow(id: string) {
     id;
     //
+  }
+
+  focusWindow(id: string) {
+    this.updateWindowState(id, 'isActive', true);
+    this.updateWindowState(id, 'zIndex', this.maxZIndex++);
   }
 }

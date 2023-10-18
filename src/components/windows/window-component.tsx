@@ -114,6 +114,7 @@ export function DraggableWindowWrapper({
   }, [windowManager, id]);
 
   onDrag;
+  zIndex;
 
   // const handleDrag: DraggableEventHandler = (e, data) => {
   //   // if (data.y > 50) {
@@ -134,6 +135,10 @@ export function DraggableWindowWrapper({
   };
 
   // console.log('position]', ...position);
+
+  const handleClickWindow = () => {
+    windowManager.focusWindow(id);
+  };
 
   useEventListener(id, [
     {
@@ -165,13 +170,14 @@ export function DraggableWindowWrapper({
       cancel={cancel}
     >
       <DraggableWindowContainer
-        $zIndex={zIndex}
+        $zIndex={windowState.zIndex}
         title={title}
         className={classNames(
           'flex flex-col window-component-container',
           windowState.isMaximized && 'fullscreen-state',
           className,
         )}
+        onClick={handleClickWindow}
       >
         {Array.isArray(children) ? <>{...children}</> : children}
       </DraggableWindowContainer>

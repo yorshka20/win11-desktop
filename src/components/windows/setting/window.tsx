@@ -7,9 +7,12 @@ import { useWindowContext } from '../../../hooks';
 import { TrafficLightButtonGroup } from '../../traffic-light';
 import { DraggableWindowWrapper } from '../common/draggable-wrapper';
 import ResizableWrapper from '../common/resize-wrapper';
+import { useWindowState } from '../hooks';
 import './style.less';
 
-interface WindowComponentProps extends Options {}
+type WindowComponentProps = Partial<Options> & {
+  id: string;
+};
 
 const Container = styled.div`
   background-color: #f0f3f9;
@@ -26,16 +29,17 @@ const Container = styled.div`
 `;
 
 export function SettingWindowComponent({
-  title,
   id,
-  position,
-  zIndex,
-  size,
+  title = 'setting',
   content = '',
 }: WindowComponentProps) {
   const headerRef = useRef<HTMLHeadElement>(null);
   const { windowManager } = useWindowContext();
   windowManager;
+
+  const windowState = useWindowState(id);
+
+  console.log('windowState', windowState);
 
   const handleResize = (width: number, height: number) => {
     console.log('width, height', width, height);
@@ -45,13 +49,15 @@ export function SettingWindowComponent({
     <DraggableWindowWrapper
       id={id}
       title={title}
-      zIndex={zIndex}
-      position={position}
-      // nodeRef={() => headerRef}
+      zIndex={windowState.zIndex}
+      size={windowState.size}
+      position={windowState.position}
+      isMaximized={windowState.isMaximized}
+      nodeRef={() => headerRef}
       handle=".setting-window-header"
       className="setting-window-component"
     >
-      <ResizableWrapper onResize={handleResize} size={size} id={id}>
+      <ResizableWrapper onResize={handleResize} size={windowState.size} id={id}>
         <Container className="flex flex-col w-full h-full">
           <header
             ref={headerRef}

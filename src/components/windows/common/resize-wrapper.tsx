@@ -1,9 +1,10 @@
 import { Resizable, type ResizeCallback } from 're-resizable';
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 import { useWindowContext } from '../../../hooks';
 import type { Size } from '../../../types';
+import { createLogger } from '../../../utils/logger';
 import { useWindowResize } from '../hooks';
 
 interface ResizableWrapperProps {
@@ -16,7 +17,11 @@ interface ResizableWrapperProps {
 const ResizeContainer = styled.div`
   border: 1px solid green;
   position: relative;
+
+  display: flex;
 `;
+
+const logger = createLogger('ResizableWrapper');
 
 const ResizableWrapper: React.FC<ResizableWrapperProps> = ({
   onResize,
@@ -26,17 +31,18 @@ const ResizableWrapper: React.FC<ResizableWrapperProps> = ({
 }) => {
   const { windowManager } = useWindowContext();
 
-  const [winSize, setWinSize] = useState<[number, number]>(size);
-
   const handleResize: ResizeCallback = (...args) => {
-    const size = args[3];
-    // console.log('e, data', args, size);
-    const width = winSize[0] + size.width;
-    const height = winSize[1] + size.height;
-    setWinSize([width, height]);
+    logger('handleResize', args);
+    const s = args[3];
+
+    // try to avoid using getBoundingClientRect
+
+    const width = Math.round(size[0] + s.width);
+    const height = Math.round(size[1] + s.height);
+
+    windowManager.updateWindowState(id, 'size', [width, height]);
 
     onResize(width, height);
-    windowManager.updateWindowState(id, 'size', [width, height]);
   };
 
   // subscribe to windowManager for window resize pipeEvent
@@ -44,15 +50,11 @@ const ResizableWrapper: React.FC<ResizableWrapperProps> = ({
 
   return (
     <Resizable
-      defaultSize={{
-        width: size[0],
-        height: size[1],
-      }}
       minHeight={400}
       minWidth={600}
       onResizeStop={handleResize}
       bounds={'window'}
-      size={{ width: winSize[0], height: winSize[1] }}
+      size={{ width: size[0], height: size[1] }}
       className="flex w-full h-full relative"
     >
       <ResizeContainer className={'flex w-full h-full flex-1'}>

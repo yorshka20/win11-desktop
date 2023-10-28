@@ -9,8 +9,6 @@ export function createExplorerWindow(
   context: WindowContextType,
   defaultOptions = {} as Options,
 ) {
-  console.log('options in create window', context);
-
   const { windowManager, event$ } = context;
 
   const id = `searchWindow-${Math.random().toString(36)}`;
@@ -26,7 +24,7 @@ export function createExplorerWindow(
     content: id,
   };
 
-  const window = <ExplorerWindowComponent {...options} />;
+  const window = <ExplorerWindowComponent id={id} />;
 
   const handler: WindowHandler = {
     close() {
@@ -53,8 +51,6 @@ export function createExplorerWindow(
     window,
     data: options,
   };
-
-  console.log('windowOpener', window, handler);
 
   // 1. add window
   windowManager.addWindow(id, handler);

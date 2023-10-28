@@ -22,7 +22,7 @@ import { createSettingWindow } from './setting/create';
 export function windowOpener(
   windowType: WindowType,
   context: WindowContextType,
-  options = {} as Options,
+  options: Options = {} as Options,
 ): React.JSX.Element {
   let window: React.JSX.Element;
 

@@ -1,12 +1,8 @@
 import classNames from 'classnames';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Draggable, { type DraggableEventHandler } from 'react-draggable';
 import { styled } from 'styled-components';
 
-import {
-  type WindowState,
-  getDefaultWindowState,
-} from '../../../context/window-manager';
 import { useEventListener, useWindowContext } from '../../../hooks';
 import { Position, Size } from '../../../types';
 import { noop } from '../../../utils/helper';
@@ -28,6 +24,7 @@ export interface CommonWindowWrapperProps {
   title: string;
   position: Position;
   zIndex: number;
+  isMaximized: boolean;
   size?: Size;
 
   className?: string;
@@ -46,14 +43,13 @@ export interface CommonWindowWrapperProps {
   children: React.JSX.Element[] | React.JSX.Element;
 }
 
-const dState = getDefaultWindowState();
-
 export function DraggableWindowWrapper({
   id,
   title,
-  position: pos,
+  position,
   zIndex,
-  // nodeRef,
+  isMaximized,
+  // nodeRef, // TODO: fix nodeRef
   className = '',
   handle,
   onDrag = noop,
@@ -64,15 +60,6 @@ export function DraggableWindowWrapper({
 }: CommonWindowWrapperProps) {
   // const dragRef = useMemo(() => nodeRef(), [nodeRef]);
   const { windowManager } = useWindowContext();
-
-  const [position, setPosition] = useState<Position>(pos);
-
-  const [windowState, setWindowState] = useState<WindowState>(dState);
-
-  useEffect(() => {
-    const sub = windowManager.subscribeState(id, setWindowState);
-    return () => sub.unsubscribe();
-  }, [windowManager, id]);
 
   onDrag;
   zIndex;
@@ -92,10 +79,9 @@ export function DraggableWindowWrapper({
   // handle move.
   const handleDragStop: DraggableEventHandler = (e, data) => {
     onDragStop(e, data);
-    setPosition([data.x, data.y]);
-  };
 
-  // console.log('position]', ...position);
+    windowManager.updateWindowState(id, 'position', [data.x, data.y]);
+  };
 
   const handleClickWindow = () => {
     windowManager.focusWindow(id);
@@ -105,13 +91,13 @@ export function DraggableWindowWrapper({
     {
       event: 'maximize-window',
       handler() {
-        setPosition([0, 0]);
+        windowManager.updateWindowState(id, 'position', [0, 0]);
       },
     },
     {
       event: 'minimize-window',
       handler() {
-        setPosition([9999, 9999]);
+        windowManager.updateWindowState(id, 'position', [9999, 9999]);
       },
     },
   ]);
@@ -131,11 +117,11 @@ export function DraggableWindowWrapper({
       cancel={cancel}
     >
       <DraggableWindowContainer
-        $zIndex={windowState.zIndex}
+        $zIndex={zIndex}
         title={title}
         className={classNames(
           'flex flex-col window-component-container',
-          windowState.isMaximized && 'fullscreen-state',
+          isMaximized && 'fullscreen-state',
           className,
         )}
         onClick={handleClickWindow}

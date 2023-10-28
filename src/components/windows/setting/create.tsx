@@ -6,8 +6,6 @@ export function createSettingWindow(
   context: WindowContextType,
   defaultOptions = {} as Options,
 ) {
-  console.log('options in create window', context, defaultOptions);
-
   const { windowManager, event$ } = context;
 
   const id = `settingWindow-${Math.random().toString(36)}`;
@@ -23,7 +21,7 @@ export function createSettingWindow(
     content: id,
   };
 
-  const window = <SettingWindowComponent {...options} />;
+  const window = <SettingWindowComponent id={id} />;
 
   const handler: WindowHandler = {
     close() {
@@ -50,8 +48,6 @@ export function createSettingWindow(
     window,
     data: options,
   };
-
-  console.log('windowOpener', window, handler);
 
   // 1. add window
   windowManager.addWindow(id, handler);

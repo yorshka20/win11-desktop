@@ -1,6 +1,7 @@
 import { Subject, Subscription, filter } from 'rxjs';
 
 import type { Position, Size } from '../types';
+import { createLogger } from '../utils/logger';
 import { PipeEvent } from './context';
 import { RxStore } from './rx-store';
 
@@ -47,6 +48,8 @@ export type WindowHandler = {
   data: Options;
 };
 
+const logger = createLogger('window-manager');
+
 export class WindowManager {
   private windowHandlerMap: Record<string, WindowHandler>;
 
@@ -56,6 +59,7 @@ export class WindowManager {
   private windowEventMap: Record<string, Subscription>;
 
   private maxZIndex = 0;
+  private currentActiveWindowId = '';
 
   constructor(private event$: Subject<PipeEvent>) {
     this.windowHandlerMap = {};
@@ -86,7 +90,7 @@ export class WindowManager {
         break;
       }
       case 'open-window': {
-        console.log('window manager', this);
+        logger('window manager: open window', id);
         break;
       }
       case 'minimize-window': {
@@ -137,7 +141,7 @@ export class WindowManager {
     key: T,
     value: WindowState[T],
   ) {
-    console.log('update state', key, value);
+    logger(`update window state: ${id} [${key}]: ${value}`);
     // window could have been destroyed
     this.getWindowState$(id)?.updateState(key, value);
   }
@@ -172,6 +176,11 @@ export class WindowManager {
   }
 
   focusWindow(id: string) {
+    if (this.currentActiveWindowId === id) {
+      return;
+    }
+
+    this.currentActiveWindowId = id;
     this.updateWindowState(id, 'isActive', true);
     this.updateWindowState(id, 'zIndex', this.maxZIndex++);
   }

@@ -23,17 +23,19 @@ const ResizableWrapper: React.FC<ResizableWrapperProps> = ({
   id,
   size,
 }) => {
-  size;
   const { desktopContainer, windowManager } = useWindowContext();
 
   const [winSize, setWinSize] = useState<[number, number]>(size);
 
-  const handleResize: ResizeCallback = (e, _, ref, size) => {
-    console.log('e, data', size);
-    setWinSize([size.width, size.height]);
+  const handleResize: ResizeCallback = (...args) => {
+    const size = args[3];
+    // console.log('e, data', args, size);
+    const width = winSize[0] + size.width;
+    const height = winSize[1] + size.height;
+    setWinSize([width, height]);
 
-    onResize(size.width, size.height);
-    windowManager.updateWindowState(id, 'size', [size.width, size.height]);
+    onResize(width, height);
+    windowManager.updateWindowState(id, 'size', [width, height]);
   };
 
   useEventListener(id, [
@@ -59,8 +61,10 @@ const ResizableWrapper: React.FC<ResizableWrapperProps> = ({
         width: size[0],
         height: size[1],
       }}
+      minHeight={400}
+      minWidth={600}
       onResizeStop={handleResize}
-      bounds={'parent'}
+      bounds={'window'}
       size={{ width: winSize[0], height: winSize[1] }}
       className="flex w-full h-full relative"
     >

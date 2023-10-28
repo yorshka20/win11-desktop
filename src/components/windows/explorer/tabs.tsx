@@ -102,6 +102,7 @@ const TabContainer = styled.div`
 
   &.inactive {
     background-color: #ceddec;
+    border: none;
   }
 `;
 
@@ -140,4 +141,4 @@ function TabItem({ name, id, onDrag, onClick, active }: ItemProps) {
   );
 }
 
-export const Tabs = React.memo(Component);
+export const WindowTabs = React.memo(Component);

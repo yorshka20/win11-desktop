@@ -56,7 +56,7 @@ const ResizableWrapper: React.FC<ResizableWrapperProps> = ({
     <Resizable
       onResizeStop={handleResize}
       bounds={'parent'}
-      // size={{ width: winSize[0], height: winSize[1] }}
+      size={{ width: winSize[0], height: winSize[1] }}
       className="flex w-full h-full relative"
     >
       <ResizeContainer className={'flex w-full h-full flex-1'}>

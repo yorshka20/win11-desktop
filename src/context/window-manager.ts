@@ -32,7 +32,7 @@ export interface BaseWindowOptions {
   title: string;
   position: Position;
   zIndex: number;
-  size: [number, number];
+  size: Size;
   content: React.JSX.Element | string;
 }
 

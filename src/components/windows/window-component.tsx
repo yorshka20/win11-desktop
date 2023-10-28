@@ -9,7 +9,7 @@ import {
   getDefaultWindowState,
 } from '../../context/window-manager';
 import { useEventListener, useWindowContext } from '../../hooks';
-import { Position } from '../../types';
+import { Position, Size } from '../../types';
 import { noop } from '../../utils/helper';
 
 /**
@@ -68,6 +68,7 @@ export interface CommonWindowWrapperProps {
   title: string;
   position: Position;
   zIndex: number;
+  size?: Size;
 
   className?: string;
 

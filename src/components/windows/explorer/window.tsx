@@ -9,7 +9,7 @@ import { TrafficLightButtonGroup } from '../../traffic-light';
 import { DraggableWindowWrapper } from '../window-component';
 import { FileTreeItemWrapper } from './file-tree';
 import './style.less';
-import { Tabs } from './tabs';
+import { WindowTabs } from './tabs';
 
 interface WindowComponentProps extends Options {}
 
@@ -40,7 +40,7 @@ export function ExplorerWindowComponent({
         ref={headerRef}
         className="explorer-window-header flex flex-row justify-between items-center w-full"
       >
-        <Tabs id={id} />
+        <WindowTabs id={id} />
         <TrafficLightButtonGroup windowManager={windowManager} id={id} />
       </header>
 

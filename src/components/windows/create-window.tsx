@@ -1,30 +1,45 @@
 import React from 'react';
 
-import type { Options } from '../../context/window-manager';
+import { WindowContextType } from '../../context/context';
+import { type Options } from '../../context/window-manager';
 import type { WindowType } from '../../types';
 import { createExplorerWindow } from './explorer/create';
-import { createSettingWindow } from './setting/window';
+import { createSettingWindow } from './setting/create';
 
+/**
+ * create window component by windowType.
+ *
+ * options are the default options for the window.
+ *
+ * windowState will be managed in windowComponent by itself.
+ *
+ * @export
+ * @param {WindowType} windowType
+ * @param {WindowContextType} context
+ * @param {Options} options
+ * @return {*}  {React.JSX.Element}
+ */
 export function windowOpener(
   windowType: WindowType,
-  options: Options,
+  context: WindowContextType,
+  options = {} as Options,
 ): React.JSX.Element {
   let window: React.JSX.Element;
 
   switch (windowType) {
     case 'Explorer':
-      window = createExplorerWindow(windowType, options);
+      window = createExplorerWindow(context, options);
       break;
     case 'Setting': {
-      window = createSettingWindow(windowType, options);
+      window = createSettingWindow(context, options);
       break;
     }
     case 'Image': {
-      window = createExplorerWindow(windowType, options);
+      window = createExplorerWindow(context, options);
       break;
     }
     default:
-      window = createExplorerWindow(windowType, options);
+      window = createExplorerWindow(context, options);
       break;
   }
 

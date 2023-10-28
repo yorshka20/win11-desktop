@@ -6,7 +6,8 @@ import { useWindowContext } from '../../../hooks';
 import { ButtonWrapper } from '../../buttons/button-wrapper';
 import { ArrowIcon } from '../../icons/arrow-icon';
 import { TrafficLightButtonGroup } from '../../traffic-light';
-import { DraggableWindowWrapper } from '../window-component';
+import { DraggableWindowWrapper } from '../common/draggable-wrapper';
+import { useWindowState } from '../hooks';
 import { FileTreeItemWrapper } from './file-tree';
 import './style.less';
 import { WindowTabs } from './tabs';
@@ -23,6 +24,9 @@ export function ExplorerWindowComponent({
 }: WindowComponentProps) {
   const headerRef = useRef<HTMLHeadElement>(null);
   const { windowManager } = useWindowContext();
+
+  const windowState = useWindowState(id);
+  console.log('windowState', windowState);
 
   return (
     <DraggableWindowWrapper

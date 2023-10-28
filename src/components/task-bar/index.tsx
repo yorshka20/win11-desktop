@@ -1,7 +1,6 @@
 import { SearchOutlined, Settings } from '@mui/icons-material';
 import React, { useCallback } from 'react';
 
-import { Options, type WindowHandler } from '../../context/window-manager';
 import { useWindowContext } from '../../hooks';
 import { ExplorerIcon } from '../icons/internal-icons';
 import { WinIcon } from '../icons/win-icon';
@@ -20,164 +19,20 @@ export interface TaskbarConfigItem {
 }
 
 export function TaskBar({ buttons }: Props) {
-  const { dispatcher, windowManager, event$ } = useWindowContext();
+  const context = useWindowContext();
+  const { dispatcher } = context;
 
   const handleClickStart = useCallback(() => {
     dispatcher('display-start-menu');
   }, [dispatcher]);
 
   const handleSetting = () => {
-    const id = `setting-window-${Math.random().toString(36)}`;
-    const options: Options = {
-      id,
-      size: [800, 600],
-      position: [200, 100],
-      title: id,
-      reuse: false,
-      zIndex: 10,
-      content: id,
-    };
-    const window = windowOpener('Setting', options);
-
-    const handler: WindowHandler = {
-      close() {
-        event$.next({
-          name: 'close-window',
-          id,
-        });
-      },
-      move(pos) {
-        console.log('move window', pos);
-      },
-      maximize() {
-        event$.next({
-          name: 'maximize-window',
-          id,
-        });
-      },
-      minimize() {
-        event$.next({
-          name: 'minimize-window',
-          id,
-        });
-      },
-      window,
-      data: options,
-    };
-
-    console.log('windowOpener', window, handler);
-
-    // 1. add window
-    windowManager.addWindow(id, handler);
-
-    // 2. open window
-    event$.next({
-      name: 'open-window',
-      id,
-    });
+    windowOpener('Setting', context);
   };
 
   const handleSearch = useCallback(() => {
-    const id = `searchWindow-${Math.random().toString(36)}`;
-    const options: Options = {
-      id,
-      size: [800, 600],
-      position: [200, 100],
-      title: id,
-      reuse: false,
-      zIndex: 10,
-      content: id,
-    };
-    const window = windowOpener('Explorer', options);
-
-    const handler: WindowHandler = {
-      close() {
-        event$.next({
-          name: 'close-window',
-          id,
-        });
-      },
-      move(pos) {
-        console.log('move window', pos);
-      },
-      maximize() {
-        event$.next({
-          name: 'maximize-window',
-          id,
-        });
-      },
-      minimize() {
-        event$.next({
-          name: 'minimize-window',
-          id,
-        });
-      },
-      window,
-      data: options,
-    };
-
-    console.log('windowOpener', window, handler);
-
-    // 1. add window
-    windowManager.addWindow(id, handler);
-
-    // 2. open window
-    event$.next({
-      name: 'open-window',
-      id,
-    });
-  }, [windowManager, event$]);
-
-  const handleSettingWindow = useCallback(() => {
-    const id = `settingWindow-${Math.random().toString(36)}`;
-    const options: Options = {
-      id,
-      size: [800, 600],
-      position: [200, 100],
-      title: id,
-      reuse: false,
-      zIndex: 10,
-      content: id,
-    };
-    const window = windowOpener('Setting', options);
-
-    const handler: WindowHandler = {
-      close() {
-        event$.next({
-          name: 'close-window',
-          id,
-        });
-      },
-      move(pos) {
-        console.log('move window', pos);
-      },
-      maximize() {
-        event$.next({
-          name: 'maximize-window',
-          id,
-        });
-      },
-      minimize() {
-        event$.next({
-          name: 'minimize-window',
-          id,
-        });
-      },
-      window,
-      data: options,
-    };
-
-    console.log('windowOpener', window, handler);
-
-    // 1. add window
-    windowManager.addWindow(id, handler);
-
-    // 2. open window
-    event$.next({
-      name: 'open-window',
-      id,
-    });
-  }, []);
+    windowOpener('Explorer', context);
+  }, [context]);
 
   return (
     <div className="taskbar-container w-full">
@@ -199,7 +54,7 @@ export function TaskBar({ buttons }: Props) {
             icon={<ExplorerIcon />}
           />
           <TaskBarButton
-            onClick={handleSettingWindow}
+            onClick={handleSetting}
             name="setting"
             icon={<Settings />}
           />

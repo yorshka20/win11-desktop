@@ -4,10 +4,9 @@ import { styled } from 'styled-components';
 
 import { type Options } from '../../../context/window-manager';
 import { useWindowContext } from '../../../hooks';
-import type { WindowType } from '../../../types';
 import { TrafficLightButtonGroup } from '../../traffic-light';
-import ResizableWrapper from '../resize-wrapper';
-import { DraggableWindowWrapper } from '../window-component';
+import { DraggableWindowWrapper } from '../common/draggable-wrapper';
+import ResizableWrapper from '../common/resize-wrapper';
 import './style.less';
 
 interface WindowComponentProps extends Options {}
@@ -79,10 +78,4 @@ export function SettingWindowComponent({
       </ResizableWrapper>
     </DraggableWindowWrapper>
   );
-}
-
-export function createSettingWindow(windowType: WindowType, options: Options) {
-  console.log('options in create window', windowType, options);
-
-  return <SettingWindowComponent {...options} />;
 }

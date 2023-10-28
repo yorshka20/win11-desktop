@@ -2,8 +2,9 @@ import { Resizable, type ResizeCallback } from 're-resizable';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
-import { useEventListener, useWindowContext } from '../../hooks';
-import { Size } from '../../types';
+import { useWindowContext } from '../../../hooks';
+import type { Size } from '../../../types';
+import { useWindowResize } from '../hooks';
 
 interface ResizableWrapperProps {
   onResize: (width: number, height: number) => void;
@@ -23,7 +24,7 @@ const ResizableWrapper: React.FC<ResizableWrapperProps> = ({
   id,
   size,
 }) => {
-  const { desktopContainer, windowManager } = useWindowContext();
+  const { windowManager } = useWindowContext();
 
   const [winSize, setWinSize] = useState<[number, number]>(size);
 
@@ -38,22 +39,8 @@ const ResizableWrapper: React.FC<ResizableWrapperProps> = ({
     windowManager.updateWindowState(id, 'size', [width, height]);
   };
 
-  useEventListener(id, [
-    {
-      event: 'maximize-window',
-      handler() {
-        const { width, height } = desktopContainer.getBoundingClientRect();
-        windowManager.updateWindowState(id, 'size', [width, height]);
-      },
-    },
-    {
-      event: 'minimize-window',
-      handler() {
-        onResize(0, 0);
-        windowManager.updateWindowState(id, 'size', [0, 0]);
-      },
-    },
-  ]);
+  // subscribe to windowManager for window resize pipeEvent
+  useWindowResize(id);
 
   return (
     <Resizable

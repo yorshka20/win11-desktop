@@ -1,19 +1,16 @@
 import { WindowContextType } from '../../../context/context';
-import {
-  type Options,
-  type WindowHandler,
-} from '../../../context/window-manager';
-import { ExplorerWindowComponent } from './window';
+import type { Options, WindowHandler } from '../../../context/window-manager';
+import { SettingWindowComponent } from './window';
 
-export function createExplorerWindow(
+export function createSettingWindow(
   context: WindowContextType,
   defaultOptions = {} as Options,
 ) {
-  console.log('options in create window', context);
+  console.log('options in create window', context, defaultOptions);
 
   const { windowManager, event$ } = context;
 
-  const id = `searchWindow-${Math.random().toString(36)}`;
+  const id = `settingWindow-${Math.random().toString(36)}`;
 
   const options: Options = {
     ...defaultOptions,
@@ -26,7 +23,7 @@ export function createExplorerWindow(
     content: id,
   };
 
-  const window = <ExplorerWindowComponent {...options} />;
+  const window = <SettingWindowComponent {...options} />;
 
   const handler: WindowHandler = {
     close() {

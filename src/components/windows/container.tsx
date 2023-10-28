@@ -18,7 +18,7 @@ export function WindowComponentContainer() {
 
   const [windows, setWindows] = useState<React.JSX.Element[]>([]);
 
-  // mount and unmount all window components.
+  // handle window operations for all.
   useEventListener('*', [
     {
       event: 'close-window',
@@ -36,6 +36,21 @@ export function WindowComponentContainer() {
         // windows are store in windowManager.
         const handler = windowManager.getWindow(id);
         setWindows((a) => [...a, handler.window]);
+      },
+    },
+    {
+      event: 'maximize-window',
+      handler(id) {
+        const { width, height } = desktopContainer.getBoundingClientRect();
+        windowManager.updateWindowState(id, 'size', [width, height]);
+        windowManager.updateWindowState(id, 'position', [0, 0]);
+      },
+    },
+    {
+      event: 'minimize-window',
+      handler(id) {
+        windowManager.updateWindowState(id, 'size', [0, 0]);
+        windowManager.updateWindowState(id, 'position', [9999, 9999]);
       },
     },
   ]);

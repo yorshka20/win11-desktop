@@ -5,7 +5,6 @@ import styled from 'styled-components';
 import { useWindowContext } from '../../../hooks';
 import type { Size } from '../../../types';
 import { createLogger } from '../../../utils/logger';
-import { useWindowResize } from '../hooks';
 
 interface ResizableWrapperProps {
   onResize: (width: number, height: number) => void;
@@ -44,9 +43,6 @@ const ResizableWrapper: React.FC<ResizableWrapperProps> = ({
 
     onResize(width, height);
   };
-
-  // subscribe to windowManager for window resize pipeEvent
-  useWindowResize(id);
 
   return (
     <Resizable

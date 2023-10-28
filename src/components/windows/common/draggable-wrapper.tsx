@@ -3,7 +3,7 @@ import React from 'react';
 import Draggable, { type DraggableEventHandler } from 'react-draggable';
 import { styled } from 'styled-components';
 
-import { useEventListener, useWindowContext } from '../../../hooks';
+import { useWindowContext } from '../../../hooks';
 import { Position, Size } from '../../../types';
 import { noop } from '../../../utils/helper';
 
@@ -40,7 +40,7 @@ export interface CommonWindowWrapperProps {
   onDrag?: DraggableEventHandler;
   onDragStop?: DraggableEventHandler;
 
-  children: React.JSX.Element[] | React.JSX.Element;
+  children: React.JSX.Element;
 }
 
 export function DraggableWindowWrapper({
@@ -87,21 +87,6 @@ export function DraggableWindowWrapper({
     windowManager.focusWindow(id);
   };
 
-  useEventListener(id, [
-    {
-      event: 'maximize-window',
-      handler() {
-        windowManager.updateWindowState(id, 'position', [0, 0]);
-      },
-    },
-    {
-      event: 'minimize-window',
-      handler() {
-        windowManager.updateWindowState(id, 'position', [9999, 9999]);
-      },
-    },
-  ]);
-
   return (
     <Draggable
       axis="both"
@@ -126,7 +111,7 @@ export function DraggableWindowWrapper({
         )}
         onClick={handleClickWindow}
       >
-        {Array.isArray(children) ? <>{...children}</> : children}
+        {children}
       </DraggableWindowContainer>
     </Draggable>
   );

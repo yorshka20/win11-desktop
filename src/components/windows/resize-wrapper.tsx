@@ -3,12 +3,13 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 
 import { useEventListener, useWindowContext } from '../../hooks';
+import { Size } from '../../types';
 
 interface ResizableWrapperProps {
   onResize: (width: number, height: number) => void;
   children: React.ReactNode;
   id: string;
-  size: [number, number];
+  size: Size;
 }
 
 const ResizeContainer = styled.div`
@@ -28,7 +29,7 @@ const ResizableWrapper: React.FC<ResizableWrapperProps> = ({
   const [winSize, setWinSize] = useState<[number, number]>(size);
 
   const handleResize: ResizeCallback = (e, _, ref, size) => {
-    console.log('e, data', ref, size);
+    console.log('e, data', size);
     setWinSize([size.width, size.height]);
 
     onResize(size.width, size.height);
@@ -54,6 +55,10 @@ const ResizableWrapper: React.FC<ResizableWrapperProps> = ({
 
   return (
     <Resizable
+      defaultSize={{
+        width: size[0],
+        height: size[1],
+      }}
       onResizeStop={handleResize}
       bounds={'parent'}
       size={{ width: winSize[0], height: winSize[1] }}

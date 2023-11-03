@@ -9,16 +9,28 @@
 
       border: 1px solid red;
 
-      .menu-item {
-        height: 40px;
+      padding: 10px;
 
-        border-radius: 4px;
+      .menu-wrapper {
+        max-height: 100%;
 
-        margin-bottom: 8px;
-      }
+        overflow: hidden auto;
+        .menu-item {
+          height: 30px;
 
-      .menu-item:hover {
-        background-color: #e7ebf0;
+          border-radius: 4px;
+
+          margin-bottom: 8px;
+
+          .icon {
+            width: 15px;
+            height: 15px;
+          }
+        }
+
+        .menu-item:hover {
+          background-color: #e7ebf0;
+        }
       }
     }
 

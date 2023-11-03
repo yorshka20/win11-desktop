@@ -1,4 +1,5 @@
 import { Input } from '@mui/joy';
+import { List, ListItem, ListItemDecorator } from '@mui/joy';
 import { useRef } from 'react';
 import { styled } from 'styled-components';
 
@@ -9,6 +10,7 @@ import { TrafficLightButtonGroup } from '../../traffic-light';
 import { DraggableWindowWrapper } from '../common/draggable-wrapper';
 import ResizableWrapper from '../common/resize-wrapper';
 import { useWindowState } from '../hooks';
+import { menuList } from './config';
 import './style.less';
 
 type WindowComponentProps = Partial<Options> & {
@@ -99,12 +101,19 @@ export function SettingWindowComponent({
                 </div>
               </ProfileBlock>
               <Input />
-              <p>1</p>
-              <p>1</p>
-              <p>1</p>
-              <p>1</p>
-              <p>1</p>
-              <p>1</p>
+              <List
+                className="w-full menu-wrapper"
+                aria-labelledby="decorated-list-demo"
+              >
+                {menuList.map((item) => (
+                  <ListItem key={item.key} className="menu-item">
+                    <ListItemDecorator>
+                      <img className={'icon'} src={item.icon} alt="" />
+                    </ListItemDecorator>
+                    {item.title}
+                  </ListItem>
+                ))}
+              </List>
             </div>
             <div className="content w-full h-full flex-1">{content}</div>
           </div>

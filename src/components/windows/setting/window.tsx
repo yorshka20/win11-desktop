@@ -2,6 +2,7 @@ import { Input } from '@mui/joy';
 import { useRef } from 'react';
 import { styled } from 'styled-components';
 
+import avatarImg from '../../../assets/avatar.jpg';
 import { type Options } from '../../../context/window-manager';
 import { useWindowContext } from '../../../hooks';
 import { TrafficLightButtonGroup } from '../../traffic-light';
@@ -25,6 +26,29 @@ const Container = styled.div`
 
   .profile-block {
     border: 1px solid red;
+  }
+`;
+
+const ProfileBlock = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+
+  padding: 10px;
+
+  img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
   }
 `;
 
@@ -67,9 +91,13 @@ export function SettingWindowComponent({
           </header>
           <div className="flex flex-1 flex-row w-full h-full justify-center items-center content-container">
             <div className="flex flex-col justify-start items-start h-full menus">
-              <div className="flex flex-row justify-start items-center profile-block">
-                profile 1312312
-              </div>
+              <ProfileBlock className="profile-block w-full">
+                <img src={avatarImg} alt="profile" className="round" />
+                <div className="content">
+                  <span>Yorshka</span>
+                  <span>mail@yors.hk</span>
+                </div>
+              </ProfileBlock>
               <Input />
               <p>1</p>
               <p>1</p>

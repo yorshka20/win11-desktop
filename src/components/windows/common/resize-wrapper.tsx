@@ -14,7 +14,7 @@ interface ResizableWrapperProps {
 }
 
 const ResizeContainer = styled.div`
-  border: 1px solid green;
+  /* border: 1px solid green; */
   position: relative;
 
   display: flex;

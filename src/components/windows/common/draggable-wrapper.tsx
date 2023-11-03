@@ -109,6 +109,7 @@ export function DraggableWindowWrapper({
           isMaximized && 'fullscreen-state',
           className,
         )}
+        data-id={'drag-wrapper'}
         onClick={handleClickWindow}
       >
         {children}

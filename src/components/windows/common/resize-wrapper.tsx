@@ -53,7 +53,10 @@ const ResizableWrapper: React.FC<ResizableWrapperProps> = ({
       size={{ width: size[0], height: size[1] }}
       className="flex w-full h-full relative"
     >
-      <ResizeContainer className={'flex w-full h-full flex-1'}>
+      <ResizeContainer
+        data-id={'resize-wrapper'}
+        className={'flex w-full h-full flex-1'}
+      >
         {children}
       </ResizeContainer>
     </Resizable>

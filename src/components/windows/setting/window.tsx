@@ -1,11 +1,12 @@
-import { Input } from '@mui/joy';
-import { List, ListItem, ListItemDecorator } from '@mui/joy';
-import { useRef } from 'react';
+import { OutlinedFlag } from '@mui/icons-material';
+import { Input, List, ListItem, ListItemDecorator } from '@mui/joy';
+import { useEffect, useRef, useState } from 'react';
 import { styled } from 'styled-components';
 
 import avatarImg from '../../../assets/avatar.jpg';
 import { type Options } from '../../../context/window-manager';
 import { useWindowContext } from '../../../hooks';
+import { getIconGroup } from '../../icons/internal-icons';
 import { TrafficLightButtonGroup } from '../../traffic-light';
 import { DraggableWindowWrapper } from '../common/draggable-wrapper';
 import ResizableWrapper from '../common/resize-wrapper';
@@ -61,15 +62,29 @@ export function SettingWindowComponent({
 }: WindowComponentProps) {
   const headerRef = useRef<HTMLHeadElement>(null);
   const { windowManager } = useWindowContext();
+
   windowManager;
 
   const windowState = useWindowState(id);
+
+  const [menuItemList, setMenuItemList] = useState(menuList);
 
   console.log('windowState', windowState);
 
   const handleResize = (width: number, height: number) => {
     console.log('width, height', width, height);
   };
+
+  useEffect(() => {
+    getIconGroup('system').then((res) => {
+      console.log('res', res);
+      const list = menuList.map((item) => ({
+        ...item,
+        icon: res[item.key] || res['system'],
+      }));
+      setMenuItemList(list);
+    });
+  }, []);
 
   return (
     <DraggableWindowWrapper
@@ -105,14 +120,16 @@ export function SettingWindowComponent({
                 className="w-full menu-wrapper"
                 aria-labelledby="decorated-list-demo"
               >
-                {menuList.map((item) => (
-                  <ListItem key={item.key} className="menu-item">
-                    <ListItemDecorator>
-                      <img className={'icon'} src={item.icon} alt="" />
-                    </ListItemDecorator>
-                    {item.title}
-                  </ListItem>
-                ))}
+                {menuItemList.map(
+                  ({ key, title, icon: Icon = OutlinedFlag }) => (
+                    <ListItem key={key} className="menu-item">
+                      <ListItemDecorator>
+                        <Icon />
+                      </ListItemDecorator>
+                      {title}
+                    </ListItem>
+                  ),
+                )}
               </List>
             </div>
             <div className="content w-full h-full flex-1">{content}</div>

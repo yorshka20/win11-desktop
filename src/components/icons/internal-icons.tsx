@@ -1,6 +1,7 @@
 import React from 'react';
 
 import explorerIcon from '../../assets/systems/explorer.ico';
+import { createPromise } from '../../utils/helper';
 import { type CombinedIcons, iconConfigs } from './config';
 import type { IconWrapperProps } from './icon-wrapper';
 import { IconWrapper } from './icon-wrapper';
@@ -16,6 +17,9 @@ export const IconMap: Record<
   Record<string, React.FC<Omit<IconWrapperProps, 'src'>>>
 > = {};
 
+const [resolve, promise] = createPromise();
+
+// eslint-disable-next-line react-refresh/only-export-components
 export async function loadIcons() {
   for (const { fileList, load, iconType } of iconConfigs) {
     for (const name of fileList) {
@@ -29,5 +33,13 @@ export async function loadIcons() {
     }
   }
 
+  resolve(undefined);
+
   return IconMap;
+}
+
+// eslint-disable-next-line react-refresh/only-export-components
+export async function getIconGroup(group: string) {
+  await promise;
+  return IconMap[group];
 }

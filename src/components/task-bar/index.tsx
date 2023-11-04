@@ -51,21 +51,23 @@ export function TaskBar({ buttons }: Props) {
           <TaskBarButton
             onClick={handleSearch}
             name="search"
+            id="search"
             icon={<ExplorerIcon />}
           />
           <TaskBarButton
             onClick={handleSetting}
             name="setting"
+            id="setting"
             icon={<Settings />}
           />
 
           {buttons.map(({ name, icon: Icon }) => (
-            <TaskBarButton name={name} icon={<Icon />} key={name} />
+            <TaskBarButton id={name} name={name} icon={<Icon />} key={name} />
           ))}
         </div>
 
         <div className="taskbar-right flex flex-row justify-end items-center">
-          <TaskBarButton name="search" icon={<SearchOutlined />} />
+          <TaskBarButton id="search" name="search" icon={<SearchOutlined />} />
 
           <TimeBlock />
 

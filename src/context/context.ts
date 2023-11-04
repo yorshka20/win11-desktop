@@ -13,11 +13,13 @@ export interface WindowContextType {
 
 function dispatcher(command: 'display-start-menu', value?: boolean): void;
 function dispatcher(command: 'display-context-menu', value?: boolean): void;
+function dispatcher(command: 'click-desktop-icon', value: string): void;
+function dispatcher(command: 'click-taskbar-icon', value: string): void;
 function dispatcher(
   command: string,
   value?: boolean | string | Partial<Options>,
 ) {
-  console.log('command', command, value);
+  console.log('[command]: ', command, value);
   switch (command) {
     case 'display-start-menu': {
       const state = (value ?? !store.getStateValue('showStartMenu')) as boolean;
@@ -28,6 +30,14 @@ function dispatcher(
       const state = (value ??
         !store.getStateValue('showContextMenu')) as boolean;
       store.updateState('showContextMenu', state);
+      break;
+    }
+    case 'click-desktop-icon': {
+      console.log('click desktop-icon', value);
+      break;
+    }
+    case 'click-taskbar-icon': {
+      console.log('click taskbar-icon', value);
       break;
     }
 

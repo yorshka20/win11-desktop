@@ -4,6 +4,7 @@ import Draggable, { type DraggableEventHandler } from 'react-draggable';
 import { styled } from 'styled-components';
 
 import { DESKTOP_GRID_SIZE } from '../../constants';
+import { useWindowContext } from '../../hooks';
 import { type IconType } from '../../types';
 import { noop } from '../../utils/helper';
 
@@ -101,6 +102,8 @@ export function DesktopIconWrapper({
 }: DesktopIconWrapperProps) {
   const dragRef = useRef<HTMLDivElement>(null);
 
+  const { dispatcher } = useWindowContext();
+
   const [focused] = useState(false);
   const [selected, setSelected] = useState(false);
   const [position, setPosition] = useState<{ x: number; y: number }>({
@@ -113,6 +116,11 @@ export function DesktopIconWrapper({
 
     onClick(id);
   }, [onClick, id]);
+
+  // double click icon to trigger command
+  const handleDoubleClick = useCallback(() => {
+    dispatcher('click-desktop-icon', id);
+  }, [id, dispatcher]);
 
   const handleStop: DraggableEventHandler = (_, data) => {
     let x = data.x;
@@ -139,6 +147,7 @@ export function DesktopIconWrapper({
     >
       <Container
         onClick={handleClick}
+        onDoubleClick={handleDoubleClick}
         className={cls(
           'desktop-icon-container flex flex-col justify-start items-center',
           focused ? 'focused' : '',

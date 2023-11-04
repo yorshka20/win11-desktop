@@ -1,5 +1,5 @@
 import { Input } from '@mui/joy';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { styled } from 'styled-components';
 
 import avatarImg from '../../../assets/avatar.jpg';
@@ -9,7 +9,7 @@ import { TrafficLightButtonGroup } from '../../traffic-light';
 import { DraggableWindowWrapper } from '../common/draggable-wrapper';
 import ResizableWrapper from '../common/resize-wrapper';
 import { useWindowState } from '../hooks';
-import { MenuBlock } from './menus';
+import { MenuBlock, SettingContentBlock } from './menus';
 import './style.less';
 
 type WindowComponentProps = Partial<Options> & {
@@ -17,10 +17,11 @@ type WindowComponentProps = Partial<Options> & {
 };
 
 const Container = styled.div`
+  position: relative;
   background-color: #f0f3f9;
 
   border-radius: 6px;
-
+  overflow: hidden;
   .setting-window-header {
     height: 40px;
   }
@@ -35,6 +36,8 @@ const ProfileBlock = styled.div`
   border-radius: 6px;
 
   padding: 10px;
+
+  margin-bottom: 20px;
 
   &:hover {
     background-color: #e7ebf0;
@@ -66,6 +69,9 @@ export function SettingWindowComponent({
   const { windowManager } = useWindowContext();
 
   windowManager;
+  content;
+
+  const [activeItem, setActiveItem] = useState('');
 
   const windowState = useWindowState(id);
 
@@ -73,6 +79,11 @@ export function SettingWindowComponent({
 
   const handleResize = (width: number, height: number) => {
     console.log('width, height', width, height);
+  };
+
+  const handleActiveItem = (item: string) => {
+    console.log('activeItem', item);
+    setActiveItem(item);
   };
 
   return (
@@ -88,7 +99,7 @@ export function SettingWindowComponent({
       className="setting-window-component"
     >
       <ResizableWrapper onResize={handleResize} size={windowState.size} id={id}>
-        <Container className="flex flex-col w-full h-full">
+        <Container className="flex flex-col w-full f-full">
           <header
             ref={headerRef}
             className="setting-window-header flex flex-row justify-end items-center w-full"
@@ -96,7 +107,8 @@ export function SettingWindowComponent({
             <TrafficLightButtonGroup windowManager={windowManager} id={id} />
           </header>
 
-          <div className="flex flex-1 flex-row w-full h-full justify-center items-center content-container">
+          <div className="flex flex-row w-full h-full justify-center items-center content-container">
+            {/* left menu sidebar */}
             <div className="flex flex-col justify-start items-start h-full menus">
               {/* user profile  */}
               <ProfileBlock className="profile-block w-full">
@@ -116,9 +128,11 @@ export function SettingWindowComponent({
               />
 
               {/* menu tree */}
-              <MenuBlock />
+              <MenuBlock onActiveItemChange={handleActiveItem} />
             </div>
-            <div className="content w-full h-full flex-1">{content}</div>
+
+            {/* content block. this should be tabPane */}
+            <SettingContentBlock activeItem={activeItem} />
           </div>
         </Container>
       </ResizableWrapper>

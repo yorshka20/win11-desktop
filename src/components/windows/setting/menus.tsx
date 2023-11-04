@@ -6,14 +6,38 @@ import { getIconGroup } from '../../icons/internal-icons';
 import { menuList } from './config';
 
 const MenuBlockDiv = styled.div`
-  display: flex;
+  width: 100%;
+  max-height: 100%;
+  overflow: hidden auto;
+
+  .menu-wrapper {
+    max-height: 100%;
+
+    overflow: hidden auto;
+    .menu-item {
+      height: 30px;
+
+      border-radius: 4px;
+
+      margin-bottom: 8px;
+
+      .icon {
+        width: 15px;
+        height: 15px;
+      }
+    }
+
+    .menu-item:hover {
+      background-color: #e7ebf0;
+    }
+  }
 
   .active-menu-item {
     &::before {
       content: '';
       width: 2px;
-      height: 100%;
-      background-color: blue;
+      height: 80%;
+      background-color: rgb(0, 103, 192);
     }
 
     background-color: #e7ebf0;
@@ -22,7 +46,7 @@ const MenuBlockDiv = styled.div`
 
 const emptyIcon = () => <></>;
 
-export function MenuBlock() {
+export function MenuBlock({ onActiveItemChange }) {
   const [menuItemList, setMenuItemList] = useState(menuList);
 
   const [activeItem, setActiveItem] = useState('');
@@ -38,6 +62,11 @@ export function MenuBlock() {
     });
   }, []);
 
+  const handleClick = (key: string) => {
+    setActiveItem(key);
+    onActiveItemChange(key);
+  };
+
   return (
     <MenuBlockDiv>
       <List
@@ -50,9 +79,7 @@ export function MenuBlock() {
             className={`menu-item ${
               activeItem === key ? 'active-menu-item' : ''
             }`}
-            onClick={() => {
-              setActiveItem(key);
-            }}
+            onClick={handleClick.bind(null, key)}
           >
             <ListItemDecorator>
               <Icon />
@@ -63,4 +90,8 @@ export function MenuBlock() {
       </List>
     </MenuBlockDiv>
   );
+}
+
+export function SettingContentBlock({ activeItem }: { activeItem: string }) {
+  return <div className="content w-full h-full flex-1">{activeItem}</div>;
 }

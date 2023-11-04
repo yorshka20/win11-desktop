@@ -30,26 +30,13 @@ export function DesktopContainer({ desktopConfig }: DesktopContainerProps) {
 
   desktopConfig;
 
-  const [icons, setIcons] = useState(IconMap);
-
   const context = useWindowContext();
 
-  const selectionArea = useDesktopSelection(desktopRef);
+  useDesktopSelection(desktopRef);
 
   const position = useContextMenu();
 
   const showContextMenu = useContextState('showContextMenu');
-
-  useEffect(() => {
-    // console.log('selectionArea', selectionArea);
-  }, [selectionArea]);
-
-  useEffect(() => {
-    loadIcons().then((res) => {
-      console.log('do icons load?', res);
-      setIcons({ ...res });
-    });
-  }, []);
 
   useEffect(() => {
     const container = desktopRef.current;
@@ -77,28 +64,8 @@ export function DesktopContainer({ desktopConfig }: DesktopContainerProps) {
         />
       ))}
 
-      {Object.keys(icons)
-        .map((iconType, i) =>
-          Object.keys(icons[iconType]).map((name, j) => {
-            const Icon = icons[iconType][name];
-
-            return (
-              <DesktopIconWrapper
-                grided
-                grid={[
-                  Math.round(Math.random() * 8),
-                  Math.round(Math.random() * 2),
-                ]}
-                name={name}
-                id={`${iconType}-${name}`}
-                shadowText
-                key={`${i}${j}`}
-                icon={<Icon size={70} />}
-              />
-            );
-          }),
-        )
-        .flat()}
+      {/* test icon block */}
+      <IconBlock />
 
       {/* desktop selections area */}
       <div id="desktop-selection" className="desktop-selection" />
@@ -116,4 +83,38 @@ export function DesktopContainer({ desktopConfig }: DesktopContainerProps) {
 
 function menuContent(configs: ContextMenuItemConfig[]): React.JSX.Element {
   return <>{configs.map((item) => buildFromConfig(item))}</>;
+}
+
+function IconBlock() {
+  const [icons, setIcons] = useState(IconMap);
+
+  useEffect(() => {
+    loadIcons().then((res) => {
+      console.log('do icons load?', res);
+      setIcons({ ...res });
+    });
+  }, []);
+
+  return Object.keys(icons)
+    .map((iconType, i) =>
+      Object.keys(icons[iconType]).map((name, j) => {
+        const Icon = icons[iconType][name];
+
+        return (
+          <DesktopIconWrapper
+            grided
+            grid={[
+              Math.round(Math.random() * 8),
+              Math.round(Math.random() * 2),
+            ]}
+            name={name}
+            id={`${iconType}-${name}`}
+            shadowText
+            key={`${i}${j}`}
+            icon={<Icon size={70} />}
+          />
+        );
+      }),
+    )
+    .flat();
 }

@@ -1,17 +1,15 @@
-import { OutlinedFlag } from '@mui/icons-material';
-import { Input, List, ListItem, ListItemDecorator } from '@mui/joy';
-import { useEffect, useRef, useState } from 'react';
+import { Input } from '@mui/joy';
+import { useRef } from 'react';
 import { styled } from 'styled-components';
 
 import avatarImg from '../../../assets/avatar.jpg';
 import { type Options } from '../../../context/window-manager';
 import { useWindowContext } from '../../../hooks';
-import { getIconGroup } from '../../icons/internal-icons';
 import { TrafficLightButtonGroup } from '../../traffic-light';
 import { DraggableWindowWrapper } from '../common/draggable-wrapper';
 import ResizableWrapper from '../common/resize-wrapper';
 import { useWindowState } from '../hooks';
-import { menuList } from './config';
+import { MenuBlock } from './menus';
 import './style.less';
 
 type WindowComponentProps = Partial<Options> & {
@@ -26,10 +24,6 @@ const Container = styled.div`
   .setting-window-header {
     height: 40px;
   }
-
-  .profile-block {
-    border: 1px solid red;
-  }
 `;
 
 const ProfileBlock = styled.div`
@@ -38,7 +32,13 @@ const ProfileBlock = styled.div`
   justify-content: flex-start;
   align-items: center;
 
+  border-radius: 6px;
+
   padding: 10px;
+
+  &:hover {
+    background-color: #e7ebf0;
+  }
 
   img {
     width: 45px;
@@ -52,6 +52,8 @@ const ProfileBlock = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
+
+    font-size: 12px;
   }
 `;
 
@@ -67,24 +69,11 @@ export function SettingWindowComponent({
 
   const windowState = useWindowState(id);
 
-  const [menuItemList, setMenuItemList] = useState(menuList);
-
   console.log('windowState', windowState);
 
   const handleResize = (width: number, height: number) => {
     console.log('width, height', width, height);
   };
-
-  useEffect(() => {
-    getIconGroup('system').then((res) => {
-      console.log('res', res);
-      const list = menuList.map((item) => ({
-        ...item,
-        icon: res[item.key] || res['system'],
-      }));
-      setMenuItemList(list);
-    });
-  }, []);
 
   return (
     <DraggableWindowWrapper
@@ -106,8 +95,10 @@ export function SettingWindowComponent({
           >
             <TrafficLightButtonGroup windowManager={windowManager} id={id} />
           </header>
+
           <div className="flex flex-1 flex-row w-full h-full justify-center items-center content-container">
             <div className="flex flex-col justify-start items-start h-full menus">
+              {/* user profile  */}
               <ProfileBlock className="profile-block w-full">
                 <img src={avatarImg} alt="profile" className="round" />
                 <div className="content">
@@ -115,22 +106,17 @@ export function SettingWindowComponent({
                   <span>mail@yors.hk</span>
                 </div>
               </ProfileBlock>
-              <Input />
-              <List
-                className="w-full menu-wrapper"
-                aria-labelledby="decorated-list-demo"
-              >
-                {menuItemList.map(
-                  ({ key, title, icon: Icon = OutlinedFlag }) => (
-                    <ListItem key={key} className="menu-item">
-                      <ListItemDecorator>
-                        <Icon />
-                      </ListItemDecorator>
-                      {title}
-                    </ListItem>
-                  ),
-                )}
-              </List>
+
+              {/* search input  */}
+              <Input
+                className="search-input w-full"
+                sx={{
+                  '--Input-minHeight': '30px',
+                }}
+              />
+
+              {/* menu tree */}
+              <MenuBlock />
             </div>
             <div className="content w-full h-full flex-1">{content}</div>
           </div>

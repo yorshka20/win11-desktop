@@ -1,5 +1,11 @@
 # Window11 Desktop
 
+a concrete and detailed window 11 gui implementation. just want to write some code to make use of difference designs and techs in project.
+
+you can only conduct nice optimizations on complicated project because there is no necessity to do so in simple project. you have nothing to optimize, to be honest.
+
+do this project is aiming at containing as many contents as possible to achieve a complicated state for me to use difference strategies for optimizing.
+
 # Preview
 
 here: https://win11-desktop-virid.vercel.app/
@@ -7,31 +13,47 @@ here: https://win11-desktop-virid.vercel.app/
 # Tech Stack
 
 - @mui/joy, @mui/icons-materials
+- tailwindcss, styled-components
+- vite, typescript, react
+- rxjs
 
-# React + TypeScript + Vite
+## why there are 3 css libs?
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+- time to try new technologies.
 
-Currently, two official plugins are available:
+# Plan
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+things will be built from Window.
 
-## Expanding the ESLint configuration
+first we write some window components, and then add difference ui and interactions to window components.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+currently only 4 kinds of window are planned to be implemented.
 
-- Configure the top-level `parserOptions` property like this:
+## Window Component
 
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
-```
+### Setting Window
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+- [x] framework
+
+### Explorer Window
+
+- [x] framework
+
+### Image Window
+
+### Video Window
+
+# Problems
+
+## can we use contextHook in components?
+
+- i want to pass less props to component
+- there should be some difference between `Basic Component` and `Business Component`
+- what is `Basic Component` and `Business Component`?
+  - Basic Component: reusable component with pure ui
+  - Business Component: components fulfilled with actual logic for difference usage.
+- i didn't differ basic components and business components in this project.
+
+## how to write less code?
+
+- better abstraction. no exception.

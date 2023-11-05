@@ -119,7 +119,10 @@ export function DesktopIconWrapper({
 
   // double click icon to trigger command
   const handleDoubleClick = useCallback(() => {
-    dispatcher('click-desktop-icon', id);
+    dispatcher('click-desktop-icon', {
+      name: id,
+      type: 'window',
+    });
   }, [id, dispatcher]);
 
   const handleStop: DraggableEventHandler = (_, data) => {

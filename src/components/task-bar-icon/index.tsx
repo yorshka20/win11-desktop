@@ -16,7 +16,10 @@ export function TaskBarButton({ icon: Icon, id, name, onClick }: Props) {
 
   const handleClick = useCallback(() => {
     onClick?.();
-    dispatcher('click-taskbar-icon', id);
+    dispatcher('click-taskbar-icon', {
+      name: id,
+      type: 'modal',
+    });
   }, [dispatcher, onClick, id]);
 
   return (

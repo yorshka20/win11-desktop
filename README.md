@@ -57,3 +57,14 @@ currently only 4 kinds of window are planned to be implemented.
 ## how to write less code?
 
 - better abstraction. no exception.
+
+## a correct way to communicate with different modules in this project.
+
+- context: we put `windowManager` and `dispatcher` and `eventPipe` in context. we should only access context under react components.
+- store: a state store representing the states of application.
+
+it's not correct to access modules in inappropriate level, in which case we may need a proxy to do something for us. like:
+
+- a proxy in component container that listening to `pipeEvent` and mount some components in purpose.
+- a proxy in component container that subscribes to the state or `pipeEvent` and do some business in component domains which can't be done in common module functions.
+- to be continue.

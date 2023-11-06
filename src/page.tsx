@@ -1,20 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-import {
-  ContextMenu,
-  type ContextMenuItemConfig,
-  buildFromConfig,
-  useContextMenu,
-} from './components/context-menu';
+import { SystemContextMenu } from './components/context-menu';
 import { DesktopIconWrapper } from './components/desktop-icon';
 import { IconMap, loadIcons } from './components/icons/internal-icons';
 import { WindowComponentContainer } from './components/windows';
-import { contextMenuConfig, desktopIconConfig } from './configs/desktop-config';
-import {
-  useContextState,
-  useDesktopSelection,
-  useWindowContext,
-} from './hooks';
+import { desktopIconConfig } from './configs/desktop-config';
+import { useDesktopSelection, useWindowContext } from './hooks';
 
 export interface DesktopItem {
   name: string;
@@ -28,15 +19,13 @@ interface DesktopContainerProps {
 export function DesktopContainer({ desktopConfig }: DesktopContainerProps) {
   const desktopRef = useRef<HTMLDivElement>(null);
 
+  // todo
   desktopConfig;
 
   const context = useWindowContext();
 
+  // window Selection. selected area will be returned.
   useDesktopSelection(desktopRef);
-
-  const position = useContextMenu();
-
-  const showContextMenu = useContextState('showContextMenu');
 
   useEffect(() => {
     const container = desktopRef.current;
@@ -71,18 +60,12 @@ export function DesktopContainer({ desktopConfig }: DesktopContainerProps) {
       <div id="desktop-selection" className="desktop-selection" />
 
       {/* desktop context menu  */}
-      <ContextMenu position={position} show={showContextMenu}>
-        {menuContent(contextMenuConfig as ContextMenuItemConfig[])}
-      </ContextMenu>
+      <SystemContextMenu />
 
       {/* separate window mount portal  */}
       <WindowComponentContainer />
     </div>
   );
-}
-
-function menuContent(configs: ContextMenuItemConfig[]): React.JSX.Element {
-  return <>{configs.map((item) => buildFromConfig(item))}</>;
 }
 
 function IconBlock() {

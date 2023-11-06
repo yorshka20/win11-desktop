@@ -1,11 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
-type SelectionArea = {
-  x: number;
-  y: number;
-  w: number;
-  h: number;
-};
+import type { SelectionArea } from '../../types';
 
 export function useDesktopSelection(ref: React.RefObject<HTMLDivElement>) {
   const [selectionArea, setSelectionArea] = useState<

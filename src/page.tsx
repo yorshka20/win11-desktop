@@ -2,10 +2,11 @@ import { useEffect, useRef, useState } from 'react';
 
 import { SystemContextMenu } from './components/context-menu';
 import { DesktopIconWrapper } from './components/desktop-icon';
+import { DesktopSelectionContainer } from './components/desktop-selection';
 import { IconMap, loadIcons } from './components/icons/internal-icons';
 import { WindowComponentContainer } from './components/windows';
 import { desktopIconConfig } from './configs/desktop-config';
-import { useDesktopSelection, useWindowContext } from './hooks';
+import { useWindowContext } from './hooks';
 
 export interface DesktopItem {
   name: string;
@@ -23,9 +24,6 @@ export function DesktopContainer({ desktopConfig }: DesktopContainerProps) {
   desktopConfig;
 
   const context = useWindowContext();
-
-  // window Selection. selected area will be returned.
-  useDesktopSelection(desktopRef);
 
   useEffect(() => {
     const container = desktopRef.current;
@@ -57,7 +55,7 @@ export function DesktopContainer({ desktopConfig }: DesktopContainerProps) {
       <IconBlock />
 
       {/* desktop selections area */}
-      <div id="desktop-selection" className="desktop-selection" />
+      <DesktopSelectionContainer selectionRef={desktopRef} />
 
       {/* desktop context menu  */}
       <SystemContextMenu />

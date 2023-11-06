@@ -38,27 +38,25 @@ function dispatcher(
       break;
     }
     case 'click-desktop-icon': {
-      const { name, type } = value as ClickIconEvent;
-      console.log('click desktop-icon', value);
+      const { type } = value as ClickIconEvent;
       // maybe we need a proxy to create window component.
       if (type === 'window') {
-        name;
-        // eventPipe.next({
-        //   name: 'open-window',
-        //   id: name,
-        // });
+        eventPipe.next({
+          name: 'proxy-operation',
+          id: 'desktop-icon',
+          data: { ...(value as ClickIconEvent) },
+        });
       }
       break;
     }
     case 'click-taskbar-icon': {
-      console.log('click taskbar-icon', value);
-      const { name, type } = value as ClickIconEvent;
+      const { type } = value as ClickIconEvent;
       if (type === 'window') {
-        name;
-        // eventPipe.next({
-        //   name: 'open-window',
-        //   id: name,
-        // });
+        eventPipe.next({
+          name: 'proxy-operation',
+          id: 'taskbar-icon',
+          data: { ...(value as ClickIconEvent) },
+        });
       }
       break;
     }
@@ -68,11 +66,14 @@ function dispatcher(
   }
 }
 
+type ProxyOperation = 'proxy-operation';
+
 type PipeEventType =
   | 'open-window'
   | 'close-window'
   | 'maximize-window'
-  | 'minimize-window';
+  | 'minimize-window'
+  | ProxyOperation; // for operation transition
 
 export type PipeEvent = {
   id: string;

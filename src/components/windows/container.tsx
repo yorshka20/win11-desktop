@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 
 import { useEventListener, useWindowContext } from '../../hooks';
+import { windowOpener } from './index';
 
 /**
  * createPortal at the Desktop root.
@@ -13,8 +14,9 @@ import { useEventListener, useWindowContext } from '../../hooks';
  * @export
  * @return {*}
  */
-export function WindowComponentContainer() {
-  const { desktopContainer, windowManager } = useWindowContext();
+export const WindowComponentContainer = React.memo(() => {
+  const context = useWindowContext();
+  const { desktopContainer, windowManager } = context;
 
   const [windows, setWindows] = useState<React.JSX.Element[]>([]);
 
@@ -55,6 +57,18 @@ export function WindowComponentContainer() {
     },
   ]);
 
+  // proxy operation for creating window components.
+  // these events are emitted by desktop icon or taskbar icon.
+  useEventListener('*', [
+    {
+      event: 'proxy-operation',
+      handler(id, e) {
+        console.log('proxy operation', id, e);
+        windowOpener('Explorer', context);
+      },
+    },
+  ]);
+
   // spread all window components to desktopContainer.
   return <>{windows.map((child) => createPortal(child, desktopContainer))}</>;
-}
+});

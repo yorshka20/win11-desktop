@@ -68,3 +68,5 @@ it's not correct to access modules in inappropriate level, in which case we may 
 - a proxy in component container that listening to `pipeEvent` and mount some components in purpose.
 - a proxy in component container that subscribes to the state or `pipeEvent` and do some business in component domains which can't be done in common module functions.
 - to be continue.
+
+- conclusion: i will just make it possible first, and then make it better if i have any ideas on how to do so.

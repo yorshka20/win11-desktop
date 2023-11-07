@@ -59,7 +59,7 @@ export function ExplorerWindowComponent({
       size={windowState.size}
       position={windowState.position}
       isMaximized={windowState.isMaximized}
-      nodeRef={() => headerRef}
+      nodeRef={headerRef}
       cancel=".tabs-container"
       handle=".explorer-window-header"
       className="explorer-window"

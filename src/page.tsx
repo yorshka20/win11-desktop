@@ -30,7 +30,7 @@ export function DesktopContainer({ desktopConfig }: DesktopContainerProps) {
     if (container) {
       context.desktopContainer = container;
     }
-  }, [context]);
+  }, [context, desktopRef]);
 
   return (
     <div

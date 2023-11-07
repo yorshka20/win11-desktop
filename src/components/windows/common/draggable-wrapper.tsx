@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import React from 'react';
+import React, { useEffect } from 'react';
 import Draggable, { type DraggableEventHandler } from 'react-draggable';
 import { styled } from 'styled-components';
 
@@ -33,7 +33,7 @@ export interface CommonWindowWrapperProps {
   // onMaximize?: () => void;
   // onClose?: () => void;
 
-  nodeRef?: () => React.RefObject<HTMLElement>;
+  nodeRef: React.RefObject<HTMLElement>;
   handle?: string;
   cancel?: string;
   onDragStart?: DraggableEventHandler;
@@ -49,9 +49,9 @@ export function DraggableWindowWrapper({
   position,
   zIndex,
   isMaximized,
-  // nodeRef, // TODO: fix nodeRef
+  nodeRef, // TODO: fix nodeRef
   className = '',
-  handle,
+  // handle,
   onDrag = noop,
   onDragStart = noop,
   onDragStop = noop,
@@ -64,20 +64,26 @@ export function DraggableWindowWrapper({
   onDrag;
   zIndex;
 
-  // const handleDrag: DraggableEventHandler = (e, data) => {
-  //   // if (data.y > 50) {
-  //   //   windowManager.updateWindowState(id, 'isMaximized', false);
-  //   //   setSize([600, 400]);
+  useEffect(() => {
+    console.log('nodeRef', nodeRef);
+  }, [nodeRef]);
 
-  //   //   const { width } = desktopContainer.getBoundingClientRect();
-  //   //   const { clientX } = e as MouseEvent;
-  //   //   setPosition([Math.round(clientX - (clientX / width) * 600), data.y]);
-  //   // }
-  //   onDrag(e, data);
-  // };
+  const handleDrag: DraggableEventHandler = (e, data) => {
+    // if (data.y > 50) {
+    //   windowManager.updateWindowState(id, 'isMaximized', false);
+    //   setSize([600, 400]);
+
+    //   const { width } = desktopContainer.getBoundingClientRect();
+    //   const { clientX } = e as MouseEvent;
+    //   setPosition([Math.round(clientX - (clientX / width) * 600), data.y]);
+    // }
+    console.log('data', e, data);
+    // onDrag(e, data);
+  };
 
   // handle move.
   const handleDragStop: DraggableEventHandler = (e, data) => {
+    console.log('data', e, data);
     onDragStop(e, data);
 
     windowManager.updateWindowState(id, 'position', [data.x, data.y]);
@@ -94,11 +100,10 @@ export function DraggableWindowWrapper({
       position={{ x: position[0], y: position[1] }}
       grid={[1, 1]}
       scale={1}
-      handle={handle}
       onStart={onDragStart}
-      // onDrag={windowState.isMaximized ? handleDrag : noop}
+      onDrag={handleDrag}
       onStop={handleDragStop}
-      // nodeRef={nodeRef()}
+      nodeRef={nodeRef}
       cancel={cancel}
     >
       <DraggableWindowContainer

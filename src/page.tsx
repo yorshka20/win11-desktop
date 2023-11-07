@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import Draggable, { type DraggableEventHandler } from 'react-draggable';
 
 import { SystemContextMenu } from './components/context-menu';
 import { DesktopIconWrapper } from './components/desktop-icon';
@@ -19,6 +20,8 @@ interface DesktopContainerProps {
 
 export function DesktopContainer({ desktopConfig }: DesktopContainerProps) {
   const desktopRef = useRef<HTMLDivElement>(null);
+
+  const ref = useRef(null);
 
   // todo
   desktopConfig;
@@ -50,6 +53,22 @@ export function DesktopContainer({ desktopConfig }: DesktopContainerProps) {
           icon={<Icon className={'icon'} />}
         />
       ))}
+
+      <Draggable
+        axis="both"
+        defaultPosition={{ x: 0, y: 0 }}
+        grid={[1, 1]}
+        scale={1}
+        // nodeRef={ref}
+        handle=".header"
+      >
+        <div style={{ width: '300px', height: 300, background: 'white' }}>
+          <header ref={ref} className="header">
+            header
+          </header>
+          111
+        </div>
+      </Draggable>
 
       {/* test icon block */}
       <IconBlock />

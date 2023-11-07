@@ -94,7 +94,7 @@ export function SettingWindowComponent({
       size={windowState.size}
       position={windowState.position}
       isMaximized={windowState.isMaximized}
-      nodeRef={() => headerRef}
+      nodeRef={headerRef}
       handle=".setting-window-header"
       className="setting-window-component"
     >

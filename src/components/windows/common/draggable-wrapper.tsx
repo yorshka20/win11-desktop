@@ -72,12 +72,11 @@ export function DraggableWindowWrapper({
     // if (data.y > 50) {
     //   windowManager.updateWindowState(id, 'isMaximized', false);
     //   setSize([600, 400]);
-
     //   const { width } = desktopContainer.getBoundingClientRect();
     //   const { clientX } = e as MouseEvent;
     //   setPosition([Math.round(clientX - (clientX / width) * 600), data.y]);
     // }
-    console.log('data', e, data);
+    // console.log('data', e, data);
     // onDrag(e, data);
   };
 
@@ -97,7 +96,7 @@ export function DraggableWindowWrapper({
     <Draggable
       axis="both"
       defaultPosition={{ x: 0, y: 0 }}
-      position={{ x: position[0], y: position[1] }}
+      // position={{ x: position[0], y: position[1] }}
       grid={[1, 1]}
       scale={1}
       onStart={onDragStart}

@@ -1,32 +1,27 @@
 import { Resizable, type ResizeCallback } from 're-resizable';
 import React from 'react';
-import styled from 'styled-components';
 
 import { useWindowContext } from '../../../hooks';
 import type { Size } from '../../../types';
 import { createLogger } from '../../../utils/logger';
 
 interface ResizableWrapperProps {
-  onResize: (width: number, height: number) => void;
-  children: React.ReactNode;
   id: string;
   size: Size;
+  className?: string;
+
+  children: React.ReactNode;
+  onResize: (width: number, height: number) => void;
 }
-
-const ResizeContainer = styled.div`
-  /* border: 1px solid green; */
-  position: relative;
-
-  display: flex;
-`;
 
 const logger = createLogger('ResizableWrapper');
 
 const Wrapper: React.FC<ResizableWrapperProps> = ({
-  onResize,
-  children,
   id,
   size,
+  className = '',
+  onResize,
+  children,
 }) => {
   const { windowManager } = useWindowContext();
 
@@ -49,14 +44,10 @@ const Wrapper: React.FC<ResizableWrapperProps> = ({
       onResizeStop={handleResize}
       bounds={'window'}
       size={{ width: size[0], height: size[1] }}
-      className="flex w-full h-full relative"
+      data-id={'resize-wrapper'}
+      className={`flex flex-1 flex-col w-full h-full relative ${className}`}
     >
-      <ResizeContainer
-        data-id={'resize-wrapper'}
-        className={'flex w-full h-full flex-1'}
-      >
-        {children}
-      </ResizeContainer>
+      {children}
     </Resizable>
   );
 };

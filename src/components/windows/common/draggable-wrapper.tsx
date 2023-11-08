@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import React, { useEffect } from 'react';
+import React from 'react';
 import Draggable, { type DraggableEventHandler } from 'react-draggable';
 import { styled } from 'styled-components';
 
@@ -33,7 +33,6 @@ export interface CommonWindowWrapperProps {
   // onMaximize?: () => void;
   // onClose?: () => void;
 
-  nodeRef: React.RefObject<HTMLElement>;
   handle?: string;
   cancel?: string;
   onDragStart?: DraggableEventHandler;
@@ -43,30 +42,30 @@ export interface CommonWindowWrapperProps {
   children: React.JSX.Element;
 }
 
-export function DraggableWindowWrapper({
-  id,
-  title,
-  position,
-  zIndex,
-  isMaximized,
-  nodeRef, // TODO: fix nodeRef
-  className = '',
-  // handle,
-  onDrag = noop,
-  onDragStart = noop,
-  onDragStop = noop,
-  cancel,
-  children,
-}: CommonWindowWrapperProps) {
-  // const dragRef = useMemo(() => nodeRef(), [nodeRef]);
+export const DraggableWindowWrapper = React.forwardRef<
+  HTMLElement,
+  CommonWindowWrapperProps
+>(function (props, ref) {
+  const {
+    id,
+    title,
+    position,
+    zIndex,
+    isMaximized,
+    className = '',
+    onDrag = noop,
+    onDragStart = noop,
+    onDragStop = noop,
+    cancel,
+    children,
+  } = props;
+
   const { windowManager } = useWindowContext();
+
+  console.log('dragRef', ref);
 
   onDrag;
   zIndex;
-
-  useEffect(() => {
-    console.log('nodeRef', nodeRef);
-  }, [nodeRef]);
 
   const handleDrag: DraggableEventHandler = (e, data) => {
     // if (data.y > 50) {
@@ -77,7 +76,7 @@ export function DraggableWindowWrapper({
     //   setPosition([Math.round(clientX - (clientX / width) * 600), data.y]);
     // }
     // console.log('data', e, data);
-    // onDrag(e, data);
+    onDrag(e, data);
   };
 
   // handle move.
@@ -96,13 +95,13 @@ export function DraggableWindowWrapper({
     <Draggable
       axis="both"
       defaultPosition={{ x: 0, y: 0 }}
-      // position={{ x: position[0], y: position[1] }}
+      position={{ x: position[0], y: position[1] }}
       grid={[1, 1]}
       scale={1}
       onStart={onDragStart}
       onDrag={handleDrag}
       onStop={handleDragStop}
-      nodeRef={nodeRef}
+      nodeRef={ref as React.RefObject<HTMLElement>}
       cancel={cancel}
     >
       <DraggableWindowContainer
@@ -120,4 +119,5 @@ export function DraggableWindowWrapper({
       </DraggableWindowContainer>
     </Draggable>
   );
-}
+});
+// });

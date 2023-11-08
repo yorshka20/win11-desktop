@@ -40,10 +40,12 @@ export function ExplorerWindowComponent({
   title = 'explorer',
   content = '',
 }: WindowComponentProps) {
-  const headerRef = useRef<HTMLHeadElement>(null);
   const { windowManager } = useWindowContext();
 
   const windowState = useWindowState(id);
+
+  // draggable ref
+  const draggableRef = useRef<HTMLElement>(null);
 
   console.log('windowState', windowState);
 
@@ -59,15 +61,14 @@ export function ExplorerWindowComponent({
       size={windowState.size}
       position={windowState.position}
       isMaximized={windowState.isMaximized}
-      nodeRef={headerRef}
       cancel=".tabs-container"
-      handle=".explorer-window-header"
       className="explorer-window"
+      ref={draggableRef} // this ref is forwarded by `React.forwardRef`. it's not in props
     >
       <ResizableWrapper onResize={handleResize} id={id} size={windowState.size}>
         <Container className="flex flex-col w-full h-full">
           <header
-            ref={headerRef}
+            ref={draggableRef}
             className="explorer-window-header flex flex-row justify-between items-center w-full"
           >
             <WindowTabs id={id} />

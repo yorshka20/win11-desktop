@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import Draggable, { type DraggableEventHandler } from 'react-draggable';
 
 import { SystemContextMenu } from './components/context-menu';
 import { DesktopIconWrapper } from './components/desktop-icon';
@@ -21,8 +20,6 @@ interface DesktopContainerProps {
 export function DesktopContainer({ desktopConfig }: DesktopContainerProps) {
   const desktopRef = useRef<HTMLDivElement>(null);
 
-  const ref = useRef(null);
-
   // todo
   desktopConfig;
 
@@ -42,33 +39,7 @@ export function DesktopContainer({ desktopConfig }: DesktopContainerProps) {
       className="flex-1 h-full flex flex-col flex-wrap justify-start items-start desktop-container"
     >
       {/* desktop icons */}
-      {desktopIconConfig.map(({ icon: Icon, grid, name, id }, index) => (
-        <DesktopIconWrapper
-          grided
-          id={id}
-          grid={grid}
-          name={name}
-          shadowText
-          key={index}
-          icon={<Icon className={'icon'} />}
-        />
-      ))}
-
-      <Draggable
-        axis="both"
-        defaultPosition={{ x: 0, y: 0 }}
-        grid={[1, 1]}
-        scale={1}
-        // nodeRef={ref}
-        handle=".header"
-      >
-        <div style={{ width: '300px', height: 300, background: 'white' }}>
-          <header ref={ref} className="header">
-            header
-          </header>
-          111
-        </div>
-      </Draggable>
+      <DesktopIconSet />
 
       {/* test icon block */}
       <IconBlock />
@@ -83,6 +54,20 @@ export function DesktopContainer({ desktopConfig }: DesktopContainerProps) {
       <WindowComponentContainer />
     </div>
   );
+}
+
+function DesktopIconSet() {
+  return desktopIconConfig.map(({ icon: Icon, grid, name, id }, index) => (
+    <DesktopIconWrapper
+      grided
+      id={id}
+      grid={grid}
+      name={name}
+      shadowText
+      key={index}
+      icon={<Icon className={'icon'} />}
+    />
+  ));
 }
 
 function IconBlock() {

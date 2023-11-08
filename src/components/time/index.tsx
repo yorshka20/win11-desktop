@@ -1,34 +1,38 @@
 import moment from 'moment';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
 
 import { ButtonWrapper } from '../buttons/button-wrapper';
-import './style.less';
 
-export function TimeBlock() {
+const TimeContent = styled.span`
+  font-size: 12px;
+  transform: scale(0.7);
+  text-align: right;
+`;
+
+export const TimeBlock = React.memo(() => {
   const [time, setTime] = useState<string>();
   const [date, setDate] = useState<string>();
 
   useEffect(() => {
+    // update time every 5 second
     const timeTimer = setInterval(() => {
       setTime(moment().format('HH:mm'));
-    }, 1000);
-    const dateTimer = setInterval(() => {
       setDate(moment().format('YYYY/MM/DD'));
-    }, 1000);
+    }, 1000 * 5);
 
     return () => {
       clearInterval(timeTimer);
-      clearInterval(dateTimer);
     };
   }, []);
 
   return (
-    <ButtonWrapper className="time-block flex justify-end items-center">
-      <span className="flex flex-col justify-center items-end float-right">
+    <ButtonWrapper className="h-[30px] select-none flex justify-end items-center">
+      <TimeContent className="flex flex-col justify-center items-end float-right">
         {time}
         <br />
         {date}
-      </span>
+      </TimeContent>
     </ButtonWrapper>
   );
-}
+});

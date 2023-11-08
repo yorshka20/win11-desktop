@@ -24,12 +24,19 @@ function App() {
   return (
     <WindowContextProvider>
       <div
-        id="window-container"
+        id="window-gui-container"
         className="flex min-w-full justify-between min-h-screen min-w-screen flex-col"
       >
+        {/* desktop. containing icons. window components are mounted here. */}
         <DesktopContainer desktopConfig={desktopConfig} />
+        {/* taskbar component. */}
         <TaskBar buttons={taskbarButtons} />
-        <StartMenu />
+
+        {/* components below take no position in layout. */}
+        <>
+          {/* float menu layer. */}
+          <StartMenu />
+        </>
       </div>
     </WindowContextProvider>
   );

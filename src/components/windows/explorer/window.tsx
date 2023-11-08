@@ -9,7 +9,7 @@ import { ButtonWrapper } from '../../buttons/button-wrapper';
 import { ArrowIcon } from '../../icons/arrow-icon';
 import { TrafficLightButtonGroup } from '../../traffic-light';
 import { DraggableWindowWrapper } from '../common/draggable-wrapper';
-import ResizableWrapper from '../common/resize-wrapper';
+import { ResizableWrapper } from '../common/resize-wrapper';
 import { useWindowState } from '../hooks';
 import { FileTreeItemWrapper } from './file-tree';
 import './style.less';

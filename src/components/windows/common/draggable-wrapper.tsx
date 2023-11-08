@@ -67,6 +67,12 @@ export const DraggableWindowWrapper = React.forwardRef<
   onDrag;
   zIndex;
 
+  `
+  todo:
+  - fix dragging shaking bug.
+  - draggable handler is not correct when using nodeRef.
+  `;
+
   const handleDrag: DraggableEventHandler = (e, data) => {
     // if (data.y > 50) {
     //   windowManager.updateWindowState(id, 'isMaximized', false);

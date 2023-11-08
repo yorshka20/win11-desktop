@@ -22,7 +22,7 @@ const ResizeContainer = styled.div`
 
 const logger = createLogger('ResizableWrapper');
 
-const ResizableWrapper: React.FC<ResizableWrapperProps> = ({
+const Wrapper: React.FC<ResizableWrapperProps> = ({
   onResize,
   children,
   id,
@@ -33,8 +33,6 @@ const ResizableWrapper: React.FC<ResizableWrapperProps> = ({
   const handleResize: ResizeCallback = (...args) => {
     logger('handleResize', args);
     const s = args[3];
-
-    // try to avoid using getBoundingClientRect
 
     const width = Math.round(size[0] + s.width);
     const height = Math.round(size[1] + s.height);
@@ -63,4 +61,4 @@ const ResizableWrapper: React.FC<ResizableWrapperProps> = ({
   );
 };
 
-export default ResizableWrapper;
+export const ResizableWrapper = React.memo(Wrapper);

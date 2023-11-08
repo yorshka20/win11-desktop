@@ -7,7 +7,7 @@ import { type Options } from '../../../context/window-manager';
 import { useWindowContext } from '../../../hooks';
 import { TrafficLightButtonGroup } from '../../traffic-light';
 import { DraggableWindowWrapper } from '../common/draggable-wrapper';
-import ResizableWrapper from '../common/resize-wrapper';
+import { ResizableWrapper } from '../common/resize-wrapper';
 import { useWindowState } from '../hooks';
 import { MenuBlock, SettingContentBlock } from './menus';
 import './style.less';
@@ -94,7 +94,7 @@ export function SettingWindowComponent({
       size={windowState.size}
       position={windowState.position}
       isMaximized={windowState.isMaximized}
-      nodeRef={headerRef}
+      ref={headerRef}
       handle=".setting-window-header"
       className="setting-window-component"
     >

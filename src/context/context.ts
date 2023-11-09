@@ -25,6 +25,7 @@ function dispatcher(
   command: 'unhover-taskbar-icon',
   value: ClickIconEvent,
 ): void;
+function dispatcher(command: 'hover-taskbar-preview', value: boolean): void;
 function dispatcher(
   command: string,
   value?: boolean | string | Partial<Options> | ClickIconEvent,
@@ -72,10 +73,19 @@ function dispatcher(
       break;
     }
     case 'unhover-taskbar-icon': {
+      // skip if mouse is hovering the preview float menu
+      if (store.getStateValue('hoverPreview')) return;
       store.updateState('taskbarPreview', 'none');
       break;
     }
-
+    case 'hover-taskbar-preview': {
+      const state = value as boolean;
+      store.updateState('hoverPreview', state);
+      if (!state) {
+        store.updateState('taskbarPreview', 'none');
+      }
+      break;
+    }
     default:
       break;
   }
@@ -101,6 +111,10 @@ const eventPipe = new Subject<PipeEvent>();
 
 // this instance can be used in this module.
 const windowManager = new WindowManager(eventPipe);
+
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore // debug
+window.windowManager = windowManager;
 
 const defaultContext: WindowContextType = {
   dispatcher,

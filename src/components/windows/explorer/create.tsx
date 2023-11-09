@@ -1,8 +1,5 @@
 import { WindowContextType } from '../../../context/context';
-import {
-  type Options,
-  type WindowHandler,
-} from '../../../context/window-manager';
+import type { Options, WindowHandler } from '../../../context/window-manager';
 import { ExplorerWindowComponent } from './window';
 
 export function createExplorerWindow(
@@ -18,10 +15,12 @@ export function createExplorerWindow(
     id,
     size: [800, 600],
     position: [200, 100],
+    previewPosition: [200, 100],
     title: id,
     reuse: false,
     zIndex: 10,
     content: id,
+    type: 'Explorer',
   };
 
   const window = <ExplorerWindowComponent id={id} />;

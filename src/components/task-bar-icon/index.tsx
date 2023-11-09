@@ -8,6 +8,7 @@ interface Props {
   icon: string | React.JSX.Element;
   name: string;
   id: string;
+
   onClick?: () => void;
 }
 
@@ -23,7 +24,6 @@ export function TaskBarButton({ icon: Icon, id, name, onClick }: Props) {
   }, [dispatcher, onClick, id]);
 
   const handleHover = useCallback(() => {
-    //
     dispatcher('hover-taskbar-icon', {
       name: id,
       type: 'modal',
@@ -31,10 +31,12 @@ export function TaskBarButton({ icon: Icon, id, name, onClick }: Props) {
   }, [dispatcher, id]);
 
   const handleLeave = useCallback(() => {
-    dispatcher('unhover-taskbar-icon', {
-      name: id,
-      type: 'modal',
-    });
+    setTimeout(() => {
+      dispatcher('unhover-taskbar-icon', {
+        name: id,
+        type: 'modal',
+      });
+    }, 1000);
   }, [dispatcher, id]);
 
   return (

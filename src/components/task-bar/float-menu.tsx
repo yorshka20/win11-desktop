@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import { store } from '../../context/store';
@@ -20,7 +20,12 @@ const Container = styled.div<StyledProps>`
   transform: translate(-50%, ${({ $show }) => ($show ? 0 : '-9999px')});
 `;
 
-export const TaskBarFloatMenu = () => {
+interface Props {
+  onEnter: () => void;
+  onLeave: () => void;
+}
+
+export const TaskBarFloatMenu = ({ onEnter, onLeave }: Props) => {
   const { windowManager } = useWindowContext();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -29,24 +34,57 @@ export const TaskBarFloatMenu = () => {
   useEffect(() => {
     const sub = store.subscribeState('taskbarPreview', (content) => {
       console.log('content', content);
-      if (content === 'Explorer') {
-        const wins = windowManager.getAllWindows();
-        setPreviewContent(wins.map((w) => w.data));
-      } else if (content === 'none') {
+      if (content === 'none') {
         setPreviewContent([]);
+        return;
+      }
+
+      if (content === 'Explorer') {
+        const wins = windowManager.getAllWindows('Explorer');
+        setPreviewContent(wins.map((w) => w.data));
+      } else if (content === 'Setting') {
+        const wins = windowManager.getAllWindows('Setting');
+        setPreviewContent(wins.map((w) => w.data));
       }
     });
 
     return () => sub.unsubscribe();
   }, [windowManager]);
 
+  const handleEnter = (e) => {
+    console.log('mouseEnter', e.target.dataset);
+    onEnter();
+  };
+
+  const handleLeave = () => {
+    onLeave();
+  };
+
+  const handleClick = (e: React.SyntheticEvent<HTMLDivElement>) => {
+    const id = e.target['dataset']?.['id'];
+    windowManager.focusWindow(id);
+  };
+
+  // focus window when hover on preview item.
+  const handleFocus = useCallback(
+    (id: string) => {
+      windowManager.focusWindow(id);
+    },
+    [windowManager],
+  );
+
   return (
     <Container
       $show={!!previewContent.length}
-      className="flex flex-row justify-between items-center"
+      className="flex flex-row justify-between items-center shadow-md"
+      onMouseEnter={handleEnter}
+      onMouseLeave={handleLeave}
+      onClick={handleClick} // delegate click event
     >
       {previewContent.map((item) => (
-        <PreviewItem key={item.id}>{item.title}</PreviewItem>
+        <PreviewItem onHover={handleFocus} id={item.id} key={item.id}>
+          {item.title}
+        </PreviewItem>
       ))}
     </Container>
   );
@@ -56,14 +94,30 @@ const PreviewContainer = styled.div`
   width: 200px;
   height: 100%;
 
-  border-radius: 6px;
-  border: 1px solid #f0f3f9;
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
 `;
 
-function PreviewItem({ children }: { children: React.JSX.Element }) {
+const PreviewItem = React.memo(function ({
+  children,
+  id,
+  onHover,
+}: {
+  id: string;
+  children: React.JSX.Element;
+  onHover: (id: string) => void;
+}) {
+  const handleMouseEnter = (e: React.SyntheticEvent<HTMLDivElement>) => {
+    onHover(e.target['dataset']?.['id']);
+  };
   return (
-    <PreviewContainer className="flex justify-center items-center">
+    <PreviewContainer
+      onMouseEnter={handleMouseEnter}
+      data-id={id}
+      className="flex justify-center items-center"
+    >
       {children}
     </PreviewContainer>
   );
-}
+});

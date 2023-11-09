@@ -15,10 +15,12 @@ export function createSettingWindow(
     id,
     size: [800, 600],
     position: [200, 100],
+    previewPosition: [200, 100],
     title: id,
     reuse: false,
     zIndex: 10,
     content: id,
+    type: 'Setting',
   };
 
   const window = <SettingWindowComponent id={id} />;

@@ -62,8 +62,6 @@ export const DraggableWindowWrapper = React.forwardRef<
 
   const { windowManager } = useWindowContext();
 
-  console.log('dragRef', ref);
-
   onDrag;
   zIndex;
 
@@ -72,27 +70,29 @@ export const DraggableWindowWrapper = React.forwardRef<
   - draggable handler is not correct when using nodeRef.
   `;
 
-  const handleDrag: DraggableEventHandler = (e, data) => {
-    // if (data.y > 50) {
-    //   windowManager.updateWindowState(id, 'isMaximized', false);
-    //   setSize([600, 400]);
-    //   const { width } = desktopContainer.getBoundingClientRect();
-    //   const { clientX } = e as MouseEvent;
-    //   setPosition([Math.round(clientX - (clientX / width) * 600), data.y]);
-    // }
-    // console.log('data', e, data);
-    onDrag(e, data);
-  };
+  // const handleDrag: DraggableEventHandler = (e, data) => {
+  //   // if (data.y > 50) {
+  //   //   windowManager.updateWindowState(id, 'isMaximized', false);
+  //   //   setSize([600, 400]);
+  //   //   const { width } = desktopContainer.getBoundingClientRect();
+  //   //   const { clientX } = e as MouseEvent;
+  //   //   setPosition([Math.round(clientX - (clientX / width) * 600), data.y]);
+  //   // }
+  //   // console.log('data', e, data);
+  //   onDrag(e, data);
+  // };
 
   // handle move.
   const handleDragStop: DraggableEventHandler = (e, data) => {
-    console.log('data', e, data);
     onDragStop(e, data);
 
     windowManager.updateWindowState(id, 'position', [data.x, data.y]);
   };
 
-  const handleClickWindow = () => {
+  const handleClickWindow = (e: React.SyntheticEvent<HTMLElement>) => {
+    const id = e.target['dataset']?.['testid'];
+    console.log('focus window: id', e.target['dataset'], id);
+    if (id === 'MinimizeIcon') return;
     windowManager.focusWindow(id);
   };
 
@@ -104,7 +104,7 @@ export const DraggableWindowWrapper = React.forwardRef<
       grid={[1, 1]}
       scale={1}
       onStart={onDragStart}
-      onDrag={handleDrag}
+      // onDrag={handleDrag}
       onStop={handleDragStop}
       offsetParent={document.body} // fix dragging shaking bug.
       nodeRef={ref as React.RefObject<HTMLElement>}

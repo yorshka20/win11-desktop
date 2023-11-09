@@ -32,6 +32,13 @@ export class RxStore<State extends RxStoreContent> {
     });
   }
 
+  batchUpdate<T extends keyof State>(params: Record<T, State[T]>) {
+    this.state$.next({
+      ...this.value,
+      ...params,
+    });
+  }
+
   subscribeState(fn: (v: State) => void): Subscription {
     const subscription = this.state$.subscribe(fn);
     return subscription;

@@ -1,7 +1,6 @@
 import { Subject, Subscription, filter } from 'rxjs';
 
-import type { Position, Size } from '../types';
-import { createLogger } from '../utils/logger';
+import type { Position, Size, WindowType } from '../types';
 import { PipeEvent } from './context';
 import { RxStore } from './rx-store';
 
@@ -27,17 +26,20 @@ export function getDefaultWindowState() {
   };
 }
 
-export interface BaseWindowOptions {
+interface BaseWindowOptions {
   reuse: boolean;
   id: string;
   title: string;
   position: Position;
   zIndex: number;
   size: Size;
+  type: WindowType;
   content: React.JSX.Element | string;
 }
 
-export type Options = BaseWindowOptions;
+export type Options = BaseWindowOptions & {
+  previewPosition: Position; // restore position for minimize window
+};
 
 export type WindowHandler = {
   close: () => void;
@@ -47,8 +49,6 @@ export type WindowHandler = {
   window: React.JSX.Element;
   data: Options;
 };
-
-const logger = createLogger('window-manager');
 
 export class WindowManager {
   private windowHandlerMap: Record<string, WindowHandler>;
@@ -90,7 +90,7 @@ export class WindowManager {
         break;
       }
       case 'open-window': {
-        logger('window manager: open window', id);
+        console.log('window manager: open window', id);
         break;
       }
       case 'minimize-window': {
@@ -125,8 +125,13 @@ export class WindowManager {
     return this.windowHandlerMap[id];
   }
 
-  getAllWindows() {
-    return Object.values(this.windowHandlerMap);
+  getAllWindows(type?: WindowType) {
+    if (!type) {
+      return Object.values(this.windowHandlerMap);
+    }
+    return Object.values(this.windowHandlerMap).filter(
+      (i) => i.data.type === type,
+    );
   }
 
   getWindowStateByKey<T extends keyof WindowState>(
@@ -145,9 +150,23 @@ export class WindowManager {
     key: T,
     value: WindowState[T],
   ) {
-    logger(`update window state: ${id} [${key}]: ${value}`);
+    console.log(`update window state => ${id} \n [${key}]: ${value}`);
     // window could have been destroyed
     this.getWindowState$(id)?.updateState(key, value);
+  }
+
+  batchUpdateWindowState<T extends keyof WindowState>(
+    id: string,
+    params: Record<T, WindowState[T]>,
+  ) {
+    console.log(
+      `update window state batch => ${id} \n ${JSON.stringify(
+        params,
+        null,
+        2,
+      )}`,
+    );
+    this.getWindowState$(id).batchUpdate(params);
   }
 
   subscribeState(id: string, fn: (v: WindowState) => void): Subscription {
@@ -172,6 +191,18 @@ export class WindowManager {
   private onMinimizeWindow(id: string, v?: boolean) {
     const value = v ?? !this.getWindowStateByKey(id, 'isMinimized');
     this.updateWindowState(id, 'isMinimized', value);
+    const data = this.getWindowStateByKey(id, 'data');
+    const position = this.getWindowStateByKey(id, 'position');
+    console.log('data', data, position);
+    // save preview position
+    this.batchUpdateWindowState(id, {
+      isMinimized: true,
+      data: {
+        ...data,
+        previewPosition: position,
+      },
+    });
+    this.currentActiveWindowId = '';
   }
 
   private onCloseWindow(id: string) {
@@ -184,8 +215,23 @@ export class WindowManager {
       return;
     }
 
+    console.log('focus window', id);
+
     this.currentActiveWindowId = id;
-    this.updateWindowState(id, 'isActive', true);
-    this.updateWindowState(id, 'zIndex', this.maxZIndex++);
+
+    const window = this.windowHandlerMap[id];
+    if (this.getWindowStateByKey(id, 'isMinimized')) {
+      this.batchUpdateWindowState(id, {
+        isActive: true,
+        zIndex: this.maxZIndex++,
+        isMinimized: false,
+        position: window.data.previewPosition,
+      });
+    } else {
+      this.batchUpdateWindowState(id, {
+        isActive: true,
+        zIndex: this.maxZIndex++,
+      });
+    }
   }
 }

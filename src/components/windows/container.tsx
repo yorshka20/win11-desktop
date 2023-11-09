@@ -44,14 +44,16 @@ export const WindowComponentContainer = React.memo(() => {
       event: 'maximize-window',
       handler(id) {
         const { width, height } = desktopContainer.getBoundingClientRect();
-        windowManager.updateWindowState(id, 'size', [width, height]);
-        windowManager.updateWindowState(id, 'position', [0, 0]);
+        windowManager.batchUpdateWindowState(id, {
+          size: [width, height],
+          position: [0, 0],
+        });
       },
     },
     {
       event: 'minimize-window',
       handler(id) {
-        windowManager.updateWindowState(id, 'size', [0, 0]);
+        // windowManager.updateWindowState(id, 'size', [0, 0]);
         windowManager.updateWindowState(id, 'position', [9999, 9999]);
       },
     },
@@ -63,7 +65,7 @@ export const WindowComponentContainer = React.memo(() => {
     {
       event: 'proxy-operation',
       handler(id, e) {
-        console.log('proxy operation', id, e);
+        console.warn('[proxy operation]', id, e);
         windowOpener('Explorer', context);
       },
     },

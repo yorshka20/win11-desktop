@@ -35,6 +35,14 @@ export function TaskBar({ buttons }: Props) {
     windowOpener('Explorer', context);
   }, [context]);
 
+  const handleEnter = useCallback(() => {
+    dispatcher('hover-taskbar-preview', true);
+  }, [dispatcher]);
+
+  const handleLeave = useCallback(() => {
+    dispatcher('hover-taskbar-preview', false);
+  }, [dispatcher]);
+
   return (
     <div className="taskbar-container w-full">
       <div className="flex flex-row justify-between items-center w-full h-full taskbar">
@@ -77,7 +85,7 @@ export function TaskBar({ buttons }: Props) {
       </div>
 
       {/* float menu for cascade window preview */}
-      <TaskBarFloatMenu />
+      <TaskBarFloatMenu onEnter={handleEnter} onLeave={handleLeave} />
     </div>
   );
 }

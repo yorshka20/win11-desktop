@@ -99,7 +99,7 @@ export function SettingWindowComponent({
       className="setting-window-component"
     >
       <ResizableWrapper onResize={handleResize} size={windowState.size} id={id}>
-        <Container className="flex flex-col w-full f-full">
+        <Container className="flex flex-col w-full h-full">
           <header
             ref={headerRef}
             className="setting-window-header flex flex-row justify-end items-center w-full"

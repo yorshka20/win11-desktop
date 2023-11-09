@@ -20,6 +20,11 @@ function dispatcher(command: 'display-start-menu', value?: boolean): void;
 function dispatcher(command: 'display-context-menu', value?: boolean): void;
 function dispatcher(command: 'click-desktop-icon', value: ClickIconEvent): void;
 function dispatcher(command: 'click-taskbar-icon', value: ClickIconEvent): void;
+function dispatcher(command: 'hover-taskbar-icon', value: ClickIconEvent): void;
+function dispatcher(
+  command: 'unhover-taskbar-icon',
+  value: ClickIconEvent,
+): void;
 function dispatcher(
   command: string,
   value?: boolean | string | Partial<Options> | ClickIconEvent,
@@ -58,6 +63,16 @@ function dispatcher(
           data: { ...(value as ClickIconEvent) },
         });
       }
+      break;
+    }
+    case 'hover-taskbar-icon': {
+      console.log('[hover-taskbar-icon]: ', value);
+      const { name } = value as ClickIconEvent;
+      store.updateState('taskbarPreview', name);
+      break;
+    }
+    case 'unhover-taskbar-icon': {
+      store.updateState('taskbarPreview', 'none');
       break;
     }
 

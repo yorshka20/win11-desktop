@@ -125,6 +125,10 @@ export class WindowManager {
     return this.windowHandlerMap[id];
   }
 
+  getAllWindows() {
+    return Object.values(this.windowHandlerMap);
+  }
+
   getWindowStateByKey<T extends keyof WindowState>(
     id: string,
     key: T,

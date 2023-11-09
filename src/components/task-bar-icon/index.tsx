@@ -22,10 +22,27 @@ export function TaskBarButton({ icon: Icon, id, name, onClick }: Props) {
     });
   }, [dispatcher, onClick, id]);
 
+  const handleHover = useCallback(() => {
+    //
+    dispatcher('hover-taskbar-icon', {
+      name: id,
+      type: 'modal',
+    });
+  }, [dispatcher, id]);
+
+  const handleLeave = useCallback(() => {
+    dispatcher('unhover-taskbar-icon', {
+      name: id,
+      type: 'modal',
+    });
+  }, [dispatcher, id]);
+
   return (
     <ButtonWrapper
       title={name}
       onClick={handleClick}
+      onHover={handleHover}
+      onLeave={handleLeave}
       id={id}
       className="taskbar-button flex items-center justify-center"
     >

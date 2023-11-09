@@ -7,6 +7,7 @@ import { WinIcon } from '../icons/win-icon';
 import { TaskBarButton } from '../task-bar-icon';
 import { TimeBlock } from '../time';
 import { windowOpener } from '../windows/create-window';
+import { TaskBarFloatMenu } from './float-menu';
 import './style.less';
 
 interface Props {
@@ -50,8 +51,8 @@ export function TaskBar({ buttons }: Props) {
           />
           <TaskBarButton
             onClick={handleSearch}
-            name="search"
-            id="search"
+            name="Explorer"
+            id="Explorer"
             icon={<ExplorerIcon />}
           />
           <TaskBarButton
@@ -74,7 +75,9 @@ export function TaskBar({ buttons }: Props) {
           <div className="back-to-desktop" />
         </div>
       </div>
-      <div className="taskbar-float-menu">1</div>
+
+      {/* float menu for cascade window preview */}
+      <TaskBarFloatMenu />
     </div>
   );
 }

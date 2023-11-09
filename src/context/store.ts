@@ -8,6 +8,7 @@ export interface ContextState extends RxStoreContent {
   showStartMenu: boolean;
   showContextMenu: boolean;
   showSystemPreference: boolean;
+  taskbarPreview: 'none' | 'Explorer' | string;
 }
 
 type ContextKey = keyof ContextState;
@@ -51,6 +52,7 @@ export const store = new ContextStateStore({
   showStartMenu: false,
   showContextMenu: false,
   showSystemPreference: false,
+  taskbarPreview: 'none',
 });
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment

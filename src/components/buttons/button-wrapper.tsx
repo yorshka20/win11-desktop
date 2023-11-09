@@ -1,4 +1,5 @@
 import classNames from 'classnames';
+import { debounce } from 'lodash-es';
 import { styled } from 'styled-components';
 
 import { noop } from '../../utils/helper';
@@ -9,6 +10,8 @@ interface Props {
   title?: string;
   id?: string;
   onClick?: () => void;
+  onHover?: () => void;
+  onLeave?: () => void;
 
   // styled props.
   width?: number;
@@ -40,6 +43,8 @@ export function ButtonWrapper({
   id,
   className = '',
   onClick = noop,
+  onHover = noop,
+  onLeave = noop,
   width = 30,
   height = 30,
   backgroundColor = 'rgba(240, 248, 255, 0.8)',
@@ -54,6 +59,8 @@ export function ButtonWrapper({
         'flex justify-center items-center',
         `${className}`,
       )}
+      onMouseEnter={debounce(onHover, 200)}
+      onMouseLeave={onLeave}
       $width={width}
       $height={height}
       $backgroundColor={backgroundColor}

@@ -69,7 +69,6 @@ export const DraggableWindowWrapper = React.forwardRef<
 
   `
   todo:
-  - fix dragging shaking bug.
   - draggable handler is not correct when using nodeRef.
   `;
 
@@ -107,6 +106,7 @@ export const DraggableWindowWrapper = React.forwardRef<
       onStart={onDragStart}
       onDrag={handleDrag}
       onStop={handleDragStop}
+      offsetParent={document.body} // fix dragging shaking bug.
       nodeRef={ref as React.RefObject<HTMLElement>}
       cancel={cancel}
     >
@@ -126,4 +126,3 @@ export const DraggableWindowWrapper = React.forwardRef<
     </Draggable>
   );
 });
-// });

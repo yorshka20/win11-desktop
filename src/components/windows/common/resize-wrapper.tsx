@@ -45,7 +45,7 @@ const Wrapper: React.FC<ResizableWrapperProps> = ({
       bounds={'window'}
       size={{ width: size[0], height: size[1] }}
       data-id={'resize-wrapper'}
-      className={`flex flex-1 flex-col w-full h-full relative ${className}`}
+      className={`flex flex-col w-full h-full relative ${className}`}
     >
       {children}
     </Resizable>

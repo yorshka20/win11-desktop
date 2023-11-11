@@ -9,7 +9,7 @@ import { useWindowContext } from '../../hooks';
 const dState = getDefaultWindowState();
 
 /**
- * subscribe window state
+ * subscribe window component state
  *
  * @export
  * @param {string} id

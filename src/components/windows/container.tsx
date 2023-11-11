@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 
 import { useEventListener, useWindowContext } from '../../hooks';
 import { windowOpener } from './index';
+import './style.less';
 
 /**
  * createPortal at the Desktop root.
@@ -66,7 +67,12 @@ export const WindowComponentContainer = React.memo(() => {
       event: 'proxy-operation',
       handler(id, e) {
         console.warn('[proxy operation]', id, e);
-        windowOpener('Explorer', context);
+        const { name = '' } = e.data as { name: string };
+        if (name.includes('image')) {
+          windowOpener('Image', context);
+        } else {
+          windowOpener('Explorer', context);
+        }
       },
     },
   ]);

@@ -1,5 +1,4 @@
-import { Input } from '@mui/joy';
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { styled } from 'styled-components';
 
 import avatarImg from '../../../assets/avatar.jpg';
@@ -9,7 +8,6 @@ import { TrafficLightButtonGroup } from '../../traffic-light';
 import { DraggableWindowWrapper } from '../common/draggable-wrapper';
 import { ResizableWrapper } from '../common/resize-wrapper';
 import { useWindowState } from '../hooks';
-import { MenuBlock, SettingContentBlock } from './menus';
 
 type WindowComponentProps = Partial<Options> & {
   id: string;
@@ -26,42 +24,9 @@ const Container = styled.div`
   }
 `;
 
-const ProfileBlock = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-
-  border-radius: 6px;
-
-  padding: 10px;
-
-  margin-bottom: 20px;
-
-  &:hover {
-    background-color: #e7ebf0;
-  }
-
-  img {
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    margin-right: 10px;
-  }
-
-  .content {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-
-    font-size: 12px;
-  }
-`;
-
-export function SettingWindowComponent({
+export function ImageWindowComponent({
   id,
-  title = 'setting',
+  title = 'image',
   content = '',
 }: WindowComponentProps) {
   const headerRef = useRef<HTMLHeadElement>(null);
@@ -70,19 +35,12 @@ export function SettingWindowComponent({
   windowManager;
   content;
 
-  const [activeItem, setActiveItem] = useState('');
-
   const windowState = useWindowState(id);
 
   console.log('windowState', windowState);
 
   const handleResize = (width: number, height: number) => {
     console.log('width, height', width, height);
-  };
-
-  const handleActiveItem = (item: string) => {
-    console.log('activeItem', item);
-    setActiveItem(item);
   };
 
   return (
@@ -94,8 +52,7 @@ export function SettingWindowComponent({
       position={windowState.position}
       isMaximized={windowState.isMaximized}
       ref={headerRef}
-      handle=".setting-window-header"
-      className="setting-window-component"
+      className="image-window-component"
     >
       <ResizableWrapper onResize={handleResize} size={windowState.size} id={id}>
         <Container className="flex flex-col w-full h-full">
@@ -107,31 +64,7 @@ export function SettingWindowComponent({
           </header>
 
           <div className="flex flex-row w-full h-full justify-center items-center content-container">
-            {/* left menu sidebar */}
-            <div className="flex flex-col justify-start items-start h-full menus">
-              {/* user profile  */}
-              <ProfileBlock className="profile-block w-full">
-                <img src={avatarImg} alt="profile" className="round" />
-                <div className="content">
-                  <span>Yorshka</span>
-                  <span>mail@yors.hk</span>
-                </div>
-              </ProfileBlock>
-
-              {/* search input  */}
-              <Input
-                className="search-input w-full"
-                sx={{
-                  '--Input-minHeight': '30px',
-                }}
-              />
-
-              {/* menu tree */}
-              <MenuBlock onActiveItemChange={handleActiveItem} />
-            </div>
-
-            {/* content block. this should be tabPane */}
-            <SettingContentBlock activeItem={activeItem} />
+            <img className="h-full" src={avatarImg} />
           </div>
         </Container>
       </ResizableWrapper>

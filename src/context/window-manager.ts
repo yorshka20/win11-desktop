@@ -150,7 +150,7 @@ export class WindowManager {
     key: T,
     value: WindowState[T],
   ) {
-    console.log(`update window state => ${id} \n [${key}]: ${value}`);
+    console.log(`update window state => ${id} [${key}]: ${value}`);
     // window could have been destroyed
     this.getWindowState$(id)?.updateState(key, value);
   }
@@ -193,7 +193,7 @@ export class WindowManager {
     this.updateWindowState(id, 'isMinimized', value);
     const data = this.getWindowStateByKey(id, 'data');
     const position = this.getWindowStateByKey(id, 'position');
-    console.log('data', data, position);
+
     // save preview position
     this.batchUpdateWindowState(id, {
       isMinimized: true,

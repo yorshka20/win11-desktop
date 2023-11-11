@@ -4,6 +4,7 @@ import { WindowContextType } from '../../context/context';
 import { type Options } from '../../context/window-manager';
 import type { WindowType } from '../../types';
 import { createExplorerWindow } from './explorer/create';
+import { createImageWindow } from './image/create';
 import { createSettingWindow } from './setting/create';
 
 /**
@@ -35,7 +36,7 @@ export function windowOpener(
       break;
     }
     case 'Image': {
-      window = createExplorerWindow(context, options);
+      window = createImageWindow(context, options);
       break;
     }
     default:

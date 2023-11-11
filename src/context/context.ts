@@ -103,7 +103,7 @@ type PipeEventType =
 export type PipeEvent = {
   id: string;
   name: PipeEventType;
-  data?: Record<string, unknown>;
+  data?: Record<string, unknown> | ClickIconEvent;
 };
 
 // this instance can be used in this module.

@@ -1,11 +1,11 @@
 import cls from 'classnames';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import Draggable, { type DraggableEventHandler } from 'react-draggable';
 import { styled } from 'styled-components';
 
 import { DESKTOP_GRID_SIZE } from '../../constants';
 import { useWindowContext } from '../../hooks';
-import { type IconType } from '../../types';
+import { type IconType, Position } from '../../types';
 import { noop } from '../../utils/helper';
 
 export interface DesktopIconWrapperProps {
@@ -29,13 +29,16 @@ export interface DesktopIconWrapperProps {
 
 interface StyledProps {
   $color?: string;
+  $borderColor?: string;
   $hoverBgColor?: string;
   $selectedBgColor?: string;
 }
 
 const Container = styled.div<StyledProps>`
-  width: 62px;
-  max-height: 82px;
+  position: fixed;
+
+  width: 60px;
+  height: 80px;
 
   box-sizing: border-box;
   margin: 4px;
@@ -45,22 +48,17 @@ const Container = styled.div<StyledProps>`
 
   user-select: none;
 
-  &.focused {
-    border-color: #999;
-  }
-
-  &.selected {
-    background-color: ${(props) => props.$selectedBgColor};
-    border-color: #999;
-  }
+  border-color: ${(props) => props.$borderColor};
+  background-color: ${(props) => props.$selectedBgColor};
 
   &:hover {
     background-color: ${(props) => props.$hoverBgColor};
   }
 
   .icon {
-    width: 40px;
-    height: 40px;
+    width: 100%;
+    min-height: 40px;
+    flex: 1;
     margin-bottom: 4px;
   }
 
@@ -88,6 +86,13 @@ const Container = styled.div<StyledProps>`
   }
 `;
 
+function getRoundPosition([x, y]: Position): Position {
+  return [
+    Math.round(x / DESKTOP_GRID_SIZE.x) * DESKTOP_GRID_SIZE.x,
+    Math.round(y / DESKTOP_GRID_SIZE.y) * DESKTOP_GRID_SIZE.y,
+  ];
+}
+
 export function DesktopIconWrapper({
   name,
   id,
@@ -106,10 +111,17 @@ export function DesktopIconWrapper({
 
   const [focused] = useState(false);
   const [selected, setSelected] = useState(false);
-  const [position, setPosition] = useState<{ x: number; y: number }>({
-    x: grid[0] * 100,
-    y: grid[1] * 100,
-  });
+  const [position, setPosition] = useState<Position>([
+    DESKTOP_GRID_SIZE.x * grid[0],
+    DESKTOP_GRID_SIZE.y * grid[1],
+  ]);
+
+  const sbgColor = useMemo(() => {
+    if (selected) {
+      return selectedBgColor;
+    }
+    return 'transparent';
+  }, [selected, selectedBgColor]);
 
   const handleClick = useCallback(() => {
     setSelected(true);
@@ -126,21 +138,19 @@ export function DesktopIconWrapper({
   }, [id, dispatcher]);
 
   const handleStop: DraggableEventHandler = (_, data) => {
-    let x = data.x;
-    let y = data.y;
+    let pos = {} as Position;
     if (grided) {
-      x = Math.round(data.x / DESKTOP_GRID_SIZE) * DESKTOP_GRID_SIZE;
-      y = Math.round(data.y / DESKTOP_GRID_SIZE) * DESKTOP_GRID_SIZE;
+      pos = getRoundPosition([data.x, data.y]);
     }
-    setPosition({ x, y });
+    setPosition(pos);
   };
 
   return (
     <Draggable
       axis="both"
       defaultPosition={{ x: 0, y: 0 }}
-      position={position}
-      grid={[5, 5]}
+      position={{ x: position[0], y: position[1] }}
+      grid={[4, 4]}
       scale={1}
       // onStart={handleStart}
       // onDrag={handleDrag}
@@ -152,14 +162,14 @@ export function DesktopIconWrapper({
         onClick={handleClick}
         onDoubleClick={handleDoubleClick}
         className={cls(
-          'desktop-icon-container flex flex-col justify-start items-center',
-          focused ? 'focused' : '',
-          selected ? 'selected' : '',
+          'desktop-icon-container',
+          'flex flex-col justify-start items-center',
         )}
         ref={dragRef}
         $color={color}
+        $borderColor={focused || selected ? '#999' : 'transparent'}
         $hoverBgColor={hoverBgColor}
-        $selectedBgColor={selectedBgColor}
+        $selectedBgColor={sbgColor}
       >
         {typeof Icon === 'string' ? <img src={Icon} className="icon" /> : Icon}
         <p className={`${shadowText ? 'text-shadow' : ''}`}>{name}</p>

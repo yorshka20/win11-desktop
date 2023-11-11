@@ -20,7 +20,7 @@ export function createImageWindow(
     reuse: false,
     zIndex: 10,
     content: id,
-    type: 'Setting',
+    type: 'Image',
   };
 
   const window = <ImageWindowComponent id={id} />;

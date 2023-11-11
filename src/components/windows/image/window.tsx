@@ -52,6 +52,7 @@ export function ImageWindowComponent({
       position={windowState.position}
       isMaximized={windowState.isMaximized}
       ref={headerRef}
+      cancel=".tabs-container"
       className="image-window-component"
     >
       <ResizableWrapper onResize={handleResize} size={windowState.size} id={id}>

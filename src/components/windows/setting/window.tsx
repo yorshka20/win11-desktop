@@ -94,7 +94,7 @@ export function SettingWindowComponent({
       position={windowState.position}
       isMaximized={windowState.isMaximized}
       ref={headerRef}
-      handle=".setting-window-header"
+      cancel=".tabs-container"
       className="setting-window-component"
     >
       <ResizableWrapper onResize={handleResize} size={windowState.size} id={id}>

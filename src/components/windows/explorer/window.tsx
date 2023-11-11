@@ -11,7 +11,6 @@ import { DraggableWindowWrapper } from '../common/draggable-wrapper';
 import { ResizableWrapper } from '../common/resize-wrapper';
 import { useWindowState } from '../hooks';
 import { FileTreeItemWrapper } from './file-tree';
-import './style.less';
 import { WindowTabs } from './tabs';
 
 type WindowComponentProps = Partial<Options> & {

@@ -9,7 +9,7 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          react: ['react', 'react-dom'],
+          reacts: ['react', 'react-dom'],
           'style-vendors': [
             'styled-components',
             '@emotion/styled',
@@ -17,9 +17,28 @@ export default defineConfig({
             '@mui/joy',
             '@mui/styled-engine-sc',
             '@mui/icons-material',
+            '@fontsource/inter',
           ],
           interacts: ['re-resizable', 'react-draggable'],
-          'common-vendors': ['lodash-es', 'moment'],
+          'common-vendors': ['lodash-es', 'moment', 'rxjs', 'classnames'],
+        },
+        chunkFileNames(chunkInfo) {
+          if (chunkInfo.facadeModuleId?.includes('/src/assets/')) {
+            return `assets/icons/${chunkInfo.name}.js`;
+          }
+
+          return `assets/js/${chunkInfo.name}.js`;
+        },
+        assetFileNames(assetInfo) {
+          // icons set
+          if (/\.(ico|gif|png|jpe?g|svg|webp|avif)$/.test(assetInfo.name)) {
+            return `assets/icons/${assetInfo.name}`;
+          }
+          // fonts and others
+          if (/\.(woff|woff2)$/.test(assetInfo.name)) {
+            return `assets/fonts/${assetInfo.name}`;
+          }
+          return `assets/${assetInfo.name}`;
         },
       },
     },

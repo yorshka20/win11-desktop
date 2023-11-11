@@ -8,6 +8,7 @@ export interface ContextState extends RxStoreContent {
   showStartMenu: boolean;
   showContextMenu: boolean;
   showSystemPreference: boolean;
+  selectedDesktopIcons: string[];
   taskbarPreview: 'none' | 'Explorer' | string;
   hoverPreview: boolean;
 }
@@ -53,6 +54,7 @@ export const store = new ContextStateStore({
   showStartMenu: false,
   showContextMenu: false,
   showSystemPreference: false,
+  selectedDesktopIcons: [],
   taskbarPreview: 'none',
   hoverPreview: false,
 });

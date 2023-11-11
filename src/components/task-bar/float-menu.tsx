@@ -51,8 +51,7 @@ export const TaskBarFloatMenu = ({ onEnter, onLeave }: Props) => {
     return () => sub.unsubscribe();
   }, [windowManager]);
 
-  const handleEnter = (e) => {
-    console.log('mouseEnter', e.target.dataset);
+  const handleEnter = () => {
     onEnter();
   };
 

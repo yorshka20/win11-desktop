@@ -4,6 +4,7 @@ import Draggable, { type DraggableEventHandler } from 'react-draggable';
 import { styled } from 'styled-components';
 
 import { DESKTOP_GRID_SIZE } from '../../constants';
+import { store } from '../../context/store';
 import { useWindowContext } from '../../hooks';
 import { type IconType, Position } from '../../types';
 import { noop } from '../../utils/helper';
@@ -12,9 +13,12 @@ export interface DesktopIconWrapperProps {
   name: string;
   id: string;
   icon: IconType;
+  // layout pos
   grid: [number, number];
 
-  grided?: boolean;
+  // should not be positioned in grid. default is grided.
+  ungrided?: boolean;
+  selected: boolean;
   shadowText?: boolean;
 
   // styled props.
@@ -97,9 +101,10 @@ export function DesktopIconWrapper({
   name,
   id,
   grid,
-  grided = false,
+  selected,
   icon: Icon,
   shadowText,
+  ungrided = false,
   color = 'black',
   hoverBgColor = 'rgba(240, 248, 255, 0.3)',
   selectedBgColor = 'rgba(240, 248, 255, 0.5)',
@@ -109,8 +114,6 @@ export function DesktopIconWrapper({
 
   const { dispatcher } = useWindowContext();
 
-  const [focused] = useState(false);
-  const [selected, setSelected] = useState(false);
   const [position, setPosition] = useState<Position>([
     DESKTOP_GRID_SIZE.x * grid[0],
     DESKTOP_GRID_SIZE.y * grid[1],
@@ -124,8 +127,7 @@ export function DesktopIconWrapper({
   }, [selected, selectedBgColor]);
 
   const handleClick = useCallback(() => {
-    setSelected(true);
-
+    store.updateState('selectedDesktopIcons', [id]);
     onClick(id);
   }, [onClick, id]);
 
@@ -139,7 +141,7 @@ export function DesktopIconWrapper({
 
   const handleStop: DraggableEventHandler = (_, data) => {
     let pos = {} as Position;
-    if (grided) {
+    if (!ungrided) {
       pos = getRoundPosition([data.x, data.y]);
     }
     setPosition(pos);
@@ -167,7 +169,7 @@ export function DesktopIconWrapper({
         )}
         ref={dragRef}
         $color={color}
-        $borderColor={focused || selected ? '#999' : 'transparent'}
+        $borderColor={selected ? '#999' : 'transparent'}
         $hoverBgColor={hoverBgColor}
         $selectedBgColor={sbgColor}
       >

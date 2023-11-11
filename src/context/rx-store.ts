@@ -1,4 +1,10 @@
-import { BehaviorSubject, Observable, type Subscription, map } from 'rxjs';
+import {
+  BehaviorSubject,
+  Observable,
+  type Subscription,
+  distinctUntilChanged,
+  map,
+} from 'rxjs';
 
 export type RxStoreContent = {
   [x: string]: unknown;
@@ -55,7 +61,10 @@ export class RxStore<State extends RxStoreContent> {
       return sub;
     }
 
-    const subject = this.state$.pipe(map((s) => s[key]));
+    const subject = this.state$.pipe(
+      map((s) => s[key]),
+      distinctUntilChanged(), // deduplicate
+    );
     const subscription = subject.subscribe((v) => fn(v as State[T]));
     this.stateSubscription[key] = subject;
 

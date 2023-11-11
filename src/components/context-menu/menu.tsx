@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 
+import type { Position } from '../../types';
+
 interface ContextMenuProps {
   children: React.JSX.Element;
   position: Position;
   show: boolean;
 }
-
-type Position = [number, number]; // x,y
 
 export function ContextMenu(props: ContextMenuProps) {
   const { children, position, show } = props;

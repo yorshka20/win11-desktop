@@ -36,7 +36,7 @@ export function DesktopContainer({ desktopConfig }: DesktopContainerProps) {
     <div
       ref={desktopRef}
       id="desktop"
-      className="flex-1 h-full flex flex-col flex-wrap justify-start items-start desktop-container"
+      className="w-full h-full flex flex-1 desktop-container"
     >
       {/* desktop icons */}
       <DesktopIconSet />
@@ -84,14 +84,11 @@ function IconBlock() {
     .map((iconType, i) =>
       Object.keys(icons[iconType]).map((name, j) => {
         const Icon = icons[iconType][name];
-
+        const grid = [i + Math.round(j / 5), j % 5] as [number, number];
         return (
           <DesktopIconWrapper
             grided
-            grid={[
-              Math.round(Math.random() * 8),
-              Math.round(Math.random() * 2),
-            ]}
+            grid={grid}
             name={name}
             id={`${iconType}-${name}`}
             shadowText

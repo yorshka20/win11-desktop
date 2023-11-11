@@ -1,4 +1,3 @@
-import '@fontsource/inter';
 import { CssVarsProvider } from '@mui/joy/styles';
 import React from 'react';
 import ReactDOM from 'react-dom/client';

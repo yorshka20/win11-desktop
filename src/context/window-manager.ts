@@ -113,7 +113,7 @@ export class WindowManager {
     delete this.windowHandlerMap[id];
 
     // destroy window state rxStore
-    this.windowState$Map[id].destroy();
+    this.getWindowState$(id)?.destroy();
     delete this.windowState$Map[id];
 
     // unsubscribe from window events
@@ -138,7 +138,7 @@ export class WindowManager {
     id: string,
     key: T,
   ): WindowState[T] {
-    return this.windowState$Map[id].getValue()[key];
+    return this.getWindowState$(id)?.getValue()[key];
   }
 
   private getWindowState$(id: string) {

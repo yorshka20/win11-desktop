@@ -67,6 +67,13 @@ export class WindowManager {
     this.windowEventMap = {};
   }
 
+  /**
+   * Adds a window to the window handler map, creates a new RxStore for the window state,
+   * and subscribes to the event$ observable to handle window events.
+   *
+   * @param {string} id - The ID of the window.
+   * @param {WindowHandler} window - The window handler object.
+   */
   addWindow(id: string, window: WindowHandler) {
     this.windowHandlerMap[id] = window;
     this.windowState$Map[id] = new RxStore<WindowState>({

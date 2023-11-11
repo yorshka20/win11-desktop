@@ -50,6 +50,17 @@ export class RxStore<State extends RxStoreContent> {
     return subscription;
   }
 
+  /**
+   * Subscribes to a specific key in the state and invokes the provided
+   * callback function whenever the value of that key changes.
+   *
+   * @template T - The type of the key being subscribed to.
+   * @param {T} key - The key in the state to subscribe to.
+   * @param {(v: State[T]) => void} fn - The callback function to be invoked
+   *   when the value of the key changes.
+   * @return {Subscription} - The subscription object that can be used to
+   *   unsubscribe from the key.
+   */
   subscribeKey<T extends keyof State>(
     key: T,
     fn: (v: State[T]) => void,

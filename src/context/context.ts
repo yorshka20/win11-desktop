@@ -26,6 +26,12 @@ function dispatcher(
   value: ClickIconEvent,
 ): void;
 function dispatcher(command: 'hover-taskbar-preview', value: boolean): void;
+/**
+ * Executes different actions based on the provided command.
+ *
+ * @param {string} command - The command to be executed.
+ * @param {boolean | string | Partial<Options> | ClickIconEvent} [value] - The value associated with the command.
+ */
 function dispatcher(
   command: string,
   value?: boolean | string | Partial<Options> | ClickIconEvent,

@@ -1,10 +1,10 @@
 # Window11 Desktop
 
-a concrete and detailed window 11 gui implementation. just want to write some code to make use of difference designs and techs in project.
+a concrete and detailed window 11 gui implementation.
 
-you can only conduct nice optimizations on complicated project because there is no necessity to do so in simple project. you have nothing to optimize, to be honest.
+you can only conduct nice optimizations on complicated project because there is no necessity to do so in simple project. you have nothing to optimize when there are just several components and one data pipeline, to be honest.
 
-do this project is aiming at containing as many contents as possible to achieve a complicated state for me to use difference strategies for optimizing.
+this project is aiming at containing as many contents as possible to achieve a complicated state for me to use different strategies for optimizing and experiencing my thoughts in some cases.
 
 # Preview
 
@@ -20,6 +20,15 @@ here: https://win11-desktop-virid.vercel.app/
 ## why there are 3 css libs?
 
 - time to try new technologies.
+- styled-components has really solved some of my problems in dynamically controlling the components' style, with styled-components we don't need to switch between different `className` to show different style in different situations.
+
+## what the most important part of this project?
+
+- basically, the react components parts are quite ordinary, and I just have tried and experimented some of my thoughts in building better components in performance(showed as less frequently rerendered) and reusable aspect.
+- the structure I put most attention to is the `context` part. I have designed a `RxStore` as a basic storage service for multiple kinds of controller which require a state storage.
+- the `RxStore` is a mechanism which is quite similar with the core mechanism in Vue in my opinion. this means that the state stored in this `RxStore` has the capability to trigger a notification to whom is listening to it. this is very similar with what the Vue does by using `Proxy`, the `ref` variable is tracked by Vue and in our project the change of state value is also `subscribed` by us.
+- by using `subscribe` we can be notified with the exact state value change which we care about. we will be notified only if the state we subscribe changed. this is the key to decrease the frequency of rerender of our components.
+- btw, this `subscribe` capability is achieved by `RxJS.BehaviorSubject`
 
 # Plan
 

@@ -9,7 +9,15 @@ interface Props extends DesktopIconWrapperProps {}
 export function StartMenuIcon({ name, id, grid, icon }: Props) {
   //
 
-  return <DesktopIconWrapper icon={icon} name={name} id={id} grid={grid} />;
+  return (
+    <DesktopIconWrapper
+      selected={false}
+      icon={icon}
+      name={name}
+      id={id}
+      grid={grid}
+    />
+  );
 }
 
 export function StartMenuPinBlock() {
@@ -18,6 +26,7 @@ export function StartMenuPinBlock() {
       {desktopIconConfig.map(({ icon: Icon, name, id, grid }, index) => (
         <StartMenuIcon
           key={index}
+          selected={false}
           icon={<Icon className={'icon'} />}
           name={name}
           id={id}

@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import './app.less';
 import { StartMenu } from './components/start-menu';
 import { TaskBar } from './components/task-bar';
-import { taskbarButtonsConfig } from './configs/desktop-config';
 import { WindowContextProvider } from './context/context-provider';
 import { useContextState } from './hooks';
 import { DesktopContainer, type DesktopItem } from './page';
@@ -22,8 +21,6 @@ const MainContainer = styled.div<StyledProps>`
 
 function App() {
   const [desktopConfig, setDesktopConfig] = useState<DesktopItem[]>([]);
-
-  const [taskbarButtons] = useState(taskbarButtonsConfig);
 
   const wallpaper = useContextState('wallpaper');
 
@@ -46,7 +43,7 @@ function App() {
         {/* desktop. containing icons. window components are mounted here. */}
         <DesktopContainer desktopConfig={desktopConfig} />
         {/* taskbar component. */}
-        <TaskBar buttons={taskbarButtons} />
+        <TaskBar />
 
         {/* components below take no position in layout. */}
         <>

@@ -11,8 +11,7 @@ import {
 import React from 'react';
 
 import { ContextMenuItemConfig } from '../components/context-menu';
-import { type TaskbarConfigItem } from '../components/task-bar';
-import type { WindowType } from '../types';
+import type { TaskbarConfigItem, WindowType } from '../types';
 
 export const taskbarButtonsConfig: TaskbarConfigItem[] = [
   {

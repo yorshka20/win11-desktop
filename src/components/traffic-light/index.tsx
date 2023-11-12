@@ -34,7 +34,7 @@ const Container = styled.div`
 
 function Component({ windowManager, id }: Props) {
   function getWindowHandler() {
-    return windowManager.getWindow(id);
+    return windowManager.getWindowById(id);
   }
 
   function handleMinimize() {

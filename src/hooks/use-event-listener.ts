@@ -1,8 +1,7 @@
 import { useEffect } from 'react';
 import { filter } from 'rxjs';
 
-import { type PipeEvent } from '../context/context';
-import { useWindowContext } from '../context/hook';
+import { type PipeEvent, useWindowContext } from '../context/context';
 
 type EventListenerPair = {
   event: PipeEvent['name'];

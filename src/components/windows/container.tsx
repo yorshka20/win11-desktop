@@ -27,7 +27,7 @@ export const WindowComponentContainer = React.memo(() => {
     {
       event: 'close-window',
       handler(id) {
-        const handler = windowManager.getWindow(id);
+        const handler = windowManager.getWindowById(id);
         // since we still need to use the handler
         setWindows((w) => w.filter((i) => i !== handler.window));
         // we should delete the window after we have unmounted it.
@@ -38,7 +38,7 @@ export const WindowComponentContainer = React.memo(() => {
       event: 'open-window',
       handler(id) {
         // windows are store in windowManager.
-        const handler = windowManager.getWindow(id);
+        const handler = windowManager.getWindowById(id);
         setWindows((a) => [...a, handler.window]);
       },
     },

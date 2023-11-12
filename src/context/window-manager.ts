@@ -1,8 +1,8 @@
 import { Subject, Subscription, filter } from 'rxjs';
 
 import type { Position, Size, WindowType } from '../types';
+import { RxStore } from './base/rx-store';
 import { PipeEvent } from './context';
-import { RxStore } from './rx-store';
 
 export type WindowState = {
   isMaximized: boolean;
@@ -58,7 +58,9 @@ export class WindowManager {
 
   private windowEventMap: Record<string, Subscription>;
 
+  // temp
   private maxZIndex = 0;
+  // temp
   private currentActiveWindowId = '';
 
   constructor(private event$: Subject<PipeEvent>) {
@@ -82,6 +84,8 @@ export class WindowManager {
       position: window.data.position,
       data: window.data,
     });
+
+    // for internal window operations.
     this.windowEventMap[id] = this.event$
       .pipe(filter((i) => i.id === id))
       .subscribe(this.handleWindowEvent);
@@ -93,7 +97,6 @@ export class WindowManager {
     switch (name) {
       case 'close-window': {
         this.onCloseWindow(id);
-        this.updateWindowState(id, 'isActive', false);
         break;
       }
       case 'open-window': {
@@ -102,12 +105,10 @@ export class WindowManager {
       }
       case 'minimize-window': {
         this.onMinimizeWindow(id);
-        this.updateWindowState(id, 'isActive', false);
         break;
       }
       case 'maximize-window': {
         this.onMaximizeWindow(id);
-        this.updateWindowState(id, 'isActive', true);
         break;
       }
       default:
@@ -128,7 +129,7 @@ export class WindowManager {
     delete this.windowEventMap[id];
   }
 
-  getWindow(id: string) {
+  getWindowById(id: string) {
     return this.windowHandlerMap[id];
   }
 
@@ -141,6 +142,14 @@ export class WindowManager {
     );
   }
 
+  /**
+   * Retrieves the value of a specific key from the window state object
+   * associated with the given id.
+   *
+   * @param {string} id - The id of the window state object.
+   * @param {T} key - The key of the value to retrieve.
+   * @return {WindowState[T]} The value associated with the given key.
+   */
   getWindowStateByKey<T extends keyof WindowState>(
     id: string,
     key: T,
@@ -164,16 +173,16 @@ export class WindowManager {
 
   batchUpdateWindowState<T extends keyof WindowState>(
     id: string,
-    params: Record<T, WindowState[T]>,
+    states: Record<T, WindowState[T]>,
   ) {
     console.log(
-      `update window state batch => ${id} \n ${JSON.stringify(
-        params,
+      `batch update window state => ${id} \n ${JSON.stringify(
+        states,
         null,
         2,
       )}`,
     );
-    this.getWindowState$(id).batchUpdate(params);
+    this.getWindowState$(id).batchUpdate(states);
   }
 
   subscribeState(id: string, fn: (v: WindowState) => void): Subscription {
@@ -192,29 +201,33 @@ export class WindowManager {
 
   private onMaximizeWindow(id: string, v?: boolean) {
     const value = v ?? !this.getWindowStateByKey(id, 'isMaximized');
-    this.updateWindowState(id, 'isMaximized', value);
+
+    this.batchUpdateWindowState(id, {
+      isMaximized: value,
+      isActive: true,
+    });
   }
 
   private onMinimizeWindow(id: string, v?: boolean) {
     const value = v ?? !this.getWindowStateByKey(id, 'isMinimized');
-    this.updateWindowState(id, 'isMinimized', value);
     const data = this.getWindowStateByKey(id, 'data');
     const position = this.getWindowStateByKey(id, 'position');
 
     // save preview position
     this.batchUpdateWindowState(id, {
-      isMinimized: true,
+      isMinimized: value,
+      isActive: false,
       data: {
         ...data,
         previewPosition: position,
       },
     });
+
     this.currentActiveWindowId = '';
   }
 
   private onCloseWindow(id: string) {
-    id;
-    //
+    this.updateWindowState(id, 'isActive', false);
   }
 
   focusWindow(id: string) {

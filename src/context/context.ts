@@ -1,4 +1,5 @@
 import { createContext } from 'react';
+import { useContext } from 'react';
 import { Subject } from 'rxjs';
 
 import type { TaskbarConfigItem, WindowType } from '../types';
@@ -161,3 +162,7 @@ export function makeContextValue() {
 }
 
 export const WindowContext = createContext<WindowContextType>(defaultContext);
+
+export function useWindowContext() {
+  return useContext(WindowContext);
+}

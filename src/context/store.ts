@@ -1,7 +1,7 @@
 import { type Subscription } from 'rxjs';
 
 import type { TaskbarConfigItem, ThemeType, WindowType } from '../types';
-import { RxStore, RxStoreContent } from './rx-store';
+import { RxStore, RxStoreContent } from './base/rx-store';
 
 export interface ContextState extends RxStoreContent {
   theme: ThemeType;

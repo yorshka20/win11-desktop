@@ -45,6 +45,14 @@ export class RxStore<State extends RxStoreContent> {
     });
   }
 
+  /**
+   * Subscribe to changes in the whole state.
+   *
+   * for single key, please using `subscribeKey`
+   *
+   * @param {function} fn - The callback function to be called when the state changes.
+   * @returns {Subscription} The subscription object that can be used to unsubscribe from the state changes.
+   */
   subscribeState(fn: (v: State) => void): Subscription {
     const subscription = this.state$.subscribe(fn);
     return subscription;

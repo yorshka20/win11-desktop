@@ -2,9 +2,9 @@
 
 a concrete and detailed window 11 gui implementation.
 
-you can only conduct nice optimizations on complicated project because there is no necessity to do so in simple project. you have nothing to optimize when there are just several components and one data pipeline, to be honest.
-
 this project is aiming at containing as many contents as possible to achieve a complicated state for me to use different strategies for optimizing and experiencing my thoughts in some cases.
+
+you can only perform nice optimizations on complicated project because there is no necessity to do so in simple project. you have nothing to optimize when there are just several components and one data pipeline, to be honest.
 
 # Preview
 
@@ -36,7 +36,7 @@ things will be built from Window.
 
 first we write some window components, and then add difference ui and interactions to window components.
 
-currently only 4 kinds of window are planned to be implemented.
+currently only 3 kinds of window are planned to be implemented.
 
 ## Window Component
 
@@ -50,7 +50,7 @@ currently only 4 kinds of window are planned to be implemented.
 
 ### Image Window
 
-### Video Window
+- [x] framework
 
 # Problems
 
@@ -79,3 +79,9 @@ it's not correct to access modules in inappropriate level, in which case we may 
 - to be continue.
 
 - conclusion: i will just make it possible first, and then make it better if i have any ideas on how to do so.
+
+## we should organize and separate the operations on `store` and `windowManager` and `components`
+
+- we don't operate `store` in components part, instead we use `dispatcher` to trigger the operations of store.
+- we don't operate `components` in `context` part, instead we use a `proxyOperation` to do the tasks in component modules.
+- TODO: currently it's just a mass. optimizations are needed.

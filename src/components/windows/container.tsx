@@ -67,6 +67,7 @@ export const WindowComponentContainer = React.memo(() => {
     {
       event: 'proxy-operation',
       async handler(id, e) {
+        // todo: better way to handle proxy operation
         console.warn('[proxy operation]', id, e);
         const { name = '' } = e.data as { name: string };
         switch (name) {

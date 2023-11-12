@@ -59,6 +59,8 @@ export function DesktopContainer({ desktopConfig }: DesktopContainerProps) {
 function DesktopIconSet() {
   const selectedDesktopIcons = useContextState('selectedDesktopIcons');
 
+  // console.log('desktopIconConfig', desktopIconConfig);
+
   return desktopIconConfig.map(({ icon: Icon, grid, name, id }, index) => (
     <DesktopIconWrapper
       id={id}
@@ -87,7 +89,8 @@ function IconBlock() {
     .map((iconType, i) =>
       Object.keys(icons[iconType]).map((name, j) => {
         const Icon = icons[iconType][name];
-        const grid = [i + Math.round(j / 5), j % 5] as [number, number];
+        const grid = [j, i] as [number, number];
+
         return (
           <DesktopIconWrapper
             selected={selectedDesktopIcons.includes(`${iconType}-${name}`)}

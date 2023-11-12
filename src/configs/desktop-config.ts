@@ -11,6 +11,7 @@ import {
 import React from 'react';
 
 import { ContextMenuItemConfig } from '../components/context-menu';
+// import { getIconByGroupAndName } from '../components/icons/internal-icons';
 import type { TaskbarConfigItem, WindowType } from '../types';
 
 export const taskbarButtonsConfig: TaskbarConfigItem[] = [
@@ -36,8 +37,10 @@ export const taskbarButtonsConfig: TaskbarConfigItem[] = [
   },
 ];
 
+// type FnIcon = () => Promise<React.FC<{ className: string }>>;
+
 interface IconConfig {
-  icon: React.FC<{ className: string }>;
+  icon: React.FC<{ className: string }>; //  | FnIcon;
   name: string;
   id: string;
   grid: [number, number];
@@ -47,23 +50,23 @@ interface IconConfig {
 export const desktopIconConfig: IconConfig[] = [
   // {
   //   name: 'trash-bin-empty',
-  //   icon: trashBinEmptyIcon,
+  //   icon: async () => await getIconByGroupAndName('system', 'trash-bin-empty'),
   //   id: 'trash-empty',
-  //   grid: [0, 0],
+  //   grid: [1, 6],
   //   windowType: 'Explorer',
   // },
   // {
   //   name: 'trash-bin-full',
-  //   icon: trashBinFullIcon,
+  //   icon: async () => await getIconByGroupAndName('system', 'trash-bin-full'),
   //   id: 'trash-full',
-  //   grid: [0, 1],
+  //   grid: [2, 6],
   //   windowType: 'Explorer',
   // },
   {
     name: 'home',
     icon: Settings,
     id: 'home',
-    grid: [0, 2],
+    grid: [3, 6],
     windowType: 'Setting',
   },
 ];

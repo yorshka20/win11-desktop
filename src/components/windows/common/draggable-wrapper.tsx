@@ -92,7 +92,10 @@ export const DraggableWindowWrapper = React.forwardRef<
   const handleClickWindow = (e: React.SyntheticEvent<HTMLElement>) => {
     const id = e.target['dataset']?.['testid'];
     console.log('focus window: id', e.target['dataset'], id);
-    if (id === 'MinimizeIcon') return;
+    if (id === 'MinimizeIcon' || id === 'CloseOutlinedIcon') {
+      return;
+    }
+
     windowManager.focusWindow(id);
   };
 

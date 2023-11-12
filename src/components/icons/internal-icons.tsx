@@ -53,7 +53,7 @@ export async function getIconGroup(group: string) {
 export async function getIconByGroupAndName<T extends GroupNameType>(
   group: T,
   name: IconNameType<T>,
-) {
+): Promise<React.FC<Omit<IconWrapperProps, 'src'>>> {
   await promise;
   console.log(IconMap[group]);
   return IconMap[group][name];

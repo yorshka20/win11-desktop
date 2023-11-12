@@ -1,6 +1,7 @@
 import { createContext } from 'react';
 import { Subject } from 'rxjs';
 
+import type { TaskbarConfigItem } from '../types';
 import { store } from './store';
 import { type Options, WindowManager } from './window-manager';
 
@@ -22,6 +23,10 @@ function dispatcher(command: 'click-desktop-icon', value: ClickIconEvent): void;
 function dispatcher(command: 'click-taskbar-icon', value: ClickIconEvent): void;
 function dispatcher(command: 'hover-taskbar-icon', value: ClickIconEvent): void;
 function dispatcher(
+  command: 'add-taskbar-icon',
+  value: TaskbarConfigItem,
+): void;
+function dispatcher(
   command: 'unhover-taskbar-icon',
   value: ClickIconEvent,
 ): void;
@@ -34,7 +39,12 @@ function dispatcher(command: 'hover-taskbar-preview', value: boolean): void;
  */
 function dispatcher(
   command: string,
-  value?: boolean | string | Partial<Options> | ClickIconEvent,
+  value?:
+    | boolean
+    | string
+    | Partial<Options>
+    | ClickIconEvent
+    | TaskbarConfigItem,
 ) {
   console.log('[command]: ', command, value);
   switch (command) {
@@ -90,6 +100,17 @@ function dispatcher(
       if (!state) {
         store.updateState('taskbarPreview', 'none');
       }
+      break;
+    }
+    case 'add-taskbar-icon': {
+      const { name, icon } = value as TaskbarConfigItem;
+      store.updateState('taskBarIcons', [
+        ...store.getStateValue('taskBarIcons'),
+        {
+          name,
+          icon,
+        },
+      ]);
       break;
     }
     default:

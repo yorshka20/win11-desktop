@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 
 import { useEventListener, useWindowContext } from '../../hooks';
+import { getIconByGroupAndName } from '../icons/internal-icons';
 import { windowOpener } from './index';
 import './style.less';
 
@@ -17,7 +18,7 @@ import './style.less';
  */
 export const WindowComponentContainer = React.memo(() => {
   const context = useWindowContext();
-  const { desktopContainer, windowManager } = context;
+  const { desktopContainer, windowManager, dispatcher } = context;
 
   const [windows, setWindows] = useState<React.JSX.Element[]>([]);
 
@@ -65,13 +66,25 @@ export const WindowComponentContainer = React.memo(() => {
   useEventListener('*', [
     {
       event: 'proxy-operation',
-      handler(id, e) {
+      async handler(id, e) {
         console.warn('[proxy operation]', id, e);
         const { name = '' } = e.data as { name: string };
-        if (name.includes('image')) {
-          windowOpener('Image', context);
-        } else {
-          windowOpener('Explorer', context);
+        switch (name) {
+          case 'extension-image': {
+            windowOpener('Image', context);
+            const icon = await getIconByGroupAndName('folder', 'picture');
+            dispatcher('add-taskbar-icon', {
+              name: 'image',
+              icon,
+            });
+            break;
+          }
+          case 'Explorer': {
+            windowOpener('Explorer', context);
+            break;
+          }
+          default:
+            break;
         }
       },
     },

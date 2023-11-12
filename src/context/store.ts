@@ -1,11 +1,11 @@
 import { type Subscription } from 'rxjs';
 
-import type { TaskbarConfigItem } from '../types';
+import type { TaskbarConfigItem, ThemeType, WindowType } from '../types';
 import { RxStore, RxStoreContent } from './rx-store';
 
 export interface ContextState extends RxStoreContent {
-  theme: 'light' | 'dark';
-  wallpaper: 'light' | 'dark';
+  theme: ThemeType;
+  wallpaper: ThemeType;
 
   activeWindow: string;
   showStartMenu: boolean;
@@ -15,7 +15,7 @@ export interface ContextState extends RxStoreContent {
   selectedDesktopIcons: string[];
   taskBarIcons: TaskbarConfigItem[];
 
-  taskbarPreview: 'none' | 'Explorer' | string;
+  taskbarPreview: 'none' | WindowType;
   hoverPreview: boolean;
 }
 

@@ -8,6 +8,8 @@ export type Size = [number, number];
 
 export type WindowType = 'Explorer' | 'Setting' | 'Image';
 
+export type ThemeType = 'light' | 'dark';
+
 export type SelectionArea = {
   x: number;
   y: number;

@@ -1,7 +1,7 @@
 import { createContext } from 'react';
 import { Subject } from 'rxjs';
 
-import type { TaskbarConfigItem } from '../types';
+import type { TaskbarConfigItem, WindowType } from '../types';
 import { store } from './store';
 import { type Options, WindowManager } from './window-manager';
 
@@ -13,9 +13,17 @@ export interface WindowContextType {
 }
 
 type ClickIconEvent = {
-  name: string;
+  name: WindowType | string;
   type: 'window' | 'modal';
 };
+
+// merged types for dispatcher
+type ReloadValueType =
+  | boolean
+  | string
+  | Partial<Options>
+  | ClickIconEvent
+  | TaskbarConfigItem;
 
 function dispatcher(command: 'display-start-menu', value?: boolean): void;
 function dispatcher(command: 'display-context-menu', value?: boolean): void;
@@ -34,19 +42,14 @@ function dispatcher(command: 'hover-taskbar-preview', value: boolean): void;
 /**
  * Executes different actions based on the provided command.
  *
+ * store operations should be done here by default.
+ *
  * @param {string} command - The command to be executed.
- * @param {boolean | string | Partial<Options> | ClickIconEvent} [value] - The value associated with the command.
+ * @param {ReloadValueType} [value] - The value associated with the command.
  */
-function dispatcher(
-  command: string,
-  value?:
-    | boolean
-    | string
-    | Partial<Options>
-    | ClickIconEvent
-    | TaskbarConfigItem,
-) {
+function dispatcher(command: string, value?: ReloadValueType) {
   console.log('[command]: ', command, value);
+
   switch (command) {
     case 'display-start-menu': {
       const state = (value ?? !store.getStateValue('showStartMenu')) as boolean;
@@ -83,9 +86,8 @@ function dispatcher(
       break;
     }
     case 'hover-taskbar-icon': {
-      console.log('[hover-taskbar-icon]: ', value);
       const { name } = value as ClickIconEvent;
-      store.updateState('taskbarPreview', name);
+      store.updateState('taskbarPreview', name as WindowType);
       break;
     }
     case 'unhover-taskbar-icon': {
@@ -103,14 +105,18 @@ function dispatcher(
       break;
     }
     case 'add-taskbar-icon': {
-      const { name, icon } = value as TaskbarConfigItem;
       store.updateState('taskBarIcons', [
         ...store.getStateValue('taskBarIcons'),
-        {
-          name,
-          icon,
-        },
+        value as TaskbarConfigItem,
       ]);
+      break;
+    }
+    case 'delete-taskbar-icon': {
+      const list = store.getStateValue('taskBarIcons');
+      store.updateState(
+        'taskBarIcons',
+        list.filter((item) => item.name !== (value as TaskbarConfigItem).name),
+      );
       break;
     }
     default:

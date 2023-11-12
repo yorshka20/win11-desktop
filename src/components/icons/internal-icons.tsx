@@ -2,7 +2,12 @@ import React from 'react';
 
 import explorerIcon from '../../assets/systems/explorer.ico';
 import { createPromise } from '../../utils/helper';
-import { type CombinedIcons, iconConfigs } from './config';
+import {
+  type CombinedIcons,
+  GroupNameType,
+  IconNameType,
+  iconConfigs,
+} from './config';
 import type { IconWrapperProps } from './icon-wrapper';
 import { IconWrapper } from './icon-wrapper';
 
@@ -42,4 +47,14 @@ export async function loadIcons() {
 export async function getIconGroup(group: string) {
   await promise;
   return IconMap[group];
+}
+
+// eslint-disable-next-line react-refresh/only-export-components
+export async function getIconByGroupAndName<T extends GroupNameType>(
+  group: T,
+  name: IconNameType<T>,
+) {
+  await promise;
+  console.log(IconMap[group]);
+  return IconMap[group][name];
 }

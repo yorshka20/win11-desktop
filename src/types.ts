@@ -14,3 +14,8 @@ export type SelectionArea = {
   w: number;
   h: number;
 };
+
+export interface TaskbarConfigItem {
+  name: string;
+  icon: string | React.FC;
+}

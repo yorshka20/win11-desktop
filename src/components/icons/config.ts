@@ -79,3 +79,12 @@ export const iconConfigs = [
     iconType: 'system',
   },
 ];
+
+export type GroupNameType = 'extension' | 'folder' | 'system';
+export type IconNameType<T extends GroupNameType> = T extends 'extension'
+  ? ExtensionIcons
+  : T extends 'folder'
+  ? FolderIcons
+  : T extends 'system'
+  ? SystemIcons
+  : never;

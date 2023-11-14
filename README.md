@@ -1,8 +1,8 @@
 # Window11 Desktop
 
-a concrete and detailed window 11 gui implementation.
+a concrete and detailed window 11 gui implementation. i will try to implement as many functions as possible.
 
-this project is aiming at containing as many contents as possible to achieve a complicated state for me to use different strategies for optimizing and experiencing my thoughts in some cases.
+this project is aiming at containing plenty of contents to achieve a complicated state for me to use different strategies for optimizing and experimenting my thoughts in some cases.
 
 you can only perform nice optimizations on complicated project because there is no necessity to do so in simple project. you have nothing to optimize when there are just several components and one data pipeline, to be honest.
 
@@ -17,10 +17,24 @@ here: https://win11-desktop-virid.vercel.app/
 - vite, typescript, react
 - rxjs
 
+# Thoughts
+
+## initial plan
+
+there are at least two stages of development:
+
+1. UI components stage
+2. Overall software engineering stage
+
+for the ui stage, there are not many new things applied into the coding, and everything is just common react component. when it comes to the second stage, i think there will be more considerations on how to make code more concise and abstracted to decrease the size and enrich the utilities at the same time.
+
+currently i am just writing the react components and some basic models for state management. it looks very `simple and crude`.
+
 ## why there are 3 css libs?
 
-- time to try new technologies.
+- time to try new technologies. but just try.
 - styled-components has really solved some of my problems in dynamically controlling the components' style, with styled-components we don't need to switch between different `className` to show different style in different situations.
+- actually i don't like the css-in-js strategy because some of these has a runtime cost and will take more space in your bundle files.
 
 ## what the most important part of this project?
 
@@ -30,13 +44,13 @@ here: https://win11-desktop-virid.vercel.app/
 - by using `subscribe` we can be notified with the exact state value change which we care about. we will be notified only if the state we subscribe changed. this is the key to decrease the frequency of rerender of our components.
 - btw, this `subscribe` capability is achieved by `RxJS.BehaviorSubject`
 
-# Plan
+# Schedule
 
-things will be built from Window.
+i am going to implement 3 kinds of `Window` in this project.
 
-first we write some window components, and then add difference ui and interactions to window components.
-
-currently only 3 kinds of window are planned to be implemented.
+- Explorer
+- Setting
+- Image
 
 ## Window Component
 
@@ -52,9 +66,15 @@ currently only 3 kinds of window are planned to be implemented.
 
 - [x] framework
 
-# Problems
+## TODO
 
-## can we use contextHook in components?
+- detailed components in different `Window`
+- an overall state controller of a complicated system, just like the windows 11
+- maybe some 'useful' apps like `notepad` and `draw`
+
+# Problems and thoughts in development
+
+## can we use `contextHook` in components?
 
 - i want to pass less props to component
 - there should be some difference between `Basic Component` and `Business Component`
@@ -84,4 +104,4 @@ it's not correct to access modules in inappropriate level, in which case we may 
 
 - we don't operate `store` in components part, instead we use `dispatcher` to trigger the operations of store.
 - we don't operate `components` in `context` part, instead we use a `proxyOperation` to do the tasks in component modules.
-- TODO: currently it's just a mass. optimizations are needed.
+- _TODO_: currently it's just a mass. optimizations are needed.

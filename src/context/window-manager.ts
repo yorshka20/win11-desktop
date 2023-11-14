@@ -182,7 +182,8 @@ export class WindowManager {
         2,
       )}`,
     );
-    this.getWindowState$(id).batchUpdate(states);
+    // todo: figure out why there could be undefined
+    this.getWindowState$(id)?.batchUpdate(states);
   }
 
   subscribeState(id: string, fn: (v: WindowState) => void): Subscription {

@@ -106,10 +106,14 @@ function dispatcher(command: string, value?: ReloadValueType) {
       break;
     }
     case 'add-taskbar-icon': {
-      store.updateState('taskBarIcons', [
-        ...store.getStateValue('taskBarIcons'),
-        value as TaskbarConfigItem,
-      ]);
+      const currentTaskBarIcons = store.getStateValue('taskBarIcons');
+      const { name } = value as TaskbarConfigItem;
+      if (!currentTaskBarIcons.some((i) => i.name === name)) {
+        store.updateState('taskBarIcons', [
+          ...currentTaskBarIcons,
+          value as TaskbarConfigItem,
+        ]);
+      }
       break;
     }
     case 'delete-taskbar-icon': {

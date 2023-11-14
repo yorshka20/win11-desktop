@@ -37,7 +37,7 @@ export function ImageWindowComponent({
 
   const windowState = useWindowState(id);
 
-  console.log('windowState', windowState);
+  console.log('windowState image: ', windowState);
 
   const handleResize = (width: number, height: number) => {
     console.log('width, height', width, height);

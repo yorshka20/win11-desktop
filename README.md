@@ -16,6 +16,7 @@ here: https://win11-desktop-virid.vercel.app/
 - tailwindcss, styled-components
 - vite, typescript, react
 - rxjs
+- codeium: a copilot tool. it helps a lot in shipping the code.
 
 # Thoughts
 
@@ -29,6 +30,8 @@ there are at least two stages of development:
 for the ui stage, there are not many new things applied into the coding, and everything is just common react component. when it comes to the second stage, i think there will be more considerations on how to make code more concise and abstracted to decrease the size and enrich the utilities at the same time.
 
 currently i am just writing the react components and some basic models for state management. it looks very `simple and crude`.
+
+overall, it's an _useless_ project which can do nothing but only display the interface. so it will be hard to make this project better in the perspective of software engineering.
 
 ## why there are 3 css libs?
 
@@ -71,6 +74,7 @@ i am going to implement 3 kinds of `Window` in this project.
 - detailed components in different `Window`
 - an overall state controller of a complicated system, just like the windows 11
 - maybe some 'useful' apps like `notepad` and `draw`
+- add test cover.
 
 # Problems and thoughts in development
 

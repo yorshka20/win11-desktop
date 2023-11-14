@@ -1,5 +1,6 @@
 import { WindowContextType } from '../../../context/context';
 import type { Options, WindowHandler } from '../../../context/window-manager';
+import { createWindowId } from '../../../utils/helper';
 import { ImageWindowComponent } from './window';
 
 export function createImageWindow(
@@ -8,7 +9,7 @@ export function createImageWindow(
 ) {
   const { windowManager, event$ } = context;
 
-  const id = `ImageWindow-${Math.random().toString(36)}`;
+  const id = createWindowId('Image');
 
   const options: Options = {
     ...defaultOptions,

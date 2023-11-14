@@ -1,5 +1,6 @@
 import { WindowContextType } from '../../../context/context';
 import type { Options, WindowHandler } from '../../../context/window-manager';
+import { createWindowId } from '../../../utils/helper';
 import { SettingWindowComponent } from './window';
 
 export function createSettingWindow(
@@ -8,7 +9,7 @@ export function createSettingWindow(
 ) {
   const { windowManager, event$ } = context;
 
-  const id = `settingWindow-${Math.random().toString(36)}`;
+  const id = createWindowId('Setting');
 
   const options: Options = {
     ...defaultOptions,

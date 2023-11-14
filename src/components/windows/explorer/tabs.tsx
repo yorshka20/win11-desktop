@@ -90,20 +90,20 @@ interface ItemProps {
   onDrag: (id: string, data: DraggableData) => void;
 }
 
-const TabContainer = styled.div`
+interface TabStyleProps {
+  $border: string;
+  $background: string;
+}
+
+const TabContainer = styled.div<TabStyleProps>`
   min-width: 80px;
   height: 30px;
 
-  background-color: #f0f5f9;
+  background-color: ${(props) => props.$background};
 
-  border: 1px solid #8b929a;
+  border: ${(props) => props.$border};
   border-bottom: none;
   border-radius: 8px 8px 0 0;
-
-  &.inactive {
-    background-color: #ceddec;
-    border: none;
-  }
 `;
 
 function TabItem({ name, id, onDrag, onClick, active }: ItemProps) {
@@ -128,12 +128,11 @@ function TabItem({ name, id, onDrag, onClick, active }: ItemProps) {
       nodeRef={dragRef}
     >
       <TabContainer
-        className={classNames(
-          'flex justify-center items-center align-middle',
-          !active && 'inactive',
-        )}
+        className={classNames('flex justify-center items-center align-middle')}
         onClick={handleClick}
         ref={dragRef}
+        $border={!active ? 'none' : '1px solid #ceddec'}
+        $background={!active ? '#ceddec' : '#f0f5f9'}
       >
         {name}
       </TabContainer>

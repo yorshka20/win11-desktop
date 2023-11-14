@@ -1,5 +1,6 @@
 import { WindowContextType } from '../../../context/context';
 import type { Options, WindowHandler } from '../../../context/window-manager';
+import { createWindowId } from '../../../utils/helper';
 import { ExplorerWindowComponent } from './window';
 
 export function createExplorerWindow(
@@ -8,7 +9,7 @@ export function createExplorerWindow(
 ) {
   const { windowManager, event$ } = context;
 
-  const id = `searchWindow-${Math.random().toString(36)}`;
+  const id = createWindowId('Explorer');
 
   const options: Options = {
     ...defaultOptions,

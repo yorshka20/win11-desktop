@@ -1,5 +1,6 @@
 import darkWallpaper from '../assets/wallpaper/dark.jpg';
 import lightWallpaper from '../assets/wallpaper/light.jpg';
+import { WindowType } from '../types';
 
 export function noop() {
   //
@@ -25,4 +26,8 @@ export function generateWallpaperUrl(wallpaper: string) {
     default:
       return lightWallpaper;
   }
+}
+
+export function createWindowId(type: WindowType): string {
+  return `Window-${type}-${Math.random().toString(36).substring(2, 8)}`;
 }

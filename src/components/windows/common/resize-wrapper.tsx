@@ -1,6 +1,7 @@
 import { Resizable, type ResizeCallback } from 're-resizable';
 import React from 'react';
 
+import { MIN_WINDOW_SIZE } from '../../../constants';
 import { useWindowContext } from '../../../hooks';
 import type { Size } from '../../../types';
 import { createLogger } from '../../../utils/logger';
@@ -39,8 +40,8 @@ const Wrapper: React.FC<ResizableWrapperProps> = ({
 
   return (
     <Resizable
-      minHeight={400}
-      minWidth={600}
+      minHeight={MIN_WINDOW_SIZE.height}
+      minWidth={MIN_WINDOW_SIZE.width}
       onResizeStop={handleResize}
       bounds={'window'}
       size={{ width: size[0], height: size[1] }}

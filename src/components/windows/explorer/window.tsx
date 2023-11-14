@@ -31,7 +31,7 @@ export function ExplorerWindowComponent({
   // draggable ref
   const draggableRef = useRef<HTMLElement>(null);
 
-  console.log('windowState', windowState);
+  console.log('windowState Explorer', windowState);
 
   const handleResize = useCallback((width: number, height: number) => {
     logger('handleResize', width, height);

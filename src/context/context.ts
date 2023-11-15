@@ -39,6 +39,7 @@ function dispatcher(
   command: 'unhover-taskbar-icon',
   value: ClickIconEvent,
 ): void;
+function dispatcher(command: 'select-desktop-icon', value: string): void;
 function dispatcher(command: 'hover-taskbar-preview', value: boolean): void;
 /**
  * Executes different actions based on the provided command.
@@ -84,6 +85,10 @@ function dispatcher(command: string, value?: ReloadValueType) {
           data: { ...(value as ClickIconEvent) },
         });
       }
+      break;
+    }
+    case 'select-desktop-icon': {
+      store.updateState('selectedDesktopIcons', [value as string]);
       break;
     }
     case 'hover-taskbar-icon': {

@@ -4,7 +4,6 @@ import Draggable, { type DraggableEventHandler } from 'react-draggable';
 import { styled } from 'styled-components';
 
 import { DESKTOP_GRID_SIZE } from '../../constants';
-import { store } from '../../context/store';
 import { useWindowContext } from '../../hooks';
 import { type IconType, Position } from '../../types';
 import { noop } from '../../utils/helper';
@@ -127,9 +126,9 @@ export function DesktopIconWrapper({
   }, [selected, selectedBgColor]);
 
   const handleClick = useCallback(() => {
-    store.updateState('selectedDesktopIcons', [id]);
+    dispatcher('select-desktop-icon', id);
     onClick(id);
-  }, [onClick, id]);
+  }, [onClick, dispatcher, id]);
 
   // double click icon to trigger command
   const handleDoubleClick = useCallback(() => {

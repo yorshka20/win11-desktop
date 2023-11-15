@@ -26,6 +26,7 @@ export function useEventListener(id: string | '*', pairs: EventListenerPair) {
       PipeEvent['name'],
       EventListenerPair[number]['handler']
     >;
+
     pairs.forEach((pair) => {
       events.push(pair.event);
       eventMap[pair.event] = pair.handler;

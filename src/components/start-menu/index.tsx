@@ -6,8 +6,11 @@ import {
 } from '@mui/icons-material';
 import { useRef } from 'react';
 
-import { store } from '../../context/store';
-import { useClickOutside, useContextState } from '../../hooks';
+import {
+  useClickOutside,
+  useContextState,
+  useWindowContext,
+} from '../../hooks';
 import { ButtonWrapper } from '../buttons/button-wrapper';
 import { StartMenuPinBlock } from './components';
 import './style.less';
@@ -15,10 +18,12 @@ import './style.less';
 export function StartMenu() {
   const show = useContextState('showStartMenu');
 
+  const { dispatcher } = useWindowContext();
+
   const ref = useRef<HTMLDivElement>(null);
 
   useClickOutside([ref.current, '#win-button'], () => {
-    store.updateState('showStartMenu', false);
+    dispatcher('display-start-menu', false);
   });
 
   return (

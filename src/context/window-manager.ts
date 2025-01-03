@@ -238,6 +238,11 @@ export class WindowManager {
 
     console.log('focus window', id);
 
+    // lower current active window
+    this.batchUpdateWindowState(this.currentActiveWindowId, {
+      zIndex: this.maxZIndex - 1,
+    });
+
     this.currentActiveWindowId = id;
 
     const window = this.windowHandlerMap[id];

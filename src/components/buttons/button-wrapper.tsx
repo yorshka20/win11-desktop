@@ -32,6 +32,8 @@ const Container = styled.div<StyledProps>`
 
   border-radius: 4px;
 
+  cursor: pointer;
+
   &:hover {
     background-color: ${(props) => props.$backgroundColor};
   }

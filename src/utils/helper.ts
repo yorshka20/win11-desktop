@@ -1,6 +1,6 @@
 import darkWallpaper from '../assets/wallpaper/dark.jpg';
 import lightWallpaper from '../assets/wallpaper/light.jpg';
-import { WindowType } from '../types';
+import type { WindowType } from '../types';
 
 export function noop() {
   //

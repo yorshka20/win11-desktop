@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 
+import { DraggableBoundary } from '../../context/dnd-boundary';
 import { useEventListener, useWindowContext } from '../../hooks';
 import { getIconByGroupAndName } from '../icons/internal-icons';
 import { windowOpener } from './index';
@@ -92,5 +93,9 @@ export const WindowComponentContainer = React.memo(() => {
   ]);
 
   // spread all window components to desktopContainer.
-  return <>{windows.map((child) => createPortal(child, desktopContainer))}</>;
+  return (
+    <DraggableBoundary>
+      {windows.map((child) => createPortal(child, desktopContainer))}
+    </DraggableBoundary>
+  );
 });

@@ -1,6 +1,7 @@
+import { DragEndEvent, useDndMonitor, useDraggable } from '@dnd-kit/core';
 import classNames from 'classnames';
-import React from 'react';
-import Draggable, { type DraggableEventHandler } from 'react-draggable';
+import React, { useEffect, useState } from 'react';
+import { type DraggableEventHandler } from 'react-draggable';
 import { styled } from 'styled-components';
 
 import { useWindowContext } from '../../../hooks';
@@ -27,6 +28,8 @@ export interface CommonWindowWrapperProps {
   isMaximized: boolean;
   size?: Size;
 
+  disabled?: boolean;
+
   className?: string;
 
   // onMinimize?: () => void;
@@ -49,7 +52,6 @@ export const DraggableWindowWrapper = React.forwardRef<
   const {
     id,
     title,
-    position,
     zIndex,
     isMaximized,
     className = '',
@@ -62,32 +64,49 @@ export const DraggableWindowWrapper = React.forwardRef<
 
   const { windowManager } = useWindowContext();
 
-  onDrag;
-  zIndex;
+  const [position, setPosition] = useState<[number, number]>([0, 0]);
+
+  const [disabled, setDisabled] = useState(false);
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    setPosition(([x, y]) => [x + event.delta.x, y + event.delta.y]);
+
+    windowManager.updateWindowState(id, 'position', position);
+    // onDragStop(event, event.data);
+  };
+
+  useDndMonitor({
+    onDragEnd: disabled || !open ? noop : handleDragEnd,
+  });
+
+  const {
+    attributes,
+    listeners,
+    isDragging,
+    setNodeRef,
+    setActivatorNodeRef,
+    transform,
+  } = useDraggable({
+    id: `window:${id}`,
+    disabled,
+  });
+
+  const [transformStyle, setTransformStyle] = useState<string>(
+    'translate3d(0, 0, 0)',
+  );
+
+  useEffect(() => {
+    if (transform) {
+      setTransformStyle(`translate3d(${transform.x}px, ${transform.y}px, 0)`);
+    } else {
+      setTransformStyle('translate3d(0, 0, 0)');
+    }
+  }, [transform]);
 
   `
   todo:
   - draggable handler is not correct when using nodeRef.
   `;
-
-  // const handleDrag: DraggableEventHandler = (e, data) => {
-  //   // if (data.y > 50) {
-  //   //   windowManager.updateWindowState(id, 'isMaximized', false);
-  //   //   setSize([600, 400]);
-  //   //   const { width } = desktopContainer.getBoundingClientRect();
-  //   //   const { clientX } = e as MouseEvent;
-  //   //   setPosition([Math.round(clientX - (clientX / width) * 600), data.y]);
-  //   // }
-  //   // console.log('data', e, data);
-  //   onDrag(e, data);
-  // };
-
-  // handle move.
-  const handleDragStop: DraggableEventHandler = (e, data) => {
-    onDragStop(e, data);
-
-    windowManager.updateWindowState(id, 'position', [data.x, data.y]);
-  };
 
   const handleClickWindow = (e: React.SyntheticEvent<HTMLElement>) => {
     const id = e.target['dataset']?.['testid'];
@@ -100,32 +119,25 @@ export const DraggableWindowWrapper = React.forwardRef<
   };
 
   return (
-    <Draggable
-      axis="both"
-      defaultPosition={{ x: 0, y: 0 }}
-      position={{ x: position[0], y: position[1] }}
-      grid={[1, 1]} // smoothly dragging
-      scale={1}
-      onStart={onDragStart}
-      // onDrag={handleDrag}
-      onStop={handleDragStop}
-      offsetParent={document.body} // fix dragging shaking bug.
-      nodeRef={ref as React.RefObject<HTMLElement>}
-      cancel={cancel}
+    <DraggableWindowContainer
+      title={title}
+      style={{
+        transform: isDragging ? transformStyle : 'translate3d(0, 0, 0)',
+        top: position[1],
+        left: position[0],
+      }}
+      $zIndex={zIndex}
+      {...listeners}
+      {...attributes}
+      ref={setNodeRef}
+      className={classNames(
+        'flex flex-col window-component-container',
+        isMaximized && 'fullscreen-state',
+        className,
+      )}
+      onClick={handleClickWindow}
     >
-      <DraggableWindowContainer
-        $zIndex={zIndex}
-        title={title}
-        className={classNames(
-          'flex flex-col window-component-container',
-          isMaximized && 'fullscreen-state',
-          className,
-        )}
-        data-id={'drag-wrapper'}
-        onClick={handleClickWindow}
-      >
-        {children}
-      </DraggableWindowContainer>
-    </Draggable>
+      {children}
+    </DraggableWindowContainer>
   );
 });
